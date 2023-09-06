@@ -37,6 +37,13 @@ def delete_alarm():
         save_data()
 
 
+# Function to delete all alarms
+def delete_all_alarms():
+    alarm_listbox.delete(0, tk.END)  # Delete all items from the listbox
+    alarms.clear()  # Clear the alarms list
+    set_schedule()  # Update the schedule (no alarms left)
+
+
 # Function to trigger the alarm
 def trigger_alarm():
     for alarm_time in alarms:
@@ -81,7 +88,7 @@ def load_data():
 
 # Create the main window
 root = tk.Tk()
-root.title("School Bell Alarm")
+root.title("Automatic Bell System")
 root.geometry("500x500")
 
 # Set the window icon
@@ -108,6 +115,11 @@ delete_button = ttk.Button(
     frame, text="Delete Selected", style="Custom.TButton", command=delete_alarm
 )
 delete_button.grid(row=1, column=1, padx=5, pady=10, sticky="e")
+
+delete_all_button = ttk.Button(
+    frame, text="Delete All", style="Custom.TButton", command=delete_all_alarms
+)
+delete_all_button.grid(row=1, column=2, padx=5, pady=10, sticky="e")
 
 
 # Create the alarm_listbox widget with a scrollbar
