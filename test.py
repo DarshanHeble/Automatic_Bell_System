@@ -87,16 +87,9 @@ root.geometry("500x500")
 # Set the window icon
 root.iconbitmap("Musify.ico")
 
-# Define a custom font with an increased font size
-button_text = ("Helvetica", 20)
-
 # Create a style for the button
 button_style = ttk.Style()
-button_style.configure("Custom.TButton", font=button_text)
-
-# Configure row and column weights for responsiveness
-# root.columnconfigure(0, weight=1)
-# root.rowconfigure(1, weight=1)
+button_style.configure("Custom.TButton", font=("Helvetica", 12), padding=(10, 10))
 
 # Create UI elements
 frame = ttk.Frame(root)
@@ -111,7 +104,9 @@ add_button = ttk.Button(
 )
 add_button.grid(row=1, column=0, padx=5, pady=10, sticky="w")
 
-delete_button = ttk.Button(frame, text="Delete Selected", command=delete_alarm)
+delete_button = ttk.Button(
+    frame, text="Delete Selected", style="Custom.TButton", command=delete_alarm
+)
 delete_button.grid(row=1, column=1, padx=5, pady=10, sticky="e")
 
 
