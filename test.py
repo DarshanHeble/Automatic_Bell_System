@@ -100,42 +100,45 @@ button_style.configure("Custom.TButton", font=("Helvetica", 12), padding=(10, 10
 
 # Create UI elements
 frame = ttk.Frame(root)
-# frame.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
-frame.pack()
+frame.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
+# frame.pack()
 
 title_label = ttk.Label(frame, text="School Bell Alarm", font=("Helvetica", 30))
-title_label.grid(row=0, column=0, columnspan=2, padx=5, pady=10)
+title_label.grid(row=0, column=0, columnspan=3, padx=5, pady=10, sticky="wsne")
 
 add_button = ttk.Button(
-    frame, text="Add Alarm Card", style="Custom.TButton", command=add_alarm_card
+    frame, text="Add Alarm", style="Custom.TButton", command=add_alarm_card
 )
-add_button.grid(row=1, column=0, padx=5, pady=10, sticky="w")
+add_button.grid(row=2, column=3, padx=5, pady=10, sticky="w")
 
 delete_button = ttk.Button(
-    frame, text="Delete Selected", style="Custom.TButton", command=delete_alarm
+    frame, text="Delete Alarm", style="Custom.TButton", command=delete_alarm
 )
-delete_button.grid(row=1, column=1, padx=5, pady=10, sticky="e")
+delete_button.grid(row=3, column=3, padx=5, pady=10, sticky="e")
 
 delete_all_button = ttk.Button(
     frame, text="Delete All", style="Custom.TButton", command=delete_all_alarms
 )
-delete_all_button.grid(row=1, column=2, padx=5, pady=10, sticky="e")
+delete_all_button.grid(row=4, column=3, padx=5, pady=10, sticky="e")
 
 
 # Create the alarm_listbox widget with a scrollbar
 alarm_listbox_frame = ttk.Frame(frame)
-alarm_listbox_frame.grid(row=2, column=0, columnspan=2, padx=5, pady=10, sticky="nsew")
+alarm_listbox_frame.grid(
+    row=2, column=0, columnspan=3, rowspan=3, padx=5, pady=10, sticky="nsew"
+)
 
 alarm_listbox = tk.Listbox(
     alarm_listbox_frame, width=20, height=10, font=("Helvetica", 14)
 )
 alarm_listbox.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
 
-scrollbar = ttk.Scrollbar(
-    alarm_listbox_frame, orient="vertical", command=alarm_listbox.yview
-)
-scrollbar.grid(row=0, column=1, sticky="ns")
-alarm_listbox.config(yscrollcommand=scrollbar.set)
+# Scrollbar Widget
+# scrollbar = ttk.Scrollbar(
+#     alarm_listbox_frame, orient="vertical", command=alarm_listbox.yview
+# )
+# scrollbar.grid(row=0, column=1, sticky="ns")
+# alarm_listbox.config(yscrollcommand=scrollbar.set)
 
 # Start the scheduler in a separate thread
 scheduler_thread = threading.Thread(target=start_scheduler)
