@@ -8,7 +8,7 @@ import pickle
 # Initialize the main window
 root = tk.Tk()
 root.title("Alarm Scheduler")
-root.geometry("500x500")
+root.geometry("800x500")
 
 # Create a list to store alarm data dictionaries
 alarm_data = []
@@ -172,6 +172,9 @@ def update_alarm_cards():
         padding=10,
     )
     add_alarm_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+    if not alarm_data:
+        return
 
     # Create and display alarm cards based on alarm_data
     for idx, alarm in enumerate(alarm_data, start=1):

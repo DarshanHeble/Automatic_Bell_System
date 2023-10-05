@@ -134,11 +134,11 @@ alarm_listbox = tk.Listbox(
 alarm_listbox.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
 
 # Scrollbar Widget
-# scrollbar = ttk.Scrollbar(
-#     alarm_listbox_frame, orient="vertical", command=alarm_listbox.yview
-# )
-# scrollbar.grid(row=0, column=1, sticky="ns")
-# alarm_listbox.config(yscrollcommand=scrollbar.set)
+scrollbar = ttk.Scrollbar(
+    alarm_listbox_frame, orient="vertical", command=alarm_listbox.yview
+)
+scrollbar.grid(row=0, column=1, sticky="ns")
+alarm_listbox.config(yscrollcommand=scrollbar.set)
 
 # Start the scheduler in a separate thread
 scheduler_thread = threading.Thread(target=start_scheduler)
