@@ -1,30 +1,34 @@
-import customtkinter as ctk
+import tkinter as tk
 
 
-class CustomButton(ctk.CTkButton):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
+class FixedWidget(tk.Frame):
+    def __init__(self, master, x, y):
+        super().__init__(master)
 
-        # Set the button's position to the bottom right corner of the frame.
-        self.place(relx=1.0, rely=1.0, anchor="se")
+        self.x = x
+        self.y = y
 
-        # Load the plus image.
-        plus_icon = ctk.CTkImage(Image.open("plus_icon.png"))
+        self.place(x=self.x, y=self.y)
 
-        # Set the button's image to the plus icon.
-        self.config(image=plus_icon)
+        # Set the fixed property to True
+        self.canvas.itemconfig(self, fixed=True)
+
+
+class MainWindow(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        # Create a Canvas widget
+        self.canvas = tk.Canvas(self, width=500, height=500)
+        self.canvas.pack()
+
+        # Create a fixed widget
+        fixed_widget = FixedWidget(self.canvas, 100, 100)
+
+        # Raise the fixed widget to the top of the stacking order
+        self.canvas.tag_raise(fixed_widget)
 
 
 if __name__ == "__main__":
-    root = ctk.CTk()
-
-    # Create a new Tkinter frame to contain the button.
-    frame = ctk.CTkFrame(root)
-    frame.pack()
-
-    # Create a new instance of the custom button class and add it to the frame.
-    button = CustomButton(frame)
-    button.pack()
-
-    # Start the mainloop.
-    root.mainloop()
+    window = MainWindow()
+    window.mainloop()
