@@ -2,7 +2,7 @@ from customtkinter import *
 
 root = CTk()
 root.geometry("500x500")
-# set_appearance_mode("light")
+set_appearance_mode("light")
 mainframe = CTkFrame(root)
 mainframe.pack(fill="both", expand=TRUE)
 
