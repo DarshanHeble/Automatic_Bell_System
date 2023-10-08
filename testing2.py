@@ -1,34 +1,23 @@
-import tkinter as tk
+import customtkinter
 
 
-class FixedWidget(tk.Frame):
-    def __init__(self, master, x, y):
-        super().__init__(master)
-
-        self.x = x
-        self.y = y
-
-        self.place(x=self.x, y=self.y)
-
-        # Set the fixed property to True
-        self.canvas.itemconfig(self, fixed=True)
-
-
-class MainWindow(tk.Tk):
+class App(customtkinter.CTk):
     def __init__(self):
+        # main setup
         super().__init__()
+        self.title("Bell System")
+        self.geometry("500x500")
+        self.minsize(500, 500)
 
-        # Create a Canvas widget
-        self.canvas = tk.Canvas(self, width=500, height=500)
-        self.canvas.pack()
+        # mainframe
+        self.mainframe = MainFrame(self)
 
-        # Create a fixed widget
-        fixed_widget = FixedWidget(self.canvas, 100, 100)
-
-        # Raise the fixed widget to the top of the stacking order
-        self.canvas.tag_raise(fixed_widget)
+        self.mainloop()
 
 
-if __name__ == "__main__":
-    window = MainWindow()
-    window.mainloop()
+class MainFrame(customtkinter.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+
+App()
