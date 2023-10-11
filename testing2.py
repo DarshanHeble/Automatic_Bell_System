@@ -5,10 +5,12 @@ class App(customtkinter.CTk):
     def __init__(self):
         # main setup
         super().__init__()
-        self._set_appearance_mode("light")
+        customtkinter.set_appearance_mode("light")
+        customtkinter.set_default_color_theme("green")
         self.title("Bell System")
-        self.geometry("500x500")
+        self.geometry("550x500")
         self.minsize(500, 500)
+        # self.maxsize()
 
         # mainframe
         self.mainframe = MainFrame(self)
@@ -19,34 +21,35 @@ class App(customtkinter.CTk):
 class MainFrame(customtkinter.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
+        # mode
         self._set_appearance_mode("light")
-
         self.pack(fill="both", expand=True)
         self.Create_Scrollable_Frame()
+        self.Create_Button()
 
     def Create_Scrollable_Frame(self):
         frame = customtkinter.CTkScrollableFrame(self)
         frame.pack(fill="both", expand=True)
-        self._set_appearance_mode("light")
 
         # widgets
         frame1 = customtkinter.CTkFrame(frame)
         frame1.pack(fill="both", padx=10, pady=10)
+        # {
+        #         frame2 = customtkinter.CTkFrame(frame)
+        #         frame2.pack(fill="both", padx=10, pady=10)
 
-        frame2 = customtkinter.CTkFrame(frame)
-        frame2.pack(fill="both", padx=10, pady=10)
+        #         frame3 = customtkinter.CTkFrame(frame)
+        #         frame3.pack(fill="both", padx=10, pady=10)
 
-        frame3 = customtkinter.CTkFrame(frame)
-        frame3.pack(fill="both", padx=10, pady=10)
+        #         frame3 = customtkinter.CTkFrame(frame)
+        #         frame3.pack(fill="both", padx=10, pady=10)
 
-        frame3 = customtkinter.CTkFrame(frame)
-        frame3.pack(fill="both", padx=10, pady=10)
+        #         frame3 = customtkinter.CTkFrame(frame)
+        #         frame3.pack(fill="both", padx=10, pady=10)
 
-        frame3 = customtkinter.CTkFrame(frame)
-        frame3.pack(fill="both", padx=10, pady=10)
-
-        frame3 = customtkinter.CTkFrame(frame)
-        frame3.pack(fill="both", padx=10, pady=10)
+        #         frame3 = customtkinter.CTkFrame(frame)
+        #         frame3.pack(fill="both", padx=10, pady=10)
+        # }
 
         frame1.rowconfigure((0, 1, 2), weight=1)
         frame1.columnconfigure((0, 1, 2, 3), weight=1)
@@ -61,7 +64,7 @@ class MainFrame(customtkinter.CTkFrame):
         )
         name_label.grid(row=1, column=0, padx=15, pady=5, sticky="w")
 
-        weekd_days_frame = customtkinter.CTkFrame(frame1)
+        weekd_days_frame = customtkinter.CTkFrame(frame1, fg_color="transparent")
         weekd_days_frame.grid(
             row=2, column=0, columnspan=4, padx=15, pady=5, sticky="wnes"
         )
@@ -97,6 +100,16 @@ class MainFrame(customtkinter.CTkFrame):
         )
         mon_cb.grid(row=0, column=7, sticky="w")
 
+    def Create_Button(self):
+        def open_window():
+            window = customtkinter.CTkFrame(self)
+            window.configure(width=1500, height=850)
+            # window.configure(width=self.winfo_width(), height=self.winfo_height())
+            window.place(relx=0.5, rely=0.5, anchor="center")
+
+            card = customtkinter.CTkScrollableFrame(window)
+            # window.pack()
+
         buttonframe = customtkinter.CTkFrame(
             self,
             # fg_color="transparent",
@@ -104,19 +117,22 @@ class MainFrame(customtkinter.CTkFrame):
             # corner_radius=40,
             # height=200,
         )
-
         buttonframe.place(relx=0.94, rely=0.94, anchor="se")
 
         btn = customtkinter.CTkButton(
             buttonframe,
             text="+",
             width=50,
-            height=50,
+            # height=50,
             # fg_color="transparent",
             # corner_radius=10,
             font=("arial", 40),
+            command=open_window,
         )
         btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
+
+        # window = customtkinter.CTkFrame(self)
+        # window.place(relx=0.5, rely=0.5, anchor="center")
 
 
 App()

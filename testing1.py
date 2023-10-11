@@ -1,4 +1,5 @@
 from customtkinter import *
+from tkinter import *
 from PIL import Image
 
 app = CTk()
@@ -25,6 +26,9 @@ checkbox = CTkCheckBox(master=app, text="mon", corner_radius=50, border_width=2)
 checkbox.pack()
 switch = CTkSwitch(master=app, text="schedule")
 switch.pack()
+
+time = CTKTimePicker(master=app)
+time.pack()
 
 
 app.mainloop()
