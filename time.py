@@ -5,16 +5,14 @@ app = customtkinter.CTk()
 app.minsize(400, 400)
 
 heading = customtkinter.CTkLabel(
-    app, text="Alarm Clock", font=("helvitica", 40, "bold")
+    app,
+    text="Add New Bell",
+    font=("helvitica", 30, "bold"),
 )
-heading.pack()
+heading.pack(pady=20)
 
-set_alarm = customtkinter.CTkLabel(app, text="Set Time", font=("helvitica", 20, "bold"))
-set_alarm.pack()
-
-frame = customtkinter.CTkFrame(app)
-frame.pack()
-
+option_frame = customtkinter.CTkFrame(app)
+option_frame.pack(pady=10,padx=10)
 
 # =============================hours===============================
 hour_options = (
@@ -47,8 +45,8 @@ hour_options = (
 hour = customtkinter.StringVar()
 hour.set(hour_options[0])
 
-hrs = customtkinter.CTkOptionMenu(frame, values=hour_options, variable=hour)
-hrs.pack()
+hrs = customtkinter.CTkOptionMenu(option_frame, values=hour_options, variable=hour,width=100,height=50,font=("helvitica",20),)
+hrs.grid(row=0,column=0,padx=10)
 # =============================hours===============================
 # =============================hours===============================
 minute_options = (
@@ -81,11 +79,11 @@ minute_options = (
 minute = customtkinter.StringVar()
 minute.set(minute_options[0])
 
-min = customtkinter.CTkOptionMenu(frame, values=minute_options, variable=hour)
-min.pack()
+min = customtkinter.CTkOptionMenu(option_frame, values=minute_options, variable=hour,width=100,font=("helvitica",20))
+min.grid(row=0,column=1,padx=10)
 # =============================hours===============================
 # =============================hours===============================
-options = (
+second_options = (
     "00",
     "01",
     "02",
@@ -112,11 +110,11 @@ options = (
     "23",
     "24",
 )
-hour = customtkinter.StringVar()
-hour.set(options[0])
+second = customtkinter.StringVar()
+second.set(second_options[0])
 
-hrs = customtkinter.CTkOptionMenu(frame, values=options, variable=hour)
-hrs.pack()
+sec = customtkinter.CTkOptionMenu(option_frame, values=second_options, variable=hour,width=100,font=("helvitica",20))
+sec.grid(row=0,column=2,padx=10)
 # =============================hours===============================
 
 
