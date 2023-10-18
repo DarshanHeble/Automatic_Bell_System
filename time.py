@@ -214,4 +214,7 @@ mon_cb.grid(row=0, column=7, sticky="w")
 buttom = customtkinter.CTkButton(app, text="Set Alarm", font=("helvitica", 20, "bold"))
 buttom.pack()
 
+upload_btn = customtkinter.CTkCheckBox(app)
+upload_btn.pack()
+
 app.mainloop()
