@@ -1,6 +1,8 @@
 import customtkinter
-from tkinter import ttk
-import datetime, time, winsound
+from tkinter import ttk, filedialog
+import pickle, os
+
+# import datetime, time, winsound
 
 app = customtkinter.CTk()
 app.minsize(400, 400)
@@ -92,7 +94,7 @@ minute.set(minute_options[0])
 min = customtkinter.CTkOptionMenu(
     option_frame,
     values=minute_options,
-    variable=hour,
+    variable=minute,
     width=100,
     height=50,
     font=("helvitica", 20),
@@ -134,7 +136,7 @@ second.set(second_options[0])
 sec = customtkinter.CTkOptionMenu(
     option_frame,
     values=second_options,
-    variable=hour,
+    variable=second,
     width=100,
     height=50,
     font=("helvitica", 20),
@@ -146,7 +148,7 @@ sec.grid(row=0, column=2, padx=10)
 name_frame = customtkinter.CTkFrame(app, fg_color="transparent")
 name_frame.pack(pady=10, padx=25, anchor="w")
 
-name_label = customtkinter.CTkLabel(name_frame, text="Label", font=("helvitica", 20))
+name_label = customtkinter.CTkLabel(name_frame, text="Label : ", font=("helvitica", 20))
 name_label.grid(row=0, column=0, padx=5)
 name_entry = customtkinter.CTkEntry(name_frame, font=("helvitica", 20))
 name_entry.grid(row=0, column=1, padx=5)
@@ -211,10 +213,52 @@ mon_cb = customtkinter.CTkCheckBox(
 )
 mon_cb.grid(row=0, column=7, sticky="w")
 
+
+# ===============================
+def upload_music_file():
+    music_file = filedialog.askopenfilename(
+        title="select a music file", filetypes=[("MP3 files", "*.mp3")]
+    )
+    return music_file
+
+
+def music_name_list(file_path, file_name_list):
+    file_name = os.path.basename(file_path)
+    file_name_list.append(file_name)
+
+
+# def pickle_music_file(music_file_path, pickle_file_path):
+#     with open(music_file_path, "rb") as music_file:
+#         music_file_data = music_file.read()
+
+#     with open(pickle_file_path, "wb") as pickle_file:
+#         pickle.dump(music_file_data, pickle_file)
+
+
+music_frame = customtkinter.CTkFrame(app, fg_color="transparent")
+music_frame.pack(pady=15)
+
+music_label = customtkinter.CTkLabel(
+    music_frame, text="Select Music : ", font=("helvitica", 20)
+)
+music_label.pack(side="left", padx=5)
+
+select_bell = customtkinter.CTkComboBox(music_frame, values=file_name_list)
+select_bell.pack(side="left", padx=5)
+
+upload_btn = customtkinter.CTkButton(
+    music_frame, text="Upload", width=20, command=upload_music_file
+)
+upload_btn.pack(padx=5, ipadx=5)
+# ===============================
+
 buttom = customtkinter.CTkButton(app, text="Set Alarm", font=("helvitica", 20, "bold"))
 buttom.pack()
-
-upload_btn = customtkinter.CTkCheckBox(app)
-upload_btn.pack()
-
 app.mainloop()
+
+# music_file_path = upload_music_file()
+# pickle_file_path = "music_file.pickle"
+# if not os.path.exists(pickle_file_path):
+#     pickle_music_file(music_file_path, pickle_file_path)
+# else:
+#     pass
