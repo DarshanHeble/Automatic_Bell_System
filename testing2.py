@@ -5,8 +5,8 @@ class App(customtkinter.CTk):
     def __init__(self):
         # main setup
         super().__init__()
-        customtkinter.set_appearance_mode("light")
-        customtkinter.set_default_color_theme("green")
+        # customtkinter.set_appearance_mode("light")
+        customtkinter.set_default_color_theme("dark-blue")
         self.title("Bell System")
         self.geometry("550x500")
         self.minsize(500, 500)
@@ -34,22 +34,6 @@ class MainFrame(customtkinter.CTkFrame):
         # widgets
         frame1 = customtkinter.CTkFrame(frame)
         frame1.pack(fill="both", padx=10, pady=10)
-        # {
-        #         frame2 = customtkinter.CTkFrame(frame)
-        #         frame2.pack(fill="both", padx=10, pady=10)
-
-        #         frame3 = customtkinter.CTkFrame(frame)
-        #         frame3.pack(fill="both", padx=10, pady=10)
-
-        #         frame3 = customtkinter.CTkFrame(frame)
-        #         frame3.pack(fill="both", padx=10, pady=10)
-
-        #         frame3 = customtkinter.CTkFrame(frame)
-        #         frame3.pack(fill="both", padx=10, pady=10)
-
-        #         frame3 = customtkinter.CTkFrame(frame)
-        #         frame3.pack(fill="both", padx=10, pady=10)
-        # }
 
         frame1.rowconfigure((0, 1, 2), weight=1)
         frame1.columnconfigure((0, 1, 2, 3), weight=1)
@@ -103,12 +87,165 @@ class MainFrame(customtkinter.CTkFrame):
     def Create_Button(self):
         def open_window():
             window = customtkinter.CTkFrame(self)
-            window.configure(width=1500, height=850)
+            window.configure()
             # window.configure(width=self.winfo_width(), height=self.winfo_height())
             window.place(relx=0.5, rely=0.5, anchor="center")
 
-            card = customtkinter.CTkScrollableFrame(window)
-            # window.pack()
+            card = customtkinter.CTkFrame(window)
+            card.pack(expand=True, fill="both")
+            # window.pack(expand=True, fill="both")
+
+            heading = customtkinter.CTkLabel(
+                card,
+                text="Add New Bell",
+                font=("helvitica", 30, "bold"),
+            )
+            heading.pack(pady=20)
+
+            option_frame = customtkinter.CTkFrame(app, fg_color="transparent")
+            option_frame.pack(pady=10, padx=10)
+
+            # =============================hours===============================
+            hour_options = (
+                "00",
+                "01",
+                "02",
+                "03",
+                "04",
+                "05",
+                "06",
+                "07",
+                "08",
+                "09",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+            )
+            hour = customtkinter.StringVar()
+            hour.set(hour_options[0])
+
+            hrs = customtkinter.CTkOptionMenu(
+                option_frame,
+                values=hour_options,
+                variable=hour,
+                width=100,
+                height=50,
+                font=("helvitica", 20),
+                dropdown_font=("helvitica", 15),
+            )
+            hrs.grid(row=0, column=0, padx=10)
+            # =============================hours===============================
+            # =============================hours===============================
+            minute_options = (
+                "00",
+                "01",
+                "02",
+                "03",
+                "04",
+                "05",
+                "06",
+                "07",
+                "08",
+                "09",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+            )
+            minute = customtkinter.StringVar()
+            minute.set(minute_options[0])
+
+            min = customtkinter.CTkOptionMenu(
+                option_frame,
+                values=minute_options,
+                variable=minute,
+                width=100,
+                height=50,
+                font=("helvitica", 20),
+                dropdown_font=("helvitica", 15),
+            )
+            min.grid(row=0, column=1, padx=10)
+            # =============================hours===============================
+            # =============================hours===============================
+            second_options = (
+                "00",
+                "01",
+                "02",
+                "03",
+                "04",
+                "05",
+                "06",
+                "07",
+                "08",
+                "09",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+            )
+            second = customtkinter.StringVar()
+            second.set(second_options[0])
+
+            sec = customtkinter.CTkOptionMenu(
+                option_frame,
+                values=second_options,
+                variable=second,
+                width=100,
+                height=50,
+                font=("helvitica", 20),
+                dropdown_font=("helvitica", 15),
+            )
+            sec.grid(row=0, column=2, padx=10)
+
+            btn_frame = customtkinter.CTkFrame(card)
+            btn_frame.pack()
+
+            cancel_btn = customtkinter.CTkButton(
+                btn_frame,
+                text="Cancel",
+                font=("helvitica", 20, "bold"),
+                command=window.destroy,
+            )
+            cancel_btn.pack(side="left")
+
+            save_btn = customtkinter.CTkButton(
+                btn_frame, text="Save Bell", font=("helvitica", 20, "bold")
+            )
+            save_btn.pack()
 
         buttonframe = customtkinter.CTkFrame(
             self,
@@ -131,8 +268,22 @@ class MainFrame(customtkinter.CTkFrame):
         )
         btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
 
-        # window = customtkinter.CTkFrame(self)
-        # window.place(relx=0.5, rely=0.5, anchor="center")
-
 
 App()
+
+# {
+#         frame2 = customtkinter.CTkFrame(frame)
+#         frame2.pack(fill="both", padx=10, pady=10)
+
+#         frame3 = customtkinter.CTkFrame(frame)
+#         frame3.pack(fill="both", padx=10, pady=10)
+
+#         frame3 = customtkinter.CTkFrame(frame)
+#         frame3.pack(fill="both", padx=10, pady=10)
+
+#         frame3 = customtkinter.CTkFrame(frame)
+#         frame3.pack(fill="both", padx=10, pady=10)
+
+#         frame3 = customtkinter.CTkFrame(frame)
+#         frame3.pack(fill="both", padx=10, pady=10)
+# }

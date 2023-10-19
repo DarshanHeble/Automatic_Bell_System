@@ -146,12 +146,12 @@ sec.grid(row=0, column=2, padx=10)
 # =============================hours===============================
 
 name_frame = customtkinter.CTkFrame(app, fg_color="transparent")
-name_frame.pack(pady=10, padx=25, anchor="w")
+name_frame.pack(pady=10, padx=25)
 
 name_label = customtkinter.CTkLabel(name_frame, text="Label : ", font=("helvitica", 20))
-name_label.grid(row=0, column=0, padx=5)
+name_label.pack(padx=5, side="left")
 name_entry = customtkinter.CTkEntry(name_frame, font=("helvitica", 20))
-name_entry.grid(row=0, column=1, padx=5)
+name_entry.pack(padx=5)
 
 weekd_days_frame = customtkinter.CTkFrame(app, fg_color="transparent")
 weekd_days_frame.pack(padx=25)
@@ -222,9 +222,9 @@ def upload_music_file():
     return music_file
 
 
-def music_name_list(file_path, file_name_list):
-    file_name = os.path.basename(file_path)
-    file_name_list.append(file_name)
+# def music_name_list(file_path, file_name_list):
+#     file_name = os.path.basename(file_path)
+#     file_name_list.append(file_name)
 
 
 # def pickle_music_file(music_file_path, pickle_file_path):
@@ -243,7 +243,7 @@ music_label = customtkinter.CTkLabel(
 )
 music_label.pack(side="left", padx=5)
 
-select_bell = customtkinter.CTkComboBox(music_frame, values=file_name_list)
+select_bell = customtkinter.CTkComboBox(music_frame)
 select_bell.pack(side="left", padx=5)
 
 upload_btn = customtkinter.CTkButton(
