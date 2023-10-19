@@ -1,6 +1,7 @@
 import customtkinter
 from tkinter import ttk, filedialog
-import pickle, os
+
+# import pickle, os
 
 # import datetime, time, winsound
 
