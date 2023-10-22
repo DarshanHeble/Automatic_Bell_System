@@ -16,7 +16,7 @@ class App(customtkinter.CTk):
         # mainframe
         self.mainframe = MainFrame(self)
 
-        self.mainloop()
+        # self.mainloop()
 
 
 class MainFrame(customtkinter.CTkFrame):
@@ -135,7 +135,7 @@ class MainFrame(customtkinter.CTkFrame):
                     "23",
                     "24",
                 )
-                hour = customtkinter.StringVar()
+                global hour
                 hour.set(hour_options[0])
 
                 hrs = customtkinter.CTkOptionMenu(
@@ -177,7 +177,7 @@ class MainFrame(customtkinter.CTkFrame):
                     "23",
                     "24",
                 )
-                minute = customtkinter.StringVar()
+                global minute
                 minute.set(minute_options[0])
 
                 min = customtkinter.CTkOptionMenu(
@@ -219,7 +219,7 @@ class MainFrame(customtkinter.CTkFrame):
                     "23",
                     "24",
                 )
-                second = customtkinter.StringVar()
+                global second
                 second.set(second_options[0])
 
                 sec = customtkinter.CTkOptionMenu(
@@ -237,11 +237,14 @@ class MainFrame(customtkinter.CTkFrame):
                 name_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 name_frame.pack(pady=20, padx=25)
 
-                name_label = customtkinter.CTkLabel(
-                    name_frame, text="Label : ", font=("helvitica", 20)
-                )
+                # name_label = customtkinter.CTkLabel(
+                #     name_frame, text="Label : ", font=("helvitica", 20)
+                # )
                 name_label.pack(padx=5, side="left")
-                name_entry = customtkinter.CTkEntry(name_frame, font=("helvitica", 20))
+                name_entry = customtkinter.CTkEntry(
+                    name_frame,
+                    font=("helvitica", 20),
+                )
                 name_entry.pack(padx=5)
 
             def weeks():
@@ -329,6 +332,14 @@ class MainFrame(customtkinter.CTkFrame):
                 upload_btn.pack(padx=5, ipadx=5)
 
             def btn():
+                def save_data():
+                    card_item = {}
+                    name_entry = name_entry.get()
+                    hr = hour.get()
+                    mi = minute.get()
+                    sec = second.get()
+                    card_item.update({"hour": hr, "minute": mi, "second": sec})
+
                 btn_frame = customtkinter.CTkFrame(card)
                 btn_frame.pack(padx=20, pady=20)
 
@@ -341,7 +352,10 @@ class MainFrame(customtkinter.CTkFrame):
                 cancel_btn.pack(side="left")
 
                 save_btn = customtkinter.CTkButton(
-                    btn_frame, text="Save Bell", font=("helvitica", 20, "bold")
+                    btn_frame,
+                    text="Save Bell",
+                    font=("helvitica", 20, "bold"),
+                    command=save_data,
                 )
                 save_btn.pack()
 
@@ -373,7 +387,20 @@ class MainFrame(customtkinter.CTkFrame):
         btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
 
 
-App()
+# App()
+if __name__ == "__main__":
+    app = App()
+
+    hour = customtkinter.StringVar()
+    minute = customtkinter.StringVar()
+    second = customtkinter.StringVar()
+    name_entry = customtkinter.CTkEntry(
+        name_frame,
+        font=("helvitica", 20),
+    )
+
+    app.mainloop()
+
 
 # {
 #         frame2 = customtkinter.CTkFrame(frame)

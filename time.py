@@ -154,17 +154,8 @@ def time():
     sec.grid(row=0, column=2, padx=10)
 
 
-label_entry.pack()
 time()
-
-# Create a StringVar object to store the selected option.
-option = customtkinter.StringVar()
-
-# Create an option menu with the two options.
-option_menu = customtkinter.CTkOptionMenu(
-    root, values=("Red", "Green"), variable=option
-)
-option_menu.pack()
+label_entry.pack()
 
 btn = customtkinter.CTkButton(
     root, text="button", font=("arial", 20, "bold"), command=fun
