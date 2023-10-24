@@ -87,6 +87,9 @@ class MainFrame(customtkinter.CTkFrame):
 
     def Create_Button(self):
         def open_window():
+            # def name_increment():
+            #     global name
+
             window = customtkinter.CTkFrame(self)
             # window.configure()
             # window.configure(width=self.winfo_width(), height=self.winfo_height())
@@ -237,83 +240,108 @@ class MainFrame(customtkinter.CTkFrame):
                 name_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 name_frame.pack(pady=20, padx=25)
 
-                # name_label = customtkinter.CTkLabel(
-                #     name_frame, text="Label : ", font=("helvitica", 20)
-                # )
+                name_label = customtkinter.CTkLabel(
+                    name_frame, text="Label : ", font=("helvitica", 20)
+                )
                 name_label.pack(padx=5, side="left")
+                global name
                 name_entry = customtkinter.CTkEntry(
-                    name_frame,
-                    font=("helvitica", 20),
+                    name_frame, font=("helvitica", 20), textvariable=name
                 )
                 name_entry.pack(padx=5)
 
             def weeks():
                 weekd_days_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 weekd_days_frame.pack(pady=15, padx=25)
+                global sunday, monday, tuesday, wednesday, thursday, friday, saturday
 
-                mon_cb = customtkinter.CTkCheckBox(
+                sun_cb = customtkinter.CTkCheckBox(
                     weekd_days_frame,
                     text="sun",
                     corner_radius=50,
                     border_width=2,
                     width=20,
+                    onvalue="on",
+                    offvalue="off",
+                    variable=sunday,
                 )
-                mon_cb.grid(row=0, column=1, sticky="w")
                 mon_cb = customtkinter.CTkCheckBox(
                     weekd_days_frame,
                     text="mon",
                     corner_radius=50,
                     border_width=2,
                     width=20,
+                    onvalue="on",
+                    offvalue="off",
+                    variable=monday,
                 )
-                mon_cb.grid(row=0, column=2, sticky="w", padx=10)
-                mon_cb = customtkinter.CTkCheckBox(
+                tue_cb = customtkinter.CTkCheckBox(
                     weekd_days_frame,
                     text="tue",
                     corner_radius=50,
                     border_width=2,
                     width=20,
+                    onvalue="on",
+                    offvalue="off",
+                    variable=tuesday,
                 )
-                mon_cb.grid(row=0, column=3, sticky="w")
-                mon_cb = customtkinter.CTkCheckBox(
+                wed_cb = customtkinter.CTkCheckBox(
                     weekd_days_frame,
                     text="wed",
                     corner_radius=50,
                     border_width=2,
                     width=20,
+                    onvalue="on",
+                    offvalue="off",
+                    variable=wednesday,
                 )
-                mon_cb.grid(row=0, column=4, sticky="w", padx=10)
-                mon_cb = customtkinter.CTkCheckBox(
+                thu_cb = customtkinter.CTkCheckBox(
                     weekd_days_frame,
                     text="thu",
                     corner_radius=50,
                     border_width=2,
                     width=20,
+                    onvalue="on",
+                    offvalue="off",
+                    variable=thursday,
                 )
-                mon_cb.grid(row=0, column=5, sticky="w")
-                mon_cb = customtkinter.CTkCheckBox(
+                fri_cb = customtkinter.CTkCheckBox(
                     weekd_days_frame,
                     text="fri",
                     corner_radius=50,
                     border_width=2,
                     width=20,
+                    onvalue="on",
+                    offvalue="off",
+                    variable=friday,
                 )
-                mon_cb.grid(row=0, column=6, sticky="w", padx=10)
-                mon_cb = customtkinter.CTkCheckBox(
+                sat_cb = customtkinter.CTkCheckBox(
                     weekd_days_frame,
                     text="sat",
                     corner_radius=50,
                     border_width=2,
                     width=20,
+                    onvalue="on",
+                    offvalue="off",
+                    variable=saturday,
                 )
-                mon_cb.grid(row=0, column=7, sticky="w")
+
+                sun_cb.grid(row=0, column=1, sticky="w")
+                mon_cb.grid(row=0, column=2, sticky="w", padx=10)
+                tue_cb.grid(row=0, column=3, sticky="w")
+                wed_cb.grid(row=0, column=4, sticky="w", padx=10)
+                thu_cb.grid(row=0, column=5, sticky="w")
+                fri_cb.grid(row=0, column=6, sticky="w", padx=10)
+                sat_cb.grid(row=0, column=7, sticky="w")
 
             def music():
                 def upload_music_file():
+                    global music_files
                     music_file = filedialog.askopenfilename(
                         title="select a music file", filetypes=[("MP3 files", "*.mp3")]
                     )
-                    return music_file
+                    music_files.append(music_file)
+                    print(music_files)
 
                 music_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 music_frame.pack(pady=15)
@@ -332,13 +360,29 @@ class MainFrame(customtkinter.CTkFrame):
                 upload_btn.pack(padx=5, ipadx=5)
 
             def btn():
-                def save_data():
+                def save_data(hour, minute, second, name):
                     card_item = {}
-                    name_entry = name_entry.get()
+                    # time
                     hr = hour.get()
                     mi = minute.get()
                     sec = second.get()
-                    card_item.update({"hour": hr, "minute": mi, "second": sec})
+                    # name
+                    name = name.get()
+                    # weeks
+                    sun = sunday.get()
+                    mon = monday.get()
+                    tue = tuesday.get()
+                    wed = wednesday.get()
+                    thu = thursday.get()
+                    fri = friday.get()
+                    sat = saturday.get()
+
+                    # print(
+                    #     f"sun={sun}\nmon={mon}\ntue={tue}\nwed={wed}\nthu={thu}\nfri={fri}\nsat={sat}"
+                    # )
+
+                    # print(name)
+                    # card_item.update({"hour": hr, "minute": mi, "second": sec})
 
                 btn_frame = customtkinter.CTkFrame(card)
                 btn_frame.pack(padx=20, pady=20)
@@ -350,12 +394,12 @@ class MainFrame(customtkinter.CTkFrame):
                     command=window.destroy,
                 )
                 cancel_btn.pack(side="left")
-
+                global name, hour, minute, second
                 save_btn = customtkinter.CTkButton(
                     btn_frame,
                     text="Save Bell",
                     font=("helvitica", 20, "bold"),
-                    command=save_data,
+                    command=lambda: save_data(hour, minute, second, name),
                 )
                 save_btn.pack()
 
@@ -364,6 +408,7 @@ class MainFrame(customtkinter.CTkFrame):
             weeks()
             music()
             btn()
+            # name_increment()
 
         buttonframe = customtkinter.CTkFrame(
             self,
@@ -394,10 +439,17 @@ if __name__ == "__main__":
     hour = customtkinter.StringVar()
     minute = customtkinter.StringVar()
     second = customtkinter.StringVar()
-    name_entry = customtkinter.CTkEntry(
-        name_frame,
-        font=("helvitica", 20),
-    )
+    name = customtkinter.StringVar(value="bell")
+
+    sunday = customtkinter.StringVar(value="off")
+    monday = customtkinter.StringVar(value="on")
+    tuesday = customtkinter.StringVar(value="on")
+    wednesday = customtkinter.StringVar(value="on")
+    thursday = customtkinter.StringVar(value="on")
+    friday = customtkinter.StringVar(value="on")
+    saturday = customtkinter.StringVar(value="on")
+    # music_file
+    music_files = []
 
     app.mainloop()
 
