@@ -1,5 +1,8 @@
 import customtkinter
+import tkinter as tk
 from tkinter import filedialog
+import os
+from os import listdir
 
 
 class App(customtkinter.CTk):
@@ -335,13 +338,20 @@ class MainFrame(customtkinter.CTkFrame):
                 sat_cb.grid(row=0, column=7, sticky="w")
 
             def music():
-                def upload_music_file():
+                def get_music_files(folder_path):
                     global music_files
-                    music_file = filedialog.askopenfilename(
-                        title="select a music file", filetypes=[("MP3 files", "*.mp3")]
-                    )
-                    music_files.append(music_file)
-                    print(music_files)
+                    for file in os.listdir(folder_path):
+                        if (
+                            file.endswith(".mp3")
+                            or file.endswith(".wav")
+                            or file.endswith(".ogg")
+                            or file.endswith(".aiff")
+                            or file.endswith(".flac")
+                            or file.endswith(".acc")
+                            or file.endswith(".wma")
+                        ):
+                            music_files.append(file)
+                    return music_files
 
                 music_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 music_frame.pack(pady=15)
@@ -351,13 +361,16 @@ class MainFrame(customtkinter.CTkFrame):
                 )
                 music_label.pack(side="left", padx=5)
 
-                select_bell = customtkinter.CTkComboBox(music_frame)
-                select_bell.pack(side="left", padx=5)
+                music_files = get_music_files("music")
 
-                upload_btn = customtkinter.CTkButton(
-                    music_frame, text="Upload", width=20, command=upload_music_file
+                curr_music.set(music_files[0])
+                select_bell = customtkinter.CTkOptionMenu(
+                    music_frame,
+                    values=music_files,
+                    variable=curr_music,
                 )
-                upload_btn.pack(padx=5, ipadx=5)
+                print()
+                select_bell.pack(side="left", padx=5)
 
             def btn():
                 def save_data(hour, minute, second, name):
@@ -376,13 +389,32 @@ class MainFrame(customtkinter.CTkFrame):
                     thu = thursday.get()
                     fri = friday.get()
                     sat = saturday.get()
+                    # music
+                    current_music = curr_music.get()
 
                     # print(
                     #     f"sun={sun}\nmon={mon}\ntue={tue}\nwed={wed}\nthu={thu}\nfri={fri}\nsat={sat}"
                     # )
 
-                    # print(name)
-                    # card_item.update({"hour": hr, "minute": mi, "second": sec})
+                    card_item.update(
+                        {
+                            "hour": hr,
+                            "minute": mi,
+                            "second": sec,
+                            "name": name,
+                            "sunday": sun,
+                            "monday": mon,
+                            "tuesday": tue,
+                            "wednesday": wed,
+                            "thursday": thu,
+                            "friday": fri,
+                            "saturday": sat,
+                            "music": current_music,
+                        }
+                    )
+                    print(card_item, "\n")
+                    alarm_data.append(card_item)
+                    print(alarm_data, "\n\n")
 
                 btn_frame = customtkinter.CTkFrame(card)
                 btn_frame.pack(padx=20, pady=20)
@@ -435,6 +467,7 @@ class MainFrame(customtkinter.CTkFrame):
 # App()
 if __name__ == "__main__":
     app = App()
+    alarm_data = []
 
     hour = customtkinter.StringVar()
     minute = customtkinter.StringVar()
@@ -450,6 +483,7 @@ if __name__ == "__main__":
     saturday = customtkinter.StringVar(value="on")
     # music_file
     music_files = []
+    curr_music = customtkinter.StringVar()
 
     app.mainloop()
 
