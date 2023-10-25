@@ -1,9 +1,12 @@
 from customtkinter import *
+import tkinter as tk
 from tkinter import *
-from PIL import Image
+from os import listdir
+
+# from PIL import Image
 
 app = CTk()
-# app.geometry("500x400")
+app.geometry("500x400")
 set_appearance_mode("system")
 set_default_color_theme("green")
 
@@ -27,8 +30,22 @@ checkbox.pack()
 switch = CTkSwitch(master=app, text="schedule")
 switch.pack()
 
-time = CTKTimePicker(master=app)
-time.pack()
+# time = CTKTimePicker(master=app)
+# time.pack()
 
+
+def get_music_files(foler_path):
+    music_files = []
+    for file in os.listdir(foler_path):
+        if file.endswith(".mp3") or file.endswith(".wav") or file.endswith(".ogg"):
+            music_files.append(file)
+    return music_files
+
+
+music_files = get_music_files("music")
+print(music_files)
+
+lists = CTkComboBox(app, values=music_files)
+lists.pack()
 
 app.mainloop()
