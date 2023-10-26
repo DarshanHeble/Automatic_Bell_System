@@ -373,48 +373,58 @@ class MainFrame(customtkinter.CTkFrame):
                 select_bell.pack(side="left", padx=5)
 
             def btn():
-                def save_data(hour, minute, second, name):
-                    card_item = {}
-                    # time
-                    hr = hour.get()
-                    mi = minute.get()
-                    sec = second.get()
-                    # name
-                    name = name.get()
-                    # weeks
-                    sun = sunday.get()
-                    mon = monday.get()
-                    tue = tuesday.get()
-                    wed = wednesday.get()
-                    thu = thursday.get()
-                    fri = friday.get()
-                    sat = saturday.get()
-                    # music
-                    current_music = curr_music.get()
+                def save_data_and_display_card(hour, minute, second, name):
+                    def save_data(name):
+                        card_item = {}
 
-                    # print(
-                    #     f"sun={sun}\nmon={mon}\ntue={tue}\nwed={wed}\nthu={thu}\nfri={fri}\nsat={sat}"
-                    # )
+                        # time
+                        hr = hour.get()
+                        mi = minute.get()
+                        sec = second.get()
+                        # name
+                        name = name.get()
+                        # weeks
+                        sun = sunday.get()
+                        mon = monday.get()
+                        tue = tuesday.get()
+                        wed = wednesday.get()
+                        thu = thursday.get()
+                        fri = friday.get()
+                        sat = saturday.get()
+                        # music
+                        current_music = curr_music.get()
 
-                    card_item.update(
-                        {
-                            "hour": hr,
-                            "minute": mi,
-                            "second": sec,
-                            "name": name,
-                            "sunday": sun,
-                            "monday": mon,
-                            "tuesday": tue,
-                            "wednesday": wed,
-                            "thursday": thu,
-                            "friday": fri,
-                            "saturday": sat,
-                            "music": current_music,
-                        }
-                    )
-                    print(card_item, "\n")
-                    alarm_data.append(card_item)
-                    print(alarm_data, "\n\n")
+                        # print(
+                        #     f"sun={sun}\nmon={mon}\ntue={tue}\nwed={wed}\nthu={thu}\nfri={fri}\nsat={sat}"
+                        # )
+
+                        card_item.update(
+                            {
+                                "hour": hr,
+                                "minute": mi,
+                                "second": sec,
+                                "name": name,
+                                "sunday": sun,
+                                "monday": mon,
+                                "tuesday": tue,
+                                "wednesday": wed,
+                                "thursday": thu,
+                                "friday": fri,
+                                "saturday": sat,
+                                "music": current_music,
+                            }
+                        )
+                        print(card_item, "\n")
+                        alarm_data.append(card_item)
+                        print(alarm_data, "\n\n")
+
+                    def display_card():
+                        global frame
+                        frame = customtkinter.CTkFrame(frame)
+                        frame.pack(fill="both", padx=10, pady=10)
+
+                    display_card()
+                    save_data(name)
 
                 btn_frame = customtkinter.CTkFrame(card)
                 btn_frame.pack(padx=20, pady=20)
@@ -431,7 +441,9 @@ class MainFrame(customtkinter.CTkFrame):
                     btn_frame,
                     text="Save Bell",
                     font=("helvitica", 20, "bold"),
-                    command=lambda: save_data(hour, minute, second, name),
+                    command=lambda: save_data_and_display_card(
+                        hour, minute, second, name
+                    ),
                 )
                 save_btn.pack()
 
@@ -484,6 +496,10 @@ if __name__ == "__main__":
     # music_file
     music_files = []
     curr_music = customtkinter.StringVar()
+
+    frames = []
+    for frame in frames:
+        frame.pack()
 
     app.mainloop()
 
