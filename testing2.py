@@ -32,61 +32,68 @@ class MainFrame(customtkinter.CTkFrame):
         self.Create_Button()
 
     def Create_Scrollable_Frame(self):
+        def create_frame():
+            # frame = tk.Frame()
+            frame = customtkinter.CTkFrame(frame)
+            lab = customtkinter.CTkLabel(frame, text="this is a frame")
+            lab.pack()
+            return frame
+
         frame = customtkinter.CTkScrollableFrame(self)
         frame.pack(fill="both", expand=True)
 
-        # widgets
-        frame1 = customtkinter.CTkFrame(frame)
-        frame1.pack(fill="both", padx=10, pady=10)
+        # # widgets
+        # frame1 = customtkinter.CTkFrame(frame)
+        # frame1.pack(fill="both", padx=10, pady=10)
 
-        frame1.rowconfigure((0, 1, 2), weight=1)
-        frame1.columnconfigure((0, 1, 2, 3), weight=1)
+        # frame1.rowconfigure((0, 1, 2), weight=1)
+        # frame1.columnconfigure((0, 1, 2, 3), weight=1)
 
-        time_label = customtkinter.CTkLabel(
-            frame1, text="01:21", font=("arial", 70, "bold")
-        )
-        time_label.grid(row=0, column=0, columnspan=2, padx=15, pady=5, sticky="w")
+        # time_label = customtkinter.CTkLabel(
+        #     frame1, text="01:21", font=("arial", 70, "bold")
+        # )
+        # time_label.grid(row=0, column=0, columnspan=2, padx=15, pady=5, sticky="w")
 
-        name_label = customtkinter.CTkLabel(
-            frame1, text="Bell(1)", font=("arial", 20, "bold")
-        )
-        name_label.grid(row=1, column=0, padx=15, pady=5, sticky="w")
+        # name_label = customtkinter.CTkLabel(
+        #     frame1, text="Bell(1)", font=("arial", 20, "bold")
+        # )
+        # name_label.grid(row=1, column=0, padx=15, pady=5, sticky="w")
 
-        weekd_days_frame = customtkinter.CTkFrame(frame1, fg_color="transparent")
-        weekd_days_frame.grid(
-            row=2, column=0, columnspan=4, padx=15, pady=5, sticky="wnes"
-        )
-        weekd_days_frame.columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+        # weekd_days_frame = customtkinter.CTkFrame(frame1, fg_color="transparent")
+        # weekd_days_frame.grid(
+        #     row=2, column=0, columnspan=4, padx=15, pady=5, sticky="wnes"
+        # )
+        # weekd_days_frame.columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
 
-        # check box
-        mon_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame, text="sun", corner_radius=50, border_width=2
-        )
-        mon_cb.grid(row=0, column=1, sticky="w")
-        mon_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame, text="mon", corner_radius=50, border_width=2
-        )
-        mon_cb.grid(row=0, column=2, sticky="w")
-        mon_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame, text="tue", corner_radius=50, border_width=2
-        )
-        mon_cb.grid(row=0, column=3, sticky="w")
-        mon_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame, text="wed", corner_radius=50, border_width=2
-        )
-        mon_cb.grid(row=0, column=4, sticky="w")
-        mon_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame, text="thu", corner_radius=50, border_width=2
-        )
-        mon_cb.grid(row=0, column=5, sticky="w")
-        mon_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame, text="fri", corner_radius=50, border_width=2
-        )
-        mon_cb.grid(row=0, column=6, sticky="w")
-        mon_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame, text="sat", corner_radius=50, border_width=2
-        )
-        mon_cb.grid(row=0, column=7, sticky="w")
+        # # check box
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="sun", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=1, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="mon", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=2, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="tue", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=3, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="wed", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=4, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="thu", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=5, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="fri", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=6, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="sat", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=7, sticky="w")
 
     def Create_Button(self):
         def open_window():
@@ -373,7 +380,7 @@ class MainFrame(customtkinter.CTkFrame):
                 select_bell.pack(side="left", padx=5)
 
             def btn():
-                def save_data_and_display_card(hour, minute, second, name):
+                def save_data_and_display_card(window, hour, minute, second, name):
                     def save_data(name):
                         card_item = {}
 
@@ -419,9 +426,18 @@ class MainFrame(customtkinter.CTkFrame):
                         print(alarm_data, "\n\n")
 
                     def display_card():
-                        global frame
-                        frame = customtkinter.CTkFrame(frame)
-                        frame.pack(fill="both", padx=10, pady=10)
+                        global frames
+                        frames.append(create_frame())
+                        frames[-1].pack(fill="both", padx=10, pady=10)
+
+                    def create_frame():
+                        # frame = tk.Frame()
+                        frame = customtkinter.CTkFrame(self)
+                        lab = customtkinter.CTkLabel(frame, text="this is a frame")
+                        lab.pack()
+                        window.destroy()
+
+                        return frame
 
                     display_card()
                     save_data(name)
@@ -442,7 +458,7 @@ class MainFrame(customtkinter.CTkFrame):
                     text="Save Bell",
                     font=("helvitica", 20, "bold"),
                     command=lambda: save_data_and_display_card(
-                        hour, minute, second, name
+                        window, hour, minute, second, name
                     ),
                 )
                 save_btn.pack()

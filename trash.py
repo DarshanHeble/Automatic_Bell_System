@@ -1,32 +1,34 @@
 import tkinter as tk
+import customtkinter
 
 
-def create_frame():
-    """Creates a new frame."""
-    frame = tk.Frame()
-    label = tk.Label(frame, text="This is a frame.")
+def create_frame(label_text, color):
+    """Creates a new frame with the given label text and color."""
+    frame = customtkinter.CTkFrame(bg=color)
+    label = customtkinter.CTkLabel(frame, text=label_text)
     label.pack()
     return frame
 
 
-def handle_button_click():
-    """Adds a frame to the window."""
-    frames.append(create_frame())
+def add_frame(frame):
+    """Adds the given frame to the window."""
+    frames.append(frame)
     frames[-1].pack()
 
 
 # Create a list to store the frames.
 frames = []
 
-root = tk.Tk()
+root = customtkinter.CTk()
 
-# Create the button.
-button = tk.Button(root, text="Add Frame", command=handle_button_click)
-button.pack()
+# Create three frames with different colors.
+frames.append(create_frame("Red Frame", "red"))
+frames.append(create_frame("Green Frame", "green"))
+frames.append(create_frame("Blue Frame", "blue"))
 
 # Add the frames to the window.
 for frame in frames:
-    frame.pack()
+    add_frame(frame)
 
 # Start the mainloop.
 root.mainloop()
