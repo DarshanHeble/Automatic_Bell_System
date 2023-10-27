@@ -26,39 +26,89 @@ class MainFrame(customtkinter.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         # mode
-        # self._set_appearance_mode("light")
+        self._set_appearance_mode("light")
         self.pack(fill="both", expand=True)
-        self.scrolframe = Create_Scrollable_Frame(self)
-        # self.Create_Button()
-
-
-class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.pack()
+        self.Create_Scrollable_Frame()
         self.Create_Button()
-        label = customtkinter.CTkLabel(self)
-        label.pack()
-        label = customtkinter.CTkLabel(self)
-        label.pack()
-        label = customtkinter.CTkLabel(self)
-        label.pack()
 
-        def create_frame(self):
+    def Create_Scrollable_Frame(self):
+        def create_frame():
             # frame = tk.Frame()
-            frame = customtkinter.CTkFrame(self)
+            frame = customtkinter.CTkFrame(frame)
             lab = customtkinter.CTkLabel(frame, text="this is a frame")
             lab.pack()
             return frame
+
+        frame = customtkinter.CTkScrollableFrame(self)
+        frame.pack(fill="both", expand=True)
+
+        # # widgets
+        # frame1 = customtkinter.CTkFrame(frame)
+        # frame1.pack(fill="both", padx=10, pady=10)
+
+        # frame1.rowconfigure((0, 1, 2), weight=1)
+        # frame1.columnconfigure((0, 1, 2, 3), weight=1)
+
+        # time_label = customtkinter.CTkLabel(
+        #     frame1, text="01:21", font=("arial", 70, "bold")
+        # )
+        # time_label.grid(row=0, column=0, columnspan=2, padx=15, pady=5, sticky="w")
+
+        # name_label = customtkinter.CTkLabel(
+        #     frame1, text="Bell(1)", font=("arial", 20, "bold")
+        # )
+        # name_label.grid(row=1, column=0, padx=15, pady=5, sticky="w")
+
+        # weekd_days_frame = customtkinter.CTkFrame(frame1, fg_color="transparent")
+        # weekd_days_frame.grid(
+        #     row=2, column=0, columnspan=4, padx=15, pady=5, sticky="wnes"
+        # )
+        # weekd_days_frame.columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+
+        # # check box
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="sun", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=1, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="mon", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=2, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="tue", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=3, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="wed", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=4, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="thu", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=5, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="fri", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=6, sticky="w")
+        # mon_cb = customtkinter.CTkCheckBox(
+        #     weekd_days_frame, text="sat", corner_radius=50, border_width=2
+        # )
+        # mon_cb.grid(row=0, column=7, sticky="w")
 
     def Create_Button(self):
         def open_window():
             # def name_increment():
             #     global name
+
             window = customtkinter.CTkFrame(self)
+            # window.configure()
+            # window.configure(width=self.winfo_width(), height=self.winfo_height())
             window.place(relx=0.5, rely=0.5, anchor="center")
+
             card = customtkinter.CTkFrame(window)
             card.pack(padx=1005, pady=1005)
+            # window.pack(expand=True, fill="both")
+
             heading = customtkinter.CTkLabel(
                 card,
                 text="Add New Bell",
@@ -69,6 +119,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
             def time():
                 option_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 option_frame.pack(pady=10, padx=10)
+
                 # =============================hours===============================
                 hour_options = (
                     "00",
@@ -99,6 +150,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                 )
                 global hour
                 hour.set(hour_options[0])
+
                 hrs = customtkinter.CTkOptionMenu(
                     option_frame,
                     values=hour_options,
@@ -140,6 +192,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                 )
                 global minute
                 minute.set(minute_options[0])
+
                 min = customtkinter.CTkOptionMenu(
                     option_frame,
                     values=minute_options,
@@ -181,6 +234,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                 )
                 global second
                 second.set(second_options[0])
+
                 sec = customtkinter.CTkOptionMenu(
                     option_frame,
                     values=second_options,
@@ -195,6 +249,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
             def name():
                 name_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 name_frame.pack(pady=20, padx=25)
+
                 name_label = customtkinter.CTkLabel(
                     name_frame, text="Label : ", font=("helvitica", 20)
                 )
@@ -209,6 +264,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                 weekd_days_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 weekd_days_frame.pack(pady=15, padx=25)
                 global sunday, monday, tuesday, wednesday, thursday, friday, saturday
+
                 sun_cb = customtkinter.CTkCheckBox(
                     weekd_days_frame,
                     text="sun",
@@ -279,6 +335,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                     offvalue="off",
                     variable=saturday,
                 )
+
                 sun_cb.grid(row=0, column=1, sticky="w")
                 mon_cb.grid(row=0, column=2, sticky="w", padx=10)
                 tue_cb.grid(row=0, column=3, sticky="w")
@@ -305,11 +362,14 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
 
                 music_frame = customtkinter.CTkFrame(card, fg_color="transparent")
                 music_frame.pack(pady=15)
+
                 music_label = customtkinter.CTkLabel(
                     music_frame, text="Select Music : ", font=("helvitica", 20)
                 )
                 music_label.pack(side="left", padx=5)
+
                 music_files = get_music_files("music")
+
                 curr_music.set(music_files[0])
                 select_bell = customtkinter.CTkOptionMenu(
                     music_frame,
@@ -323,6 +383,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                 def save_data_and_display_card(window, hour, minute, second, name):
                     def save_data(name):
                         card_item = {}
+
                         # time
                         hr = hour.get()
                         mi = minute.get()
@@ -339,6 +400,11 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                         sat = saturday.get()
                         # music
                         current_music = curr_music.get()
+
+                        # print(
+                        #     f"sun={sun}\nmon={mon}\ntue={tue}\nwed={wed}\nthu={thu}\nfri={fri}\nsat={sat}"
+                        # )
+
                         card_item.update(
                             {
                                 "hour": hr,
@@ -355,6 +421,9 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                                 "music": current_music,
                             }
                         )
+                        print(card_item, "\n")
+                        alarm_data.append(card_item)
+                        print(alarm_data, "\n\n")
 
                     def display_card():
                         global frames
@@ -367,6 +436,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
                         lab = customtkinter.CTkLabel(frame, text="this is a frame")
                         lab.pack()
                         window.destroy()
+
                         return frame
 
                     display_card()
@@ -374,6 +444,7 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
 
                 btn_frame = customtkinter.CTkFrame(card)
                 btn_frame.pack(padx=20, pady=20)
+
                 cancel_btn = customtkinter.CTkButton(
                     btn_frame,
                     text="Cancel",
@@ -397,15 +468,24 @@ class Create_Scrollable_Frame(customtkinter.CTkScrollableFrame):
             weeks()
             music()
             btn()
+            # name_increment()
 
         buttonframe = customtkinter.CTkFrame(
             self,
+            # fg_color="transparent",
+            # bg_color="transparent",
+            # corner_radius=40,
+            # height=200,
         )
         buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
         btn = customtkinter.CTkButton(
             buttonframe,
             text="+",
             width=50,
+            # height=50,
+            # fg_color="transparent",
+            # corner_radius=10,
             font=("arial", 40),
             command=open_window,
         )
@@ -456,56 +536,3 @@ if __name__ == "__main__":
 #         frame3 = customtkinter.CTkFrame(frame)
 #         frame3.pack(fill="both", padx=10, pady=10)
 # }
-
-# # widgets
-# frame1 = customtkinter.CTkFrame(frame)
-# frame1.pack(fill="both", padx=10, pady=10)
-
-# frame1.rowconfigure((0, 1, 2), weight=1)
-# frame1.columnconfigure((0, 1, 2, 3), weight=1)
-
-# time_label = customtkinter.CTkLabel(
-#     frame1, text="01:21", font=("arial", 70, "bold")
-# )
-# time_label.grid(row=0, column=0, columnspan=2, padx=15, pady=5, sticky="w")
-
-# name_label = customtkinter.CTkLabel(
-#     frame1, text="Bell(1)", font=("arial", 20, "bold")
-# )
-# name_label.grid(row=1, column=0, padx=15, pady=5, sticky="w")
-
-# weekd_days_frame = customtkinter.CTkFrame(frame1, fg_color="transparent")
-# weekd_days_frame.grid(
-#     row=2, column=0, columnspan=4, padx=15, pady=5, sticky="wnes"
-# )
-# weekd_days_frame.columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
-
-# # check box
-# mon_cb = customtkinter.CTkCheckBox(
-#     weekd_days_frame, text="sun", corner_radius=50, border_width=2
-# )
-# mon_cb.grid(row=0, column=1, sticky="w")
-# mon_cb = customtkinter.CTkCheckBox(
-#     weekd_days_frame, text="mon", corner_radius=50, border_width=2
-# )
-# mon_cb.grid(row=0, column=2, sticky="w")
-# mon_cb = customtkinter.CTkCheckBox(
-#     weekd_days_frame, text="tue", corner_radius=50, border_width=2
-# )
-# mon_cb.grid(row=0, column=3, sticky="w")
-# mon_cb = customtkinter.CTkCheckBox(
-#     weekd_days_frame, text="wed", corner_radius=50, border_width=2
-# )
-# mon_cb.grid(row=0, column=4, sticky="w")
-# mon_cb = customtkinter.CTkCheckBox(
-#     weekd_days_frame, text="thu", corner_radius=50, border_width=2
-# )
-# mon_cb.grid(row=0, column=5, sticky="w")
-# mon_cb = customtkinter.CTkCheckBox(
-#     weekd_days_frame, text="fri", corner_radius=50, border_width=2
-# )
-# mon_cb.grid(row=0, column=6, sticky="w")
-# mon_cb = customtkinter.CTkCheckBox(
-#     weekd_days_frame, text="sat", corner_radius=50, border_width=2
-# )
-# mon_cb.grid(row=0, column=7, sticky="w")
