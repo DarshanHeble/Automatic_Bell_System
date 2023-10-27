@@ -5,7 +5,7 @@ import os
 from os import listdir
 
 root = customtkinter.CTk()
-customtkinter.set_appearance_mode("light")
+# customtkinter.set_appearance_mode("light")
 root.geometry("500x500")
 
 alarm_data = []
@@ -369,6 +369,14 @@ def open_window():
 
     def btn():
         def save_data_and_display_card(window, hour, minute, second, name):
+            def create_frame():
+                # frame = tk.Frame()
+                frame = customtkinter.CTkFrame(Scrll_frame)
+                lab = customtkinter.CTkLabel(frame, text="this is a frame")
+                lab.pack()
+                window.destroy()
+                return frame
+
             def save_data(name):
                 card_item = {}
                 # time
@@ -403,19 +411,17 @@ def open_window():
                         "music": current_music,
                     }
                 )
+                print("data saved")
 
             def display_card():
-                global frames
-                frames.append(create_frame())
-                frames[-1].pack(fill="both", padx=10, pady=10)
-
-            def create_frame():
-                # frame = tk.Frame()
-                frame = customtkinter.CTkFrame(self)
+                global frame
+                # frames.append(create_frame())
+                # frames[-1].pack(fill="both", padx=10, pady=10)
+                frame = customtkinter.CTkFrame(Scrll_frame)
                 lab = customtkinter.CTkLabel(frame, text="this is a frame")
-                lab.pack()
+                # lab.pack()
                 window.destroy()
-                return frame
+                frame.pack(fill="both", padx=10, pady=10)
 
             display_card()
             save_data(name)
@@ -446,20 +452,6 @@ def open_window():
     music()
     btn()
 
-    buttonframe = customtkinter.CTkFrame(
-        self,
-    )
-    buttonframe.place(relx=0.94, rely=0.94, anchor="se")
-    # buttonframe.pack()
-    btn = customtkinter.CTkButton(
-        buttonframe,
-        text="+",
-        width=50,
-        font=("arial", 40),
-        command=lambda: open_window(self),
-    )
-    btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
-
 
 def create_frame():
     # frame = tk.Frame()
@@ -486,7 +478,7 @@ btn = customtkinter.CTkButton(
     width=50,
     height=50,
     font=("arial", 40),
-    command=create_frame,
+    command=open_window,
 )
 btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
 
