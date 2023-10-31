@@ -253,87 +253,112 @@ def open_window():
         )
         name_entry.pack(padx=5)
 
+    # def weeks():
+    #     weekd_days_frame = customtkinter.CTkFrame(card, fg_color="transparent")
+    #     weekd_days_frame.pack(pady=15, padx=25)
+    #     global sunday, monday, tuesday, wednesday, thursday, friday, saturday
+    #     sun_cb = customtkinter.CTkCheckBox(
+    #         weekd_days_frame,
+    #         text="sun",
+    #         corner_radius=50,
+    #         border_width=2,
+    #         width=20,
+    #         onvalue="on",
+    #         offvalue="off",
+    #         variable=sunday,
+    #     )
+    #     mon_cb = customtkinter.CTkCheckBox(
+    #         weekd_days_frame,
+    #         text="mon",
+    #         corner_radius=50,
+    #         border_width=2,
+    #         width=20,
+    #         onvalue="on",
+    #         offvalue="off",
+    #         variable=monday,
+    #     )
+    #     tue_cb = customtkinter.CTkCheckBox(
+    #         weekd_days_frame,
+    #         text="tue",
+    #         corner_radius=50,
+    #         border_width=2,
+    #         width=20,
+    #         onvalue="on",
+    #         offvalue="off",
+    #         variable=tuesday,
+    #     )
+    #     wed_cb = customtkinter.CTkCheckBox(
+    #         weekd_days_frame,
+    #         text="wed",
+    #         corner_radius=50,
+    #         border_width=2,
+    #         width=20,
+    #         onvalue="on",
+    #         offvalue="off",
+    #         variable=wednesday,
+    #     )
+    #     thu_cb = customtkinter.CTkCheckBox(
+    #         weekd_days_frame,
+    #         text="thu",
+    #         corner_radius=50,
+    #         border_width=2,
+    #         width=20,
+    #         onvalue="on",
+    #         offvalue="off",
+    #         variable=thursday,
+    #     )
+    #     fri_cb = customtkinter.CTkCheckBox(
+    #         weekd_days_frame,
+    #         text="fri",
+    #         corner_radius=50,
+    #         border_width=2,
+    #         width=20,
+    #         onvalue="on",
+    #         offvalue="off",
+    #         variable=friday,
+    #     )
+    #     sat_cb = customtkinter.CTkCheckBox(
+    #         weekd_days_frame,
+    #         text="sat",
+    #         corner_radius=50,
+    #         border_width=2,
+    #         width=20,
+    #         onvalue="on",
+    #         offvalue="off",
+    #         variable=saturday,
+    #     )
+    #     sun_cb.grid(row=0, column=1, sticky="w")
+    #     mon_cb.grid(row=0, column=2, sticky="w", padx=10)
+    #     tue_cb.grid(row=0, column=3, sticky="w")
+    #     wed_cb.grid(row=0, column=4, sticky="w", padx=10)
+    #     thu_cb.grid(row=0, column=5, sticky="w")
+    #     fri_cb.grid(row=0, column=6, sticky="w", padx=10)
+    #     sat_cb.grid(row=0, column=7, sticky="w")
+
     def weeks():
+        days_of_week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
         weekd_days_frame = customtkinter.CTkFrame(card, fg_color="transparent")
         weekd_days_frame.pack(pady=15, padx=25)
-        global sunday, monday, tuesday, wednesday, thursday, friday, saturday
-        sun_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame,
-            text="sun",
-            corner_radius=50,
-            border_width=2,
-            width=20,
-            onvalue="on",
-            offvalue="off",
-            variable=sunday,
-        )
-        mon_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame,
-            text="mon",
-            corner_radius=50,
-            border_width=2,
-            width=20,
-            onvalue="on",
-            offvalue="off",
-            variable=monday,
-        )
-        tue_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame,
-            text="tue",
-            corner_radius=50,
-            border_width=2,
-            width=20,
-            onvalue="on",
-            offvalue="off",
-            variable=tuesday,
-        )
-        wed_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame,
-            text="wed",
-            corner_radius=50,
-            border_width=2,
-            width=20,
-            onvalue="on",
-            offvalue="off",
-            variable=wednesday,
-        )
-        thu_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame,
-            text="thu",
-            corner_radius=50,
-            border_width=2,
-            width=20,
-            onvalue="on",
-            offvalue="off",
-            variable=thursday,
-        )
-        fri_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame,
-            text="fri",
-            corner_radius=50,
-            border_width=2,
-            width=20,
-            onvalue="on",
-            offvalue="off",
-            variable=friday,
-        )
-        sat_cb = customtkinter.CTkCheckBox(
-            weekd_days_frame,
-            text="sat",
-            corner_radius=50,
-            border_width=2,
-            width=20,
-            onvalue="on",
-            offvalue="off",
-            variable=saturday,
-        )
-        sun_cb.grid(row=0, column=1, sticky="w")
-        mon_cb.grid(row=0, column=2, sticky="w", padx=10)
-        tue_cb.grid(row=0, column=3, sticky="w")
-        wed_cb.grid(row=0, column=4, sticky="w", padx=10)
-        thu_cb.grid(row=0, column=5, sticky="w")
-        fri_cb.grid(row=0, column=6, sticky="w", padx=10)
-        sat_cb.grid(row=0, column=7, sticky="w")
+
+        day_checkboxes = []
+        for i, day in enumerate(days_of_week):
+            day_var = customtkinter.StringVar(value="on")
+            day_cb = customtkinter.CTkCheckBox(
+                weekd_days_frame,
+                text=day.lower(),
+                corner_radius=50,
+                border_width=2,
+                width=20,
+                onvalue="on",
+                offvalue="off",
+                variable=day_var,
+            )
+            day_cb.grid(row=0, column=i + 1, sticky="w")
+            day_checkboxes.append(day_var)
+
+        # Now you can access the state of each day's checkbox using day_checkboxes list.
+        sunday, monday, tuesday, wednesday, thursday, friday, saturday = day_checkboxes
 
     def music():
         def get_music_files(folder_path):
@@ -369,14 +394,6 @@ def open_window():
 
     def btn():
         def save_data_and_display_card(window, hour, minute, second, name):
-            def create_frame():
-                # frame = tk.Frame()
-                frame = customtkinter.CTkFrame(Scrll_frame)
-                lab = customtkinter.CTkLabel(frame, text="this is a frame")
-                lab.pack()
-                window.destroy()
-                return frame
-
             def save_data(name):
                 card_item = {}
                 # time
@@ -411,19 +428,27 @@ def open_window():
                         "music": current_music,
                     }
                 )
+                print(hour)
+                print(hr)
                 print("data saved")
 
-            def display_card():
-                global frame
-                # frames.append(create_frame())
-                # frames[-1].pack(fill="both", padx=10, pady=10)
-                frame = customtkinter.CTkFrame(Scrll_frame)
-                lab = customtkinter.CTkLabel(frame, text="this is a frame")
-                # lab.pack()
-                window.destroy()
-                frame.pack(fill="both", padx=10, pady=10)
+                def display_card():
+                    global frame
+                    # frames.append(create_frame())
+                    # frames[-1].pack(fill="both", padx=10, pady=10)
+                    frame = customtkinter.CTkFrame(Scrll_frame)
+                    time = customtkinter.CTkLabel(frame, text=hr)
+                    time.pack()
 
-            display_card()
+                    delete_frame = customtkinter.CTkButton(
+                        frame, text="Delete", command=frame.destroy
+                    )
+                    delete_frame.pack()
+                    window.destroy()
+                    frame.pack(fill="both", padx=10, pady=10)
+
+                display_card()
+
             save_data(name)
 
         btn_frame = customtkinter.CTkFrame(card)
@@ -451,14 +476,6 @@ def open_window():
     weeks()
     music()
     btn()
-
-
-def create_frame():
-    # frame = tk.Frame()
-    frame = customtkinter.CTkFrame(Scrll_frame)
-    lab = customtkinter.CTkLabel(frame, text="this is a frame")
-    # lab.pack()
-    frame.pack(fill="both", padx=10, pady=10)
 
 
 mainframe = customtkinter.CTkFrame(root)
