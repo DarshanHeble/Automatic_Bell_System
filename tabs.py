@@ -388,6 +388,19 @@ def mode():
         ctk.set_appearance_mode("Dark")
 
 
+def addNewTab():
+    dialog = ctk.CTkInputDialog(text="Enter a unique tab name", title="Add Tab")
+    tabName = dialog.get_input()
+    label = ctk.CTkLabel(bellFrame, text=tabName, textvariable=tabName, bg_color="red")
+    label.pack(padx=(10, 0))
+
+
+def deleteNewTab():
+    dialog = ctk.CTkInputDialog(text="Enter a tab name", title="Delete Tab")
+    tabName = dialog.get_input()
+    tabName.destroy()
+
+
 root = ctk.CTk()
 root.geometry("900x600")
 
@@ -402,35 +415,37 @@ main.columnconfigure(2, weight=1)
 main.columnconfigure(3, weight=1)
 main.columnconfigure(4, weight=1)
 
+# ========================sidebar========================
+
 sidebar = ctk.CTkFrame(main)
 sidebar.grid(row=0, column=0, padx=20, pady=20, sticky="swen")
 
-create_tab = ctk.CTkButton(
-    sidebar,
-    text="Add Tab",
-    font=("arial", 25),
-    height=60,
-    command=createtab,
-)
-create_tab.pack()
+bellFrame = ctk.CTkFrame(sidebar)
+bellFrame.pack(side="top", fill="x")
 
+bellabel = ctk.CTkLabel(bellFrame, text="Bell Labels")
+bellabel.pack(anchor="s")
+
+
+btnframe = ctk.CTkFrame(bellFrame)
+btnframe.pack(side="bottom")
+
+addtabbtn = ctk.CTkButton(btnframe, text="Add Tab", command=addNewTab)
+addtabbtn.pack(side="left")
+deletetabbtn = ctk.CTkButton(btnframe, text="Delete Tab", command=deleteNewTab)
+deletetabbtn.pack(side="right")
 
 mode = ctk.CTkButton(sidebar, text="Change Theme", command=mode)
-mode.pack()
+mode.pack(side="bottom")
 
-tabview = ctk.CTkTabview(main)
-tabview.grid(row=0, column=1, columnspan=4, padx=20, pady=20, sticky="swen")
+# ========================sidebar========================
+# ========================Frame========================
 
-tabview.add("class")
-
-tabmainframe = ctk.CTkFrame(tabview.tab("class"))
-tabmainframe.pack(fill="both", expand=True)
-
-Scrll_frame = ctk.CTkScrollableFrame(tabmainframe)
-Scrll_frame.pack(fill="both", expand=True)
+Scrll_frame = ctk.CTkScrollableFrame(main)
+Scrll_frame.grid(row=0, column=1, columnspan=5, padx=20, pady=20, sticky="swen")
 
 buttonframe = ctk.CTkFrame(
-    tabmainframe,
+    Scrll_frame,
 )
 buttonframe.place(relx=0.94, rely=0.94, anchor="se")
 
@@ -448,6 +463,4 @@ delete_tab = ctk.CTkButton(
 delete_tab.pack()
 
 root.mainloop()
-
-if __name__ == "__main__":
-    main()
+# ========================Frame========================
