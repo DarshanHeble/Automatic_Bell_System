@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import simpledialog
 import os
+import pickle
 
 
 def open_window():
@@ -367,19 +368,6 @@ def open_window():
     btn()
 
 
-def createtab():
-    dialog = ctk.CTkInputDialog(text="Enter a unique name", title="Name")
-    tabName = dialog.get_input()
-    tabview.add(tabName)
-
-
-def deletetab():
-    dialog = ctk.CTkInputDialog(text="Enter a unique name", title="Name")
-    tabName = dialog.get_input()
-    tabview.delete(tabName)
-    # check = ctk.CTkTextbox(root)
-
-
 def mode():
     appearence = ctk.get_appearance_mode()
     if appearence == "Dark":
@@ -389,20 +377,43 @@ def mode():
 
 
 def addNewTab():
+    global label
+
+    def change_color(event):
+        label.configure(fg_color="red", corner_radius=10)
+
     dialog = ctk.CTkInputDialog(text="Enter a unique tab name", title="Add Tab")
     tabName = dialog.get_input()
-    label = ctk.CTkLabel(bellFrame, text=tabName, textvariable=tabName, bg_color="red")
+    label = ctk.CTkLabel(bellFrame, text=tabName)
     label.pack(padx=(10, 0))
+    label.bind("<Button-1>", change_color)
 
 
 def deleteNewTab():
     dialog = ctk.CTkInputDialog(text="Enter a tab name", title="Delete Tab")
     tabName = dialog.get_input()
-    tabName.destroy()
+    if label.cget("text") == tabName:
+        label.destroy()
 
 
 root = ctk.CTk()
 root.geometry("900x600")
+
+alarm_data = []
+hour = ctk.StringVar()
+minute = ctk.StringVar()
+second = ctk.StringVar()
+name = ctk.StringVar(value="bell")
+sunday = ctk.StringVar(value="off")
+monday = ctk.StringVar(value="on")
+tuesday = ctk.StringVar(value="on")
+wednesday = ctk.StringVar(value="on")
+thursday = ctk.StringVar(value="on")
+friday = ctk.StringVar(value="on")
+saturday = ctk.StringVar(value="on")
+# music_file
+music_files = []
+curr_music = ctk.StringVar()
 
 main = ctk.CTkFrame(root)
 main.pack(fill="both", expand=True)
@@ -423,9 +434,22 @@ sidebar.grid(row=0, column=0, padx=20, pady=20, sticky="swen")
 bellFrame = ctk.CTkFrame(sidebar)
 bellFrame.pack(side="top", fill="x")
 
-bellabel = ctk.CTkLabel(bellFrame, text="Bell Labels")
+bellabel = ctk.CTkLabel(bellFrame, text="Bell Labels", font=("Times", 20))
 bellabel.pack(anchor="s")
 
+
+def change_color(event):
+    label.configure(fg_color="red", corner_radius=20)
+    label1.configure(fg_color="transparent", corner_radius=20)
+
+
+label = ctk.CTkLabel(bellFrame, text="class")
+label.bind("<Button-1>", change_color)
+label.pack(padx=(10, 0))
+
+label1 = ctk.CTkLabel(bellFrame, text="exam")
+# label1.bind("<Button-1>", change_color1)
+label1.pack(padx=(10, 0))
 
 btnframe = ctk.CTkFrame(bellFrame)
 btnframe.pack(side="bottom")
@@ -458,9 +482,19 @@ delete_tab = ctk.CTkButton(
     text="Delete Tab",
     font=("arial", 25),
     height=60,
-    command=deletetab,
+    # command=deletetab,
 )
 delete_tab.pack()
+
+
+def change_color(event):
+    print("click")
+    le.configure(fg_color="red", corner_radius=10)
+
+
+le = ctk.CTkLabel(Scrll_frame, text="darshan")
+# le.pack()
+le.bind("<Button-1>", change_color)
 
 root.mainloop()
 # ========================Frame========================
