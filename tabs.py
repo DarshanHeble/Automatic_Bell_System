@@ -402,6 +402,14 @@ def mode():
         ctk.set_appearance_mode("Dark")
 
 
+def change_color(label):
+    label.configure(fg_color="red", corner_radius=10)
+
+    for other_label in labels_dict.values():
+        if other_label != label:
+            other_label.configure(fg_color="transparent", corner_radius=10)
+
+
 def save_labels():
     with open(DATA_FILE, "wb") as f:
         pickle.dump(labels_list, f)
@@ -411,7 +419,13 @@ def load_labels():
     with open(DATA_FILE, "rb") as f:
         saved_labels = pickle.load(f)
         labels_list.extend(saved_labels)
+        for label_name in labels_list:
+            label = ctk.CTkLabel(bellFrame, text=label_name)
+            label.pack(padx=(10, 0))
+            label.bind("<Button-1>", lambda event, l=label: change_color(l))
+            labels_dict[label_name] = label
         print(labels_list)
+        print(labels_dict)
 
 
 def addNewTab():
@@ -421,6 +435,15 @@ def addNewTab():
     label_name = input.get_input()
     if label_name in labels_dict:
         print("not unique")
+        popup = ctk.CTkToplevel(root)
+        # popup.geometry("200x100")
+        sentence = ctk.CTkLabel(popup, text="Please Use Unique Name Next Time")
+        sentence.pack(padx=20, pady=20)
+        close = ctk.CTkButton(popup, text="Close", command=popup.destroy)
+        close.pack(pady=(0, 20))
+        close.focus()
+        close.bind("<Return>", lambda event, b=close: b.invoke())
+        # popup.pack()
         return
 
     label = ctk.CTkLabel(bellFrame, text=label_name)
@@ -434,14 +457,6 @@ def addNewTab():
     # print(labels_dict)
 
     save_labels()
-
-
-def change_color(label):
-    label.configure(fg_color="red", corner_radius=10)
-
-    for other_label in labels_dict.values():
-        if other_label != label:
-            other_label.configure(fg_color="transparent", corner_radius=10)
 
 
 def deleteNewTab():
