@@ -6,6 +6,19 @@ master = ctk.CTk()
 counter = 0
 
 
+def change_label_color(label):
+    # print(label)
+    # print(type(label))
+    # print(type(str(label)))
+    # Make the clicked label opaque
+    label.configure(fg_color="black", bg_color="white")
+
+    # Make other labels transparent
+    for other_label in labels_dict.values():
+        if other_label != label:
+            other_label.configure(fg_color="gray", bg_color="transparent")
+
+
 def add_label():
     global counter
     counter += 1
@@ -13,24 +26,27 @@ def add_label():
     label_name = ctk.CTkInputDialog(text="enter name").get_input()
 
     # Check if the label name is unique
-    if label_name in labels:
+    if label_name in labels_dict:
         print("The label name is not unique. Please enter a unique name.")
         return
 
     # Create a new label
     label = ctk.CTkLabel(master, text=label_name)
     label.pack()
-    print(label_name)
+    # print(label_name)
 
     # Bind the label to button 1
-    label.bind("<Button-1>", lambda event: change_label_color(label_name))
+    label.bind("<Button-1>", lambda event: change_label_color(label))
+    # label = str(label)
 
-    # Add the label to the dictionary
-    # labels[label_name] = label
+    # Add the label to the list
+    labels_dict[label_name] = label
+    labels_list.append(label_name)
+    print(labels_list)
 
     # Save the labels to a pickle file
-    # with open("labels.pickle", "wb") as f:
-    #     pickle.dump(labels, f)
+    with open("labels.pickle", "wb") as f:
+        pickle.dump(labels_list, f)
 
 
 def delete_label():
@@ -51,18 +67,9 @@ def delete_label():
     del labels[label_name]
 
 
-def change_label_color(label):
-    # Make the clicked label opaque
-    label.configure(fg_color="black", bg_color="white")
-
-    # Make other labels transparent
-    for other_label in labels.values():
-        if other_label != label:
-            other_label.configure(fg_color="gray", bg_color="transparent")
-
-
 # Create a dictionary to store the labels
-labels = {}
+labels_dict = {}
+labels_list = []
 
 # Create a button to add a new label
 add_button = ctk.CTkButton(master, text="Add Label", command=add_label)

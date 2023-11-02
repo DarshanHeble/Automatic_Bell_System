@@ -26,7 +26,8 @@ music_files = []
 curr_music = ctk.StringVar()
 
 counter = 0
-labels = {}
+labels_dict = {}
+labels_list = []
 
 
 def open_window():
@@ -403,33 +404,42 @@ def mode():
 
 def save_labels():
     with open(DATA_FILE, "wb") as f:
-        pickle.dump(labels, f)
+        pickle.dump(labels_list, f)
+
+
+def load_labels():
+    with open(DATA_FILE, "rb") as f:
+        saved_labels = pickle.load(f)
+        labels_list.extend(saved_labels)
+        print(labels_list)
 
 
 def addNewTab():
-    global labels, counter
+    global labels_dict, counter
 
     input = ctk.CTkInputDialog(text="Enter a unique tab name", title="Add Tab")
     label_name = input.get_input()
-    if label_name in labels:
+    if label_name in labels_dict:
         print("not unique")
         return
 
     label = ctk.CTkLabel(bellFrame, text=label_name)
     label.pack(padx=(10, 0))
     label.bind("<Button-1>", lambda event: change_color(label))
-    print(label)
+    # print(label)
 
-    labels[label_name] = label
-    print(labels)
+    labels_dict[label_name] = label
+    labels_list.append(label_name)
+    print(labels_list)
+    # print(labels_dict)
 
-    # save_labels()
+    save_labels()
 
 
 def change_color(label):
     label.configure(fg_color="red", corner_radius=10)
 
-    for other_label in labels.values():
+    for other_label in labels_dict.values():
         if other_label != label:
             other_label.configure(fg_color="transparent", corner_radius=10)
 
@@ -437,14 +447,17 @@ def change_color(label):
 def deleteNewTab():
     dialog = ctk.CTkInputDialog(text="Enter a tab name", title="Delete Tab")
     label_name = dialog.get_input()
-    if label_name not in labels:
+    if label_name not in labels_dict:
         print("does not exist")
         return
 
-    label = labels[label_name]
+    label = labels_dict[label_name]
     label.destroy()
 
-    del labels[label_name]
+    del labels_dict[label_name]
+    labels_list.remove(label_name)
+    print(labels_list)
+    save_labels()
 
 
 main = ctk.CTkFrame(root)
@@ -497,7 +510,7 @@ btn = ctk.CTkButton(
 )
 btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
 
-
+load_labels()
 root.mainloop()
 # ========================Frame========================
 
