@@ -402,14 +402,25 @@ def mode():
         ctk.set_appearance_mode("Dark")
 
 
-def change_color_and_open_tab(label, tab_frame):
+def change_color_and_open_tab(label):
+    label_name = label.cget("text")
+    frame_name = label.cget("text")
+    # print(label_name)
+    frame_name = ctk.CTkFrame(mainframe)
+    sframe = ctk.CTkScrollableFrame(frame_name)
+    sframe.pack(expand=True, fill="both", padx=10, pady=20)
+    labela = ctk.CTkLabel(sframe, text=label_name)
+    labela.pack()
+    b = ctk.CTkButton(sframe, command=frame_name.destroy)
+    b.pack()
+    frame_name.pack(fill="x")
+    # print(label)
     label.configure(fg_color="red", corner_radius=10)
 
     for other_label in labels_dict.values():
         if other_label != label:
             other_label.configure(fg_color="transparent", corner_radius=10)
-
-    tab_frame.pack()
+            frame_name = label.cget("text")
 
 
 def save_labels():
@@ -428,11 +439,11 @@ def load_labels():
             tab_frame.forget()
             label.bind(
                 "<Button-1>",
-                lambda event, l=label, t=tab_frame: change_color_and_open_tab(l, t),
+                lambda event, l=label: change_color_and_open_tab(l),
             )
             labels_dict[label_name] = label
-        print(labels_list)
-        print(labels_dict)
+        # print(labels_list)
+        # print(labels_dict)
 
 
 def addNewTab():
@@ -455,7 +466,7 @@ def addNewTab():
 
     label = ctk.CTkLabel(bellFrame, text=label_name)
     label.pack(padx=(10, 0))
-    label.bind("<Button-1>", lambda event: change_color_and_open_tab(label, tab_frame))
+    label.bind("<Button-1>", lambda event: change_color_and_open_tab(label))
     # print(label)
 
     labels_dict[label_name] = label
@@ -463,10 +474,7 @@ def addNewTab():
     # print(labels_list)
     # print(labels_dict)
 
-    tab_frame = ctk.CTkScrollableFrame(mainframe)
-    tab_frame.forget()
-
-    change_color_and_open_tab(label, tab_frame)
+    change_color_and_open_tab(label)
     save_labels()
 
 
@@ -525,22 +533,26 @@ mode.pack(side="bottom")
 
 mainframe = ctk.CTkFrame(main)
 mainframe.grid(row=0, column=1, columnspan=5, sticky="swen")
+# framee = ctk.CTkFrame(mainframe, width=2000, height=2000)
+# framee.pack(fill="both", expand=True)
+# bu = ctk.CTkButton(framee, command=framee.destroy)
+# bu.pack()
 
-Scrll_frame = ctk.CTkScrollableFrame(mainframe)
-Scrll_frame.pack(expand=True, fill="both", padx=20, pady=20)
+# Scrll_frame = ctk.CTkScrollableFrame(mainframe)
+# Scrll_frame.pack(expand=True, fill="both", padx=20, pady=20)
 
-label = ctk.CTkLabel(Scrll_frame, text="hello")
-label.pack()
-label.forget()
-buttonframe = ctk.CTkFrame(
-    mainframe,
-)
-buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+# label = ctk.CTkLabel(Scrll_frame, text="hello")
+# label.pack()
+# label.forget()
+# buttonframe = ctk.CTkFrame(
+#     mainframe,
+# )
+# buttonframe.place(relx=0.94, rely=0.94, anchor="se")
 
-btn = ctk.CTkButton(
-    buttonframe, text="+", width=50, height=50, font=("arial", 40), command=open_window
-)
-btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
+# btn = ctk.CTkButton(
+#     buttonframe, text="+", width=50, height=50, font=("arial", 40), command=open_window
+# )
+# btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
 
 load_labels()
 root.mainloop()
