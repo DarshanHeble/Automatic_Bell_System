@@ -407,12 +407,14 @@ def change_color_and_open_tab(label):
     frame_name = label.cget("text")
     # print(label_name)
     frame_name = ctk.CTkFrame(mainframe)
+
     sframe = ctk.CTkScrollableFrame(frame_name)
     sframe.pack(expand=True, fill="both", padx=10, pady=20)
     labela = ctk.CTkLabel(sframe, text=label_name)
     labela.pack()
     b = ctk.CTkButton(sframe, command=frame_name.destroy)
     b.pack()
+    frame_name.cget(labela)
     frame_name.pack(fill="x")
     # print(label)
     label.configure(fg_color="red", corner_radius=10)
@@ -420,7 +422,8 @@ def change_color_and_open_tab(label):
     for other_label in labels_dict.values():
         if other_label != label:
             other_label.configure(fg_color="transparent", corner_radius=10)
-            frame_name = label.cget("text")
+            name = label.cget("text")
+            # name.des
 
 
 def save_labels():

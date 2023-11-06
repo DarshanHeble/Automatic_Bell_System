@@ -6,31 +6,33 @@ def add_label():
     label_text = label_entry.get()
     if label_text:
         create_label(label_text)
-        create_frame(label_text)
+        create_frame()
 
 
 def create_label(label_text):
     label = ttk.Label(left_frame, text=label_text)
-    label.bind("<Button-1>", lambda event, text=label_text: display_frame(text))
+    label.bind("<Button-1>", lambda event, text=label_text: display_frame(label_text))
     label.grid(sticky="w", padx=5, pady=5)
 
 
-def create_frame(label_text):
+def create_frame():
     frame = ttk.Frame(right_frame)
-    # frame.configure(bg="blue")  # Set background color
-    label_frame_dict[label_text] = frame
+    # frame.configure()  # Set background color
     frame.grid(row=0, column=0, sticky="nsew")
-    label_display_dict[label_text] = False
+    frame.grid_remove()
+    label_frame_dict[id(frame)] = frame
+    label_display_dict[id(frame)] = False
 
 
-def display_frame(label_text):
-    for label, frame in label_frame_dict.items():
-        if label == label_text:
-            frame.grid()
-            label_display_dict[label] = True
-        else:
+def display_frame(frame_id):
+    for frame_id, frame in label_frame_dict.items():
+        if label_display_dict[frame_id]:
             frame.grid_remove()
-            label_display_dict[label] = False
+            label_display_dict[frame_id] = False
+
+    selected_frame = label_frame_dict[frame_id]
+    selected_frame.grid()
+    label_display_dict[frame_id] = True
 
 
 root = tk.Tk()
@@ -53,9 +55,9 @@ label_display_dict = {}
 
 # Example initial labels and frames
 create_label("Label 1")
-create_frame("Label 1")
+create_frame()
 
 create_label("Label 2")
-create_frame("Label 2")
+create_frame()
 
 root.mainloop()
