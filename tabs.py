@@ -34,15 +34,12 @@ button_list = [
     "button6",
     "button7",
 ]
-
 counter = 0
 labels_dict = {}
 labels_list = []
 
 
-def open_window():
-    # def name_increment():
-    #     global name
+def open_window(f):
     window = ctk.CTkFrame(root)
     window.place(relx=0.5, rely=0.5, anchor="center")
     card = ctk.CTkFrame(window)
@@ -318,7 +315,7 @@ def open_window():
         print()
         select_bell.pack(side="left", padx=5)
 
-    def btn():
+    def btn(frame):
         def save_data_and_display_card(window, hour, minute, second, name):
             def save_data(name):
                 card_item = {}
@@ -362,7 +359,7 @@ def open_window():
                     global frame
                     # frames.append(create_frame())
                     # frames[-1].pack(fill="both", padx=10, pady=10)
-                    frame = ctk.CTkFrame(Scrll_frame)
+                    frame = ctk.CTkFrame(f)
                     time = ctk.CTkLabel(frame, text=hr)
                     time.pack()
 
@@ -401,7 +398,7 @@ def open_window():
     name()
     weeks()
     music()
-    btn()
+    btn(f)
 
 
 def mode():
@@ -410,61 +407,6 @@ def mode():
         ctk.set_appearance_mode("light")
     else:
         ctk.set_appearance_mode("Dark")
-
-
-def save_labels():
-    with open(DATA_FILE, "wb") as f:
-        pickle.dump(labels_list, f)
-
-
-def load_labels():
-    with open(DATA_FILE, "rb") as f:
-        saved_labels = pickle.load(f)
-        labels_list.extend(saved_labels)
-        for label_name in labels_list:
-            label = ctk.CTkLabel(bellFrame, text=label_name)
-            label.pack(padx=(10, 0))
-            tab_frame = ctk.CTkScrollableFrame(mainframe)
-            tab_frame.forget()
-            label.bind(
-                "<Button-1>",
-                lambda event, l=label: change_color_and_open_tab(l),
-            )
-            labels_dict[label_name] = label
-        # print(labels_list)
-        # print(labels_dict)
-
-
-def addNewTab():
-    global labels_dict, counter
-
-    input = ctk.CTkInputDialog(text="Enter a unique tab name", title="Add Tab")
-    label_name = input.get_input()
-    if label_name in labels_dict:
-        print("not unique")
-        popup = ctk.CTkToplevel(root)
-        # popup.geometry("200x100")
-        sentence = ctk.CTkLabel(popup, text="Please Use Unique Name Next Time")
-        sentence.pack(padx=20, pady=20)
-        close = ctk.CTkButton(popup, text="Close", command=popup.destroy)
-        close.pack(pady=(0, 20))
-        close.focus()
-        close.bind("<Return>", lambda event, b=close: b.invoke())
-        # popup.pack()
-        return
-
-    label = ctk.CTkLabel(bellFrame, text=label_name)
-    label.pack(padx=(10, 0))
-    label.bind("<Button-1>", lambda event: change_color_and_open_tab(label))
-    # print(label)
-
-    labels_dict[label_name] = label
-    labels_list.append(label_name)
-    # print(labels_list)
-    # print(labels_dict)
-
-    change_color_and_open_tab(label)
-    save_labels()
 
 
 def deleteNewTab():
@@ -491,12 +433,25 @@ def open_frame(i, frame):
     frame4.forget()
     frame5.forget()
     frame6.forget()
-    print(i)
-    frame.pack()
+    # print(i)
+    frame.pack(expand=True, fill="both")
+
+
+def double_click(b, button, l):
+    input = ctk.CTkInputDialog().get_input()
+    for i in range(len(button_list)):
+        if button_list[i] == b:
+            button_list[i] = input
+            button.configure(text=input)
+            l.configure(text=input)
+            # print(button_list[i])
+    print(input)
+    print(button_list)
+    print(b)
 
 
 main = ctk.CTkFrame(root)
-main.pack(fill="both", expand=True)
+main.pack(expand=True, fill="both")
 
 main.rowconfigure(0, weight=1)
 
@@ -511,251 +466,207 @@ main.columnconfigure(4, weight=1)
 sidebar = ctk.CTkFrame(main)
 sidebar.grid(row=0, column=0, padx=20, pady=20, sticky="swen")
 
+
 bellFrame = ctk.CTkFrame(sidebar)
 bellFrame.pack(side="top", fill="x")
 
 bellabel = ctk.CTkLabel(bellFrame, text="Bell Labels", font=("Times", 20))
 bellabel.pack(side="left", anchor="s")
 
-
-# btnframe = ctk.CTkFrame(bellFrame)
-# btnframe.pack(side="bottom")
-
-# addtabbtn = ctk.CTkButton(btnframe, text="Add Tab", command=addNewTab)
-# addtabbtn.pack(side="left")
-# deletetabbtn = ctk.CTkButton(btnframe, text="Delete Tab", command=deleteNewTab)
-# deletetabbtn.pack(side="right")
-
-
-button0 = ctk.CTkButton(
-    sidebar,
-    text=button_list[0],
-    fg_color="transparent",
-    # border_color="yellow",
-    # border_width=1,
-    # hover_color="red",
-    font=("Times", 15),
-    command=lambda: open_frame(button_list[0], frame0),
-)
-button0.pack()
-
-button1 = ctk.CTkButton(
-    sidebar,
-    text=button_list[1],
-    fg_color="transparent",
-    # border_color="yellow",
-    # border_width=1,
-    # hover_color="red",
-    font=("Times", 15),
-    command=lambda: open_frame(button_list[1], frame1),
-)
-button1.pack()
-button2 = ctk.CTkButton(
-    sidebar,
-    text=button_list[2],
-    fg_color="transparent",
-    # border_color="yellow",
-    # border_width=1,
-    # hover_color="red",
-    font=("Times", 15),
-    command=lambda: open_frame(button_list[2], frame2),
-)
-button2.pack()
-button3 = ctk.CTkButton(
-    sidebar,
-    text=button_list[3],
-    fg_color="transparent",
-    # border_color="yellow",
-    # border_width=1,
-    # hover_color="red",
-    font=("Times", 15),
-    command=lambda: open_frame(button_list[3], frame3),
-)
-button3.pack()
-button4 = ctk.CTkButton(
-    sidebar,
-    text=button_list[4],
-    fg_color="transparent",
-    # border_color="yellow",
-    # border_width=1,
-    # hover_color="red",
-    font=("Times", 15),
-    command=lambda: open_frame(button_list[4], frame4),
-)
-button4.pack()
-button5 = ctk.CTkButton(
-    sidebar,
-    text=button_list[5],
-    fg_color="transparent",
-    # border_color="yellow",
-    # border_width=1,
-    # hover_color="red",
-    font=("Times", 15),
-    command=lambda: open_frame(button_list[5], frame5),
-)
-button5.pack()
-button6 = ctk.CTkButton(
-    sidebar,
-    text=button_list[6],
-    fg_color="transparent",
-    # border_color="yellow",
-    # border_width=1,
-    # hover_color="red",
-    font=("Times", 15),
-    command=lambda: open_frame(button_list[6], frame6),
-)
-button6.pack()
-
-mode = ctk.CTkButton(sidebar, text="Change Theme", command=mode)
-mode.pack(side="bottom")
-
-# ========================sidebar========================
-# ========================Frame========================
-
 mainframe = ctk.CTkFrame(main)
 mainframe.grid(row=0, column=1, columnspan=5, sticky="swen")
 
-frame0 = ctk.CTkFrame(mainframe)
+
+frame0 = ctk.CTkFrame(mainframe, fg_color="green")
 scrol_frame0 = ctk.CTkScrollableFrame(frame0)
 label0 = ctk.CTkLabel(frame0, text=button_list[0])
 
-frame1 = ctk.CTkFrame(mainframe)
+frame1 = ctk.CTkFrame(mainframe, fg_color="orange")
 scrol_frame1 = ctk.CTkScrollableFrame(frame1)
 label1 = ctk.CTkLabel(frame1, text=button_list[1])
 
-frame2 = ctk.CTkFrame(mainframe)
+frame2 = ctk.CTkFrame(mainframe, fg_color="magenta")
 scrol_frame2 = ctk.CTkScrollableFrame(frame2)
 label2 = ctk.CTkLabel(frame2, text=button_list[2])
 
-frame3 = ctk.CTkFrame(mainframe)
+frame3 = ctk.CTkFrame(mainframe, fg_color="royalblue")
 scrol_frame3 = ctk.CTkScrollableFrame(frame3)
 label3 = ctk.CTkLabel(frame3, text=button_list[3])
 
-frame4 = ctk.CTkFrame(mainframe)
+frame4 = ctk.CTkFrame(mainframe, fg_color="purple")
 label4 = ctk.CTkLabel(frame4, text=button_list[4])
 scrol_frame4 = ctk.CTkScrollableFrame(frame4)
 
-frame5 = ctk.CTkFrame(mainframe)
+frame5 = ctk.CTkFrame(mainframe, fg_color="crimson")
 label5 = ctk.CTkLabel(frame5, text=button_list[5])
 scrol_frame5 = ctk.CTkScrollableFrame(frame5)
 
-frame6 = ctk.CTkFrame(mainframe)
+frame6 = ctk.CTkFrame(mainframe, fg_color="teal")
 scrol_frame6 = ctk.CTkScrollableFrame(frame6)
 label6 = ctk.CTkLabel(frame6, text=button_list[6])
 
-# frame0.pack(fill="both", expand=True, padx=10)
-# frame1.pack(fill="both", expand=True)
-# frame2.pack(fill="both", expand=True)
-# frame3.pack(fill="both", expand=True)
-# frame4.pack(fill="both", expand=True)
-# frame5.pack(fill="both", expand=True)
-# frame6.pack(fill="both", expand=True)
-# scrol_frame0.pack(fill="both", expand=True)
-# scrol_frame1.pack(fill="both", expand=True)
-# scrol_frame2.pack(fill="both", expand=True)
-# scrol_frame3.pack(fill="both", expand=True)
-# scrol_frame4.pack(fill="both", expand=True)
-# scrol_frame5.pack(fill="both", expand=True)
-# scrol_frame6.pack(fill="both", expand=True)
-# label0.pack()
-# label1.pack()
-# label2.pack()
-# label3.pack()
-# label4.pack()
-# label5.pack()
-# label6.pack()
-# frame0.forget()
-# frame1.forget()
-# frame2.forget()
-# frame3.forget()
-# frame4.forget()
-# frame5.forget()
-# frame6.forget()
 
-f = c
+def btn():
+    button0 = ctk.CTkButton(
+        sidebar,
+        text=button_list[0],
+        fg_color="transparent",
+        # border_color="yellow",
+        # border_width=1,
+        hover_color="green",
+        font=("Times", 15),
+        command=lambda: open_frame(button_list[0], frame0),
+    )
+    button0.pack()
+    button0.bind(
+        "<Double-Button-1>",
+        lambda event, b=button_list[0], button=button0, l=label0: double_click(
+            b, button, l
+        ),
+    )
 
+    button1 = ctk.CTkButton(
+        sidebar,
+        text=button_list[1],
+        fg_color="transparent",
+        hover_color="orange",
+        font=("Times", 15),
+        command=lambda: open_frame(button_list[1], frame1),
+    )
+    button1.pack()
+    button1.bind(
+        "<Double-Button-1>",
+        lambda event, b=button_list[1], button=button1, l=label1: double_click(
+            b, button, l
+        ),
+    )
+    button2 = ctk.CTkButton(
+        sidebar,
+        text=button_list[2],
+        fg_color="transparent",
+        hover_color="magenta",
+        font=("Times", 15),
+        command=lambda: open_frame(button_list[2], frame2),
+    )
+    button2.pack()
+    button2.bind(
+        "<Double-Button-1>",
+        lambda event, b=button_list[2], button=button2, l=label2: double_click(
+            b, button, l
+        ),
+    )
+    button3 = ctk.CTkButton(
+        sidebar,
+        text=button_list[3],
+        fg_color="transparent",
+        hover_color="royalblue",
+        font=("Times", 15),
+        command=lambda: open_frame(button_list[3], frame3),
+    )
+    button3.pack()
+    button3.bind(
+        "<Double-Button-1>",
+        lambda event, b=button_list[3], button=button3, l=label3: double_click(
+            b, button, l
+        ),
+    )
+    button4 = ctk.CTkButton(
+        sidebar,
+        text=button_list[4],
+        fg_color="transparent",
+        hover_color="teal",
+        font=("Times", 15),
+        command=lambda: open_frame(button_list[4], frame4),
+    )
+    button4.pack()
+    button4.bind(
+        "<Double-Button-1>",
+        lambda event, b=button_list[4], button=button4, l=label4: double_click(
+            b, button, l
+        ),
+    )
+    button5 = ctk.CTkButton(
+        sidebar,
+        text=button_list[5],
+        fg_color="transparent",
+        hover_color="crimson",
+        font=("Times", 15),
+        command=lambda: open_frame(button_list[5], frame5),
+    )
+    button5.pack()
+    button5.bind(
+        "<Double-Button-1>",
+        lambda event, b=button_list[5], button=button5, l=label5: double_click(
+            b, button, l
+        ),
+    )
+    button6 = ctk.CTkButton(
+        sidebar,
+        text=button_list[6],
+        fg_color="transparent",
+        hover_color="teal",
+        font=("Times", 15),
+        command=lambda: open_frame(button_list[6], frame6),
+    )
+    button6.pack()
+    button6.bind(
+        "<Double-Button-1>",
+        lambda event, b=button_list[6], button=button6, l=label6: double_click(
+            b, button, l
+        ),
+    )
+
+
+btn()
+mode = ctk.CTkButton(sidebar, text="Change Theme", command=mode)
+mode.pack(side="bottom")
+
+buttonframe = ctk.CTkFrame(
+    frame0,
+)
+buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+btn = ctk.CTkButton(
+    buttonframe,
+    text="+",
+    width=50,
+    height=50,
+    font=("arial", 40),
+    command=lambda: open_window(scrol_frame0),
+)
+btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
+
+
+def pack():
+    frame1.pack()
+    frame0.pack()
+    frame2.pack()
+    frame3.pack()
+    frame4.pack()
+    frame5.pack()
+    frame6.pack()
+    label0.pack()
+    label1.pack()
+    label2.pack()
+    label3.pack()
+    label4.pack()
+    label5.pack()
+    label6.pack()
+    scrol_frame0.pack(expand=True, fill="both")
+    scrol_frame1.pack(expand=True, fill="both")
+    scrol_frame2.pack(expand=True, fill="both")
+    scrol_frame3.pack(expand=True, fill="both")
+    scrol_frame4.pack(expand=True, fill="both")
+    scrol_frame5.pack(expand=True, fill="both")
+    scrol_frame6.pack(expand=True, fill="both")
+    frame0.forget()
+    frame1.forget()
+    frame2.forget()
+    frame3.forget()
+    frame4.forget()
+    frame5.forget()
+    frame6.forget()
+
+
+pack()
 root.mainloop()
-
-# framee = ctk.CTkFrame(mainframe, width=2000, height=2000)
-# framee.pack(fill="both", expand=True)
-# bu = ctk.CTkButton(framee, command=framee.destroy)
-# bu.pack()
-
-# Scrll_frame = ctk.CTkScrollableFrame(mainframe)
-# Scrll_frame.pack(expand=True, fill="both", padx=20, pady=20)
-
-# label = ctk.CTkLabel(Scrll_frame, text="hello")
-# label.pack()
-# label.forget()
-# buttonframe = ctk.CTkFrame(
-#     mainframe,
-# )
-# buttonframe.place(relx=0.94, rely=0.94, anchor="se")
-
-# btn = ctk.CTkButton(
-#     buttonframe, text="+", width=50, height=50, font=("arial", 40), command=open_window
-# )
-# btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
-
-# load_labels()
-# ========================Frame========================
-
-# def change_color_and_open_tab(event):
-#     print("click")
-#     le.configure(fg_color="red", corner_radius=10)
-
-
-# le = ctk.CTkLabel(Scrll_frame, text="darshan")
-# # le.pack()
-# le.bind("<Button-1>", change_color_and_open_tab)
-
-
-# delete_tab = ctk.CTkButton(
-#     buttonframe,
-#     text="Delete Tab",
-#     font=("arial", 25),
-#     height=60,
-#     command=deletetab,
-# )
-# delete_tab.pack()
-
-
-# def change_color_and_open_tab(event):
-#     global labels
-#     label = event.widget
-
-#     for label in labels:
-#         label.configure(fg_color="transparent", corner_radius=20)
-# label.configure(fg_color="red", corner_radius=20)
-# label1.configure(fg_color="transparent", corner_radius=20)
-
-
-# label = ctk.CTkLabel(bellFrame, text="class")
-# label.bind("<Button-1>", change_color_and_open_tab)
-# label.pack(padx=(10, 0))
-
-# label1 = ctk.CTkLabel(bellFrame, text="exam")
-# label1.bind("<Button-1>", change_color_and_open_tab)
-# label1.pack(padx=(10, 0))
-# def change_color_and_open_tab(label):
-#     label_name = label.cget("text")
-#     frame_name = label.cget("text")
-#     # print(label_name)
-#     frame_name = ctk.CTkFrame(mainframe)
-
-#     sframe = ctk.CTkScrollableFrame(frame_name)
-#     sframe.pack(expand=True, fill="both", padx=10, pady=20)
-#     labela = ctk.CTkLabel(sframe, text=label_name)
-#     labela.pack()
-#     b = ctk.CTkButton(sframe, command=frame_name.destroy)
-#     b.pack()
-#     frame_name.cget(labela)
-#     frame_name.pack(fill="x")
-#     # print(label)
-#     label.configure(fg_color="red", corner_radius=10)
-
-#     for other_label in labels_dict.values():
-#         if other_label != label:
-#             other_label.configure(fg_color="transparent", corner_radius=10)
-#             name = label.cget("text")
-#             # name.des
