@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import simpledialog
 import os
 import pickle
+import time
 
 root = ctk.CTk()
 root.geometry("900x600")
@@ -13,6 +14,9 @@ alarm_data = []
 hour = ctk.StringVar()
 minute = ctk.StringVar()
 second = ctk.StringVar()
+curr_hr = time.strftime("%I")
+curr_min = time.strftime("%M")
+curr_am_pm = time.strftime("%p")
 name = ctk.StringVar(value="bell")
 sunday = ctk.StringVar(value="off")
 monday = ctk.StringVar(value="on")
@@ -43,7 +47,7 @@ def open_window(f):
     window = ctk.CTkFrame(root)
     window.place(relx=0.5, rely=0.5, anchor="center")
     card = ctk.CTkFrame(window)
-    card.pack(padx=1005, pady=1005)
+    card.pack(padx=1005, pady=1005, ipadx=30)
 
     heading = ctk.CTkLabel(
         card,
@@ -56,7 +60,7 @@ def open_window(f):
 
     def time():
         option_frame = ctk.CTkFrame(card, fg_color="transparent")
-        option_frame.pack(pady=(0, 25))
+        option_frame.pack(pady=(0, 30))
         # =============================hours===============================
         hour_options = (
             "00",
@@ -73,8 +77,8 @@ def open_window(f):
             "11",
             "12",
         )
-        global hour
-        hour.set(hour_options[0])
+        global hour, curr_hr
+        hour.set(curr_hr)
         hrs = ctk.CTkOptionMenu(
             option_frame,
             values=hour_options,
@@ -102,8 +106,8 @@ def open_window(f):
             "55",
             "60",
         )
-        global minute
-        minute.set(minute_options[0])
+        global minute, curr_min
+        minute.set(curr_min)
         min = ctk.CTkOptionMenu(
             option_frame,
             values=minute_options,
@@ -117,8 +121,8 @@ def open_window(f):
         # =============================hours===============================
         # =============================hours===============================
         second_options = ("PM", "AM")
-        global second
-        second.set(second_options[0])
+        global second, curr_am_pm
+        second.set(curr_am_pm)
         sec = ctk.CTkOptionMenu(
             option_frame,
             values=second_options,
@@ -132,7 +136,7 @@ def open_window(f):
 
     def name():
         name_frame = ctk.CTkFrame(card, fg_color="transparent")
-        name_frame.pack(pady=20)
+        name_frame.pack(pady=(0, 30))
         name_label = ctk.CTkLabel(name_frame, text="Label : ", font=("helvitica", 25))
         name_label.pack(padx=5, side="left")
         global name
@@ -145,7 +149,7 @@ def open_window(f):
         days_of_week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
-        weekd_days_frame.pack(pady=(0, 25))
+        weekd_days_frame.pack(pady=(0, 30))
 
         day_checkboxes = []
         for i, day in enumerate(days_of_week):
@@ -184,15 +188,15 @@ def open_window(f):
             return music_files
 
         music_frame = ctk.CTkFrame(card, fg_color="transparent")
-        music_frame.pack(pady=(0, 25))
+        music_frame.pack(pady=(0, 30))
         music_label = ctk.CTkLabel(
-            music_frame, text="Select Music : ", font=("helvitica", 25)
+            music_frame, text="Select Music : ", font=("helvitica", 23)
         )
         music_label.pack(side="left", padx=5)
         music_files = get_music_files("music")
         curr_music.set(music_files[0])
         select_bell = ctk.CTkOptionMenu(
-            music_frame, values=music_files, variable=curr_music, font=("helvitica", 20)
+            music_frame, values=music_files, variable=curr_music, font=("helvitica", 16)
         )
         select_bell.pack(
             side="left",
@@ -258,7 +262,7 @@ def open_window(f):
             save_data(name)
 
         btn_frame = ctk.CTkFrame(card, fg_color="transparent")
-        btn_frame.pack(pady=(0, 25))
+        btn_frame.pack(pady=(0, 30))
         cancel_btn = ctk.CTkButton(
             btn_frame,
             text="Cancel",
