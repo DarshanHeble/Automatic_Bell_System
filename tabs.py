@@ -13,7 +13,7 @@ DATA_FILE = "tabs_data.pkl"
 alarm_data = []
 hour = ctk.StringVar()
 minute = ctk.StringVar()
-second = ctk.StringVar()
+am_pm = ctk.StringVar()
 curr_hr = time.strftime("%I")
 curr_min = time.strftime("%M")
 curr_am_pm = time.strftime("%p")
@@ -120,19 +120,19 @@ def open_window(f):
         min.grid(row=0, column=1, padx=10)
         # =============================hours===============================
         # =============================hours===============================
-        second_options = ("PM", "AM")
-        global second, curr_am_pm
-        second.set(curr_am_pm)
-        sec = ctk.CTkOptionMenu(
+        am_pm_options = ("PM", "AM")
+        global am_pm, curr_am_pm
+        am_pm.set(curr_am_pm)
+        ampm = ctk.CTkOptionMenu(
             option_frame,
-            values=second_options,
-            variable=second,
+            values=am_pm_options,
+            variable=am_pm,
             width=100,
             height=50,
             font=("helvitica", 20),
             dropdown_font=("helvitica", 15),
         )
-        sec.grid(row=0, column=2, padx=10)
+        ampm.grid(row=0, column=2, padx=10)
 
     def name():
         name_frame = ctk.CTkFrame(card, fg_color="transparent")
@@ -146,30 +146,86 @@ def open_window(f):
         name_entry.pack(padx=5)
 
     def weeks():
-        days_of_week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
-        weekd_days_frame.pack(pady=(0, 30))
-
-        day_checkboxes = []
-        for i, day in enumerate(days_of_week):
-            day_var = ctk.StringVar(value="on")
-            day_cb = ctk.CTkCheckBox(
-                weekd_days_frame,
-                text=day.lower(),
-                corner_radius=50,
-                border_width=2,
-                font=("helvitca", 18),
-                width=60,
-                onvalue="on",
-                offvalue="off",
-                variable=day_var,
-            )
-            day_cb.grid(row=0, column=i + 1)
-            day_checkboxes.append(day_var)
-
-        # Now you can access the state of each day's checkbox using day_checkboxes list.
-        sunday, monday, tuesday, wednesday, thursday, friday, saturday = day_checkboxes
+        weekd_days_frame.pack(pady=15, padx=25)
+        global sunday, monday, tuesday, wednesday, thursday, friday, saturday
+        sun_cb = ctk.CTkCheckBox(
+            weekd_days_frame,
+            text="sun",
+            corner_radius=50,
+            border_width=2,
+            width=20,
+            onvalue="on",
+            offvalue="off",
+            variable=sunday,
+        )
+        mon_cb = ctk.CTkCheckBox(
+            weekd_days_frame,
+            text="mon",
+            corner_radius=50,
+            border_width=2,
+            width=20,
+            onvalue="on",
+            offvalue="off",
+            variable=monday,
+        )
+        tue_cb = ctk.CTkCheckBox(
+            weekd_days_frame,
+            text="tue",
+            corner_radius=50,
+            border_width=2,
+            width=20,
+            onvalue="on",
+            offvalue="off",
+            variable=tuesday,
+        )
+        wed_cb = ctk.CTkCheckBox(
+            weekd_days_frame,
+            text="wed",
+            corner_radius=50,
+            border_width=2,
+            width=20,
+            onvalue="on",
+            offvalue="off",
+            variable=wednesday,
+        )
+        thu_cb = ctk.CTkCheckBox(
+            weekd_days_frame,
+            text="thu",
+            corner_radius=50,
+            border_width=2,
+            width=20,
+            onvalue="on",
+            offvalue="off",
+            variable=thursday,
+        )
+        fri_cb = ctk.CTkCheckBox(
+            weekd_days_frame,
+            text="fri",
+            corner_radius=50,
+            border_width=2,
+            width=20,
+            onvalue="on",
+            offvalue="off",
+            variable=friday,
+        )
+        sat_cb = ctk.CTkCheckBox(
+            weekd_days_frame,
+            text="sat",
+            corner_radius=50,
+            border_width=2,
+            width=20,
+            onvalue="on",
+            offvalue="off",
+            variable=saturday,
+        )
+        sun_cb.grid(row=0, column=1, sticky="w")
+        mon_cb.grid(row=0, column=2, sticky="w", padx=10)
+        tue_cb.grid(row=0, column=3, sticky="w")
+        wed_cb.grid(row=0, column=4, sticky="w", padx=10)
+        thu_cb.grid(row=0, column=5, sticky="w")
+        fri_cb.grid(row=0, column=6, sticky="w", padx=10)
+        sat_cb.grid(row=0, column=7, sticky="w")
 
     def music():
         def get_music_files(folder_path):
@@ -203,13 +259,14 @@ def open_window(f):
         )
 
     def btn(frame):
-        def save_data_and_display_card(window, hour, minute, second, name):
+        def save_data_and_display_card(window, hour, minute, am_pm, name):
             def save_data(name):
                 card_item = {}
                 # time
                 hr = hour.get()
                 mi = minute.get()
-                sec = second.get()
+                # print(mi)
+                ampm = am_pm.get()
                 # name
                 name = name.get()
                 # weeks
@@ -226,7 +283,7 @@ def open_window(f):
                     {
                         "hour": hr,
                         "minute": mi,
-                        "second": sec,
+                        "am_pm": ampm,
                         "name": name,
                         "sunday": sun,
                         "monday": mon,
@@ -238,24 +295,54 @@ def open_window(f):
                         "music": current_music,
                     }
                 )
-                print(hour)
-                print(hr)
+                # print(hour)
+                # print(hr)
                 # print("data saved")
 
                 def display_card():
                     global frame
                     # frames.append(create_frame())
                     # frames[-1].pack(fill="both", padx=10, pady=10)
-                    frame = ctk.CTkFrame(f)
-                    time = ctk.CTkLabel(frame, text=hr)
-                    time.pack()
 
+                    week_days = []
+
+                    def display_weeks():
+                        if sun == "on":
+                            week_days.append("sun")
+                        if mon == "on":
+                            week_days.append("mon")
+                        if tue == "on":
+                            week_days.append("tue")
+                        if wed == "on":
+                            week_days.append("wed")
+                        if thu == "on":
+                            week_days.append("thu")
+                        if fri == "on":
+                            week_days.append("fri")
+                        if sat == "on":
+                            week_days.append("sat")
+
+                    display_weeks()
+                    frame = ctk.CTkFrame(f, fg_color="green")
+                    timeFrame = ctk.CTkFrame(frame, fg_color="transparent")
+                    time = ctk.CTkLabel(
+                        timeFrame, text=f"{hr} : {mi} {ampm}", font=("helvitica", 35)
+                    )
+                    name_label = ctk.CTkLabel(frame, text=name)
+                    week = ctk.CTkLabel(frame, text=" ".join(week_days))
+                    music_label = ctk.CTkLabel(frame, text=current_music)
                     delete_frame = ctk.CTkButton(
                         frame, text="Delete", command=frame.destroy
                     )
+
+                    timeFrame.pack()
+                    time.pack()
+                    name_label.pack()
+                    week.pack()
+                    music_label.pack()
                     delete_frame.pack()
                     window.destroy()
-                    frame.pack(fill="both", padx=10, pady=10)
+                    frame.pack(fill="x", expand=True, padx=20, pady=20)
 
                 display_card()
 
@@ -271,14 +358,14 @@ def open_window(f):
             command=window.destroy,
         )
         cancel_btn.pack(side="left", padx=10)
-        global name, hour, minute, second
+        global name, hour, minute, am_pm
         save_btn = ctk.CTkButton(
             btn_frame,
             text="Save Bell",
             # width=70,
             font=("helvitica", 20, "bold"),
             command=lambda: save_data_and_display_card(
-                window, hour, minute, second, name
+                window, hour, minute, am_pm, name
             ),
         )
         save_btn.pack(padx=10)
