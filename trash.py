@@ -142,5 +142,20 @@
 #     # print(labels_list)
 #     # print(labels_dict)
 
+
 #     change_color_and_open_tab(label)
+#     save_labels()
+# def deleteNewTab():
+#     dialog = ctk.CTkInputDialog(text="Enter a tab name", title="Delete Tab")
+#     label_name = dialog.get_input()
+#     if label_name not in labels_dict:
+#         print("does not exist")
+#         return
+
+#     label = labels_dict[label_name]
+#     label.destroy()
+
+#     del labels_dict[label_name]
+#     labels_list.remove(label_name)
+#     print(labels_list)
 #     save_labels()

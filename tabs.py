@@ -44,16 +44,19 @@ def open_window(f):
     window.place(relx=0.5, rely=0.5, anchor="center")
     card = ctk.CTkFrame(window)
     card.pack(padx=1005, pady=1005)
+
     heading = ctk.CTkLabel(
         card,
         text="Add New Bell",
+        # width=300,
         font=("helvitica", 30, "bold"),
+        # bg_color="yellow",
     )
     heading.pack(pady=20)
 
     def time():
         option_frame = ctk.CTkFrame(card, fg_color="transparent")
-        option_frame.pack(pady=10, padx=10)
+        option_frame.pack(pady=(0, 25))
         # =============================hours===============================
         hour_options = (
             "00",
@@ -69,18 +72,6 @@ def open_window(f):
             "10",
             "11",
             "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
         )
         global hour
         hour.set(hour_options[0])
@@ -98,65 +89,17 @@ def open_window(f):
         # =============================hours===============================
         minute_options = (
             "00",
-            "01",
-            "02",
-            "03",
-            "04",
             "05",
-            "06",
-            "07",
-            "08",
-            "09",
             "10",
-            "11",
-            "12",
-            "13",
-            "14",
             "15",
-            "16",
-            "17",
-            "18",
-            "19",
             "20",
-            "21",
-            "22",
-            "23",
-            "24",
             "25",
-            "26",
-            "27",
-            "28",
-            "29",
             "30",
-            "31",
-            "32",
-            "33",
-            "34",
             "35",
-            "36",
-            "37",
-            "38",
-            "39",
-            "49",
-            "41",
-            "42",
-            "43",
-            "44",
+            "40",
             "45",
-            "46",
-            "47",
-            "48",
-            "49",
             "50",
-            "51",
-            "52",
-            "53",
-            "54",
             "55",
-            "56",
-            "57",
-            "58",
-            "59",
             "60",
         )
         global minute
@@ -173,69 +116,7 @@ def open_window(f):
         min.grid(row=0, column=1, padx=10)
         # =============================hours===============================
         # =============================hours===============================
-        second_options = (
-            "00",
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-            "32",
-            "33",
-            "34",
-            "35",
-            "36",
-            "37",
-            "38",
-            "39",
-            "49",
-            "41",
-            "42",
-            "43",
-            "44",
-            "45",
-            "46",
-            "47",
-            "48",
-            "49",
-            "50",
-            "51",
-            "52",
-            "53",
-            "54",
-            "55",
-            "56",
-            "57",
-            "58",
-            "59",
-            "60",
-        )
+        second_options = ("PM", "AM")
         global second
         second.set(second_options[0])
         sec = ctk.CTkOptionMenu(
@@ -251,18 +132,20 @@ def open_window(f):
 
     def name():
         name_frame = ctk.CTkFrame(card, fg_color="transparent")
-        name_frame.pack(pady=20, padx=25)
-        name_label = ctk.CTkLabel(name_frame, text="Label : ", font=("helvitica", 20))
+        name_frame.pack(pady=20)
+        name_label = ctk.CTkLabel(name_frame, text="Label : ", font=("helvitica", 25))
         name_label.pack(padx=5, side="left")
         global name
-        name_entry = ctk.CTkEntry(name_frame, font=("helvitica", 20), textvariable=name)
+        name_entry = ctk.CTkEntry(
+            name_frame, font=("helvitica", 25), width=200, textvariable=name
+        )
         name_entry.pack(padx=5)
 
     def weeks():
         days_of_week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
-        weekd_days_frame.pack(pady=15, padx=25)
+        weekd_days_frame.pack(pady=(0, 25))
 
         day_checkboxes = []
         for i, day in enumerate(days_of_week):
@@ -272,12 +155,13 @@ def open_window(f):
                 text=day.lower(),
                 corner_radius=50,
                 border_width=2,
-                width=20,
+                font=("helvitca", 18),
+                width=60,
                 onvalue="on",
                 offvalue="off",
                 variable=day_var,
             )
-            day_cb.grid(row=0, column=i + 1, sticky="w")
+            day_cb.grid(row=0, column=i + 1)
             day_checkboxes.append(day_var)
 
         # Now you can access the state of each day's checkbox using day_checkboxes list.
@@ -300,20 +184,19 @@ def open_window(f):
             return music_files
 
         music_frame = ctk.CTkFrame(card, fg_color="transparent")
-        music_frame.pack(pady=15)
+        music_frame.pack(pady=(0, 25))
         music_label = ctk.CTkLabel(
-            music_frame, text="Select Music : ", font=("helvitica", 20)
+            music_frame, text="Select Music : ", font=("helvitica", 25)
         )
         music_label.pack(side="left", padx=5)
         music_files = get_music_files("music")
         curr_music.set(music_files[0])
         select_bell = ctk.CTkOptionMenu(
-            music_frame,
-            values=music_files,
-            variable=curr_music,
+            music_frame, values=music_files, variable=curr_music, font=("helvitica", 20)
         )
-        print()
-        select_bell.pack(side="left", padx=5)
+        select_bell.pack(
+            side="left",
+        )
 
     def btn(frame):
         def save_data_and_display_card(window, hour, minute, second, name):
@@ -353,7 +236,7 @@ def open_window(f):
                 )
                 print(hour)
                 print(hr)
-                print("data saved")
+                # print("data saved")
 
                 def display_card():
                     global frame
@@ -374,28 +257,30 @@ def open_window(f):
 
             save_data(name)
 
-        btn_frame = ctk.CTkFrame(card)
-        btn_frame.pack(padx=20, pady=20)
+        btn_frame = ctk.CTkFrame(card, fg_color="transparent")
+        btn_frame.pack(pady=(0, 25))
         cancel_btn = ctk.CTkButton(
             btn_frame,
             text="Cancel",
+            # width=70,
             font=("helvitica", 20, "bold"),
             command=window.destroy,
         )
-        cancel_btn.pack(side="left")
+        cancel_btn.pack(side="left", padx=10)
         global name, hour, minute, second
         save_btn = ctk.CTkButton(
             btn_frame,
             text="Save Bell",
+            # width=70,
             font=("helvitica", 20, "bold"),
             command=lambda: save_data_and_display_card(
                 window, hour, minute, second, name
             ),
         )
-        save_btn.pack()
+        save_btn.pack(padx=10)
 
-    time()
     name()
+    time()
     weeks()
     music()
     btn(f)
@@ -407,22 +292,6 @@ def mode():
         ctk.set_appearance_mode("light")
     else:
         ctk.set_appearance_mode("Dark")
-
-
-def deleteNewTab():
-    dialog = ctk.CTkInputDialog(text="Enter a tab name", title="Delete Tab")
-    label_name = dialog.get_input()
-    if label_name not in labels_dict:
-        print("does not exist")
-        return
-
-    label = labels_dict[label_name]
-    label.destroy()
-
-    del labels_dict[label_name]
-    labels_list.remove(label_name)
-    print(labels_list)
-    save_labels()
 
 
 def open_frame(i, frame):
@@ -621,9 +490,7 @@ btn()
 mode = ctk.CTkButton(sidebar, text="Change Theme", command=mode)
 mode.pack(side="bottom")
 
-buttonframe = ctk.CTkFrame(
-    frame0,
-)
+buttonframe = ctk.CTkFrame(frame0, corner_radius=0)
 buttonframe.place(relx=0.94, rely=0.94, anchor="se")
 
 btn = ctk.CTkButton(
@@ -638,8 +505,8 @@ btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
 
 
 def pack():
-    frame1.pack()
     frame0.pack()
+    frame1.pack()
     frame2.pack()
     frame3.pack()
     frame4.pack()
@@ -666,6 +533,7 @@ def pack():
     frame4.forget()
     frame5.forget()
     frame6.forget()
+    frame0.pack(expand=True, fill="both")
 
 
 pack()
