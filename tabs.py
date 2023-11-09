@@ -25,6 +25,7 @@ wednesday = ctk.StringVar(value="on")
 thursday = ctk.StringVar(value="on")
 friday = ctk.StringVar(value="on")
 saturday = ctk.StringVar(value="on")
+schedule = ctk.StringVar(value="on")
 # music_file
 music_files = []
 curr_music = ctk.StringVar()
@@ -147,7 +148,7 @@ def open_window(f):
 
     def weeks():
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
-        weekd_days_frame.pack(pady=15, padx=25)
+        weekd_days_frame.pack(pady=(0, 30))
         global sunday, monday, tuesday, wednesday, thursday, friday, saturday
         sun_cb = ctk.CTkCheckBox(
             weekd_days_frame,
@@ -258,6 +259,12 @@ def open_window(f):
             side="left",
         )
 
+    def schedule():
+        global schedule
+        schedule = ctk.CTkSwitch(card, text="Schedule", variable=schedule)
+        schedule.pack()
+        print(schedule.get())
+
     def btn(frame):
         def save_data_and_display_card(window, hour, minute, am_pm, name):
             def save_data(name):
@@ -343,6 +350,7 @@ def open_window(f):
                     delete_frame.pack()
                     window.destroy()
                     frame.pack(fill="x", expand=True, padx=20, pady=20)
+                    print(alarm_data)
 
                 display_card()
 
@@ -373,6 +381,7 @@ def open_window(f):
     name()
     time()
     weeks()
+    schedule()
     music()
     btn(f)
 
