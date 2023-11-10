@@ -10,7 +10,14 @@ root.geometry("900x600")
 # File path for storing data
 DATA_FILE = "tabs_data.pkl"
 
-alarm_data = []
+frame0_data = []
+frame1_data = []
+frame2_data = []
+frame3_data = []
+frame4_data = []
+frame5_data = []
+frame6_data = []
+
 hour = ctk.StringVar()
 minute = ctk.StringVar()
 am_pm = ctk.StringVar()
@@ -25,7 +32,8 @@ wednesday = ctk.StringVar(value="on")
 thursday = ctk.StringVar(value="on")
 friday = ctk.StringVar(value="on")
 saturday = ctk.StringVar(value="on")
-schedule_switch = ctk.StringVar(value="on")
+# schedule_switch = ctk.StringVar(value="on")
+
 # music_file
 music_files = []
 curr_music = ctk.StringVar()
@@ -44,7 +52,7 @@ labels_dict = {}
 labels_list = []
 
 
-def open_window(f):
+def open_window(f, framelist):
     window = ctk.CTkFrame(root)
     window.place(relx=0.5, rely=0.5, anchor="center")
     card = ctk.CTkFrame(window)
@@ -280,7 +288,7 @@ def open_window(f):
         schedule = ctk.CTkSwitch(
             switch_frame,
             text="Schedule",
-            variable=schedule_switch,
+            # variable=schedule_switch,
             onvalue="on",
             offvalue="off",
             switch_height=25,
@@ -290,7 +298,7 @@ def open_window(f):
         switch_frame.pack()
         print("schedule_switch", schedule_switch.get())
 
-    def btn(frame):
+    def btn(frame, framelist):
         def save_data_and_display_card(window, hour, minute, am_pm, name):
             def save_data(name):
                 card_item = {}
@@ -309,8 +317,6 @@ def open_window(f):
                 thu = thursday.get()
                 fri = friday.get()
                 sat = saturday.get()
-                sched = schedule_switch.get()
-                print("sched", sched)
                 # music
                 current_music = curr_music.get()
                 card_item.update(
@@ -326,17 +332,19 @@ def open_window(f):
                         "thursday": thu,
                         "friday": fri,
                         "saturday": sat,
-                        "schedule_switch": sched,
+                        "schedule_on_off": "on",
                         "music": current_music,
                     }
                 )
-                # print(hour)
-                # print(hr)
+
+                print(card_item)
+                framelist.append(card_item)
+                # print(framelist)
+                print("\n")
                 # print("data saved")
 
-                def display_card(sched):
+                def display_card(framelist):
                     global frame
-                    print(sched)
                     # frames.append(create_frame())
                     # frames[-1].pack(fill="both", padx=10, pady=10)
 
@@ -359,6 +367,16 @@ def open_window(f):
                             week_days.append("sat")
 
                     display_weeks()
+
+                    def switcher(switch):
+                        print(card_item)
+                        print(switch.get())
+                        diction = framelist[0]
+                        data = switch.get()
+
+                        diction["schedule_on_off"] = data
+                        print(switch.get())
+
                     frame = ctk.CTkFrame(f, fg_color="green")
                     timeFrame = ctk.CTkFrame(frame, fg_color="transparent")
                     time = ctk.CTkLabel(
@@ -372,7 +390,12 @@ def open_window(f):
                         text="",
                         onvalue="on",
                         offvalue="off",
+                        # variable=schedule_switch,
+                        command=lambda: switcher(
+                            schedule_label,
+                        ),
                     )
+                    schedule_label.select()
                     delete_frame = ctk.CTkButton(
                         frame, text="Delete", command=frame.destroy
                     )
@@ -387,9 +410,8 @@ def open_window(f):
                     delete_frame.pack()
                     window.destroy()
                     frame.pack(fill="x", expand=True, padx=20, pady=20)
-                    print(alarm_data)
 
-                display_card(sched)
+                display_card(framelist)
 
             save_data(name)
 
@@ -415,12 +437,12 @@ def open_window(f):
         )
         save_btn.pack(padx=10)
 
-    schedule()
+    # schedule()
     name()
     time()
     weeks()
     music()
-    btn(f)
+    btn(f, framelist)
 
 
 def mode():
@@ -447,10 +469,13 @@ def double_click(b, button, l):
     input = ctk.CTkInputDialog().get_input()
     for i in range(len(button_list)):
         if button_list[i] == b:
-            button_list[i] = input
-            button.configure(text=input)
-            l.configure(text=input)
-            # print(button_list[i])
+            if input == None:
+                pass
+            else:
+                button_list[i] = input
+                button.configure(text=input)
+                l.configure(text=input)
+                # print(button_list[i])
     print(input)
     print(button_list)
     print(b)
@@ -484,31 +509,31 @@ mainframe.grid(row=0, column=1, columnspan=5, sticky="swen")
 
 
 frame0 = ctk.CTkFrame(mainframe, fg_color="green")
-scrol_frame0 = ctk.CTkScrollableFrame(frame0)
+scrol_frame0 = ctk.CTkScrollableFrame(frame0, corner_radius=0)
 label0 = ctk.CTkLabel(frame0, text=button_list[0])
 
 frame1 = ctk.CTkFrame(mainframe, fg_color="orange")
-scrol_frame1 = ctk.CTkScrollableFrame(frame1)
+scrol_frame1 = ctk.CTkScrollableFrame(frame1, corner_radius=0)
 label1 = ctk.CTkLabel(frame1, text=button_list[1])
 
 frame2 = ctk.CTkFrame(mainframe, fg_color="magenta")
-scrol_frame2 = ctk.CTkScrollableFrame(frame2)
+scrol_frame2 = ctk.CTkScrollableFrame(frame2, corner_radius=0)
 label2 = ctk.CTkLabel(frame2, text=button_list[2])
 
 frame3 = ctk.CTkFrame(mainframe, fg_color="royalblue")
-scrol_frame3 = ctk.CTkScrollableFrame(frame3)
+scrol_frame3 = ctk.CTkScrollableFrame(frame3, corner_radius=0)
 label3 = ctk.CTkLabel(frame3, text=button_list[3])
 
 frame4 = ctk.CTkFrame(mainframe, fg_color="purple")
+scrol_frame4 = ctk.CTkScrollableFrame(frame4, corner_radius=0)
 label4 = ctk.CTkLabel(frame4, text=button_list[4])
-scrol_frame4 = ctk.CTkScrollableFrame(frame4)
 
 frame5 = ctk.CTkFrame(mainframe, fg_color="crimson")
+scrol_frame5 = ctk.CTkScrollableFrame(frame5, corner_radius=0)
 label5 = ctk.CTkLabel(frame5, text=button_list[5])
-scrol_frame5 = ctk.CTkScrollableFrame(frame5)
 
 frame6 = ctk.CTkFrame(mainframe, fg_color="teal")
-scrol_frame6 = ctk.CTkScrollableFrame(frame6)
+scrol_frame6 = ctk.CTkScrollableFrame(frame6, corner_radius=0)
 label6 = ctk.CTkLabel(frame6, text=button_list[6])
 
 
@@ -624,21 +649,100 @@ def btn():
 
 
 btn()
+
 mode = ctk.CTkButton(sidebar, text="Change Theme", command=mode)
 mode.pack(side="bottom")
 
-buttonframe = ctk.CTkFrame(frame0, corner_radius=0)
-buttonframe.place(relx=0.94, rely=0.94, anchor="se")
 
-btn = ctk.CTkButton(
-    buttonframe,
-    text="+",
-    width=50,
-    height=50,
-    font=("arial", 40),
-    command=lambda: open_window(scrol_frame0),
-)
-btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
+def button_diff_frames():
+    buttonframe = ctk.CTkFrame(frame0, corner_radius=0)
+    buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+    btn = ctk.CTkButton(
+        buttonframe,
+        text="+",
+        width=50,
+        height=50,
+        font=("arial", 40),
+        command=lambda: open_window(scrol_frame0, frame0_data),
+    )
+    btn.pack(ipadx=5, ipady=5)
+
+    buttonframe = ctk.CTkFrame(frame1, corner_radius=0)
+    buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+    btn = ctk.CTkButton(
+        buttonframe,
+        text="+",
+        width=50,
+        height=50,
+        font=("arial", 40),
+        command=lambda: open_window(scrol_frame1, frame1_data),
+    )
+    btn.pack(ipadx=5, ipady=5)
+    buttonframe = ctk.CTkFrame(frame2, corner_radius=0)
+    buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+    btn = ctk.CTkButton(
+        buttonframe,
+        text="+",
+        width=50,
+        height=50,
+        font=("arial", 40),
+        command=lambda: open_window(scrol_frame2, frame2_data),
+    )
+    btn.pack(ipadx=5, ipady=5)
+    buttonframe = ctk.CTkFrame(frame3, corner_radius=0)
+    buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+    btn = ctk.CTkButton(
+        buttonframe,
+        text="+",
+        width=50,
+        height=50,
+        font=("arial", 40),
+        command=lambda: open_window(scrol_frame3, frame3_data),
+    )
+    btn.pack(ipadx=5, ipady=5)
+    buttonframe = ctk.CTkFrame(frame4, corner_radius=0)
+    buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+    btn = ctk.CTkButton(
+        buttonframe,
+        text="+",
+        width=50,
+        height=50,
+        font=("arial", 40),
+        command=lambda: open_window(scrol_frame4, frame4_data),
+    )
+    btn.pack(ipadx=5, ipady=5)
+    buttonframe = ctk.CTkFrame(frame5, corner_radius=0)
+    buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+    btn = ctk.CTkButton(
+        buttonframe,
+        text="+",
+        width=50,
+        height=50,
+        font=("arial", 40),
+        command=lambda: open_window(scrol_frame5, frame5_data),
+    )
+    btn.pack(ipadx=5, ipady=5)
+    buttonframe = ctk.CTkFrame(frame6, corner_radius=0)
+    buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+    btn = ctk.CTkButton(
+        buttonframe,
+        text="+",
+        width=50,
+        height=50,
+        font=("arial", 40),
+        command=lambda: open_window(scrol_frame6, frame6_data),
+    )
+    btn.pack(ipadx=5, ipady=5)
+
+
+button_diff_frames()
 
 
 def pack():
