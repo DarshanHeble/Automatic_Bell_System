@@ -369,13 +369,13 @@ def open_window(f, framelist):
                     display_weeks()
 
                     def switcher(switch):
-                        print(card_item)
                         print(switch.get())
                         diction = framelist[0]
                         data = switch.get()
 
                         diction["schedule_on_off"] = data
-                        print(switch.get())
+                        print(card_item)
+                        print(data)
 
                     frame = ctk.CTkFrame(f, fg_color="green")
                     timeFrame = ctk.CTkFrame(frame, fg_color="transparent")

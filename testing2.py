@@ -2,6 +2,7 @@ import customtkinter as ctk
 import pickle
 
 master = ctk.CTk()
+master.geometry("500x500")
 
 counter = 0
 
