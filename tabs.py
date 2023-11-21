@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from tkinter import simpledialog
 import pygame
-import threading
+from threading import Thread
 import os
 import pickle
 import time
@@ -27,9 +27,9 @@ hour = ctk.StringVar()
 minute = ctk.StringVar()
 am_pm = ctk.StringVar()
 
-curr_hr = time.strftime("%I")
-curr_min = time.strftime("%M")
-curr_am_pm = time.strftime("%p")
+# curr_hr = time.strftime("%I")
+# curr_min = time.strftime("%M")
+# curr_am_pm = time.strftime("%p")
 
 name = ctk.StringVar(value="bell")
 sunday = ctk.StringVar(value="off")
@@ -94,7 +94,8 @@ def open_window(f, framelist):
             "12",
         )
         global hour, curr_hr
-        hour.set(curr_hr)
+        h = time.strftime("%I")
+        hour.set(h)
         hrs = ctk.CTkOptionMenu(
             option_frame,
             values=hour_options,
@@ -123,7 +124,8 @@ def open_window(f, framelist):
             "60",
         )
         global minute, curr_min
-        minute.set(curr_min)
+        m = time.strftime("%M")
+        minute.set(m)
         min = ctk.CTkOptionMenu(
             option_frame,
             values=minute_options,
@@ -138,7 +140,8 @@ def open_window(f, framelist):
         # =============================hours===============================
         am_pm_options = ("PM", "AM")
         global am_pm, curr_am_pm
-        am_pm.set(curr_am_pm)
+        p = time.strftime("%p")
+        am_pm.set(p)
         ampm = ctk.CTkOptionMenu(
             option_frame,
             values=am_pm_options,
@@ -357,6 +360,14 @@ def open_window(f, framelist):
 
                     def start_threading():
                         # music_file_path = f"music/{current_music}"
+                        # while (
+                        #     hr != curr_hr
+                        #     and mi != curr_min
+                        #     and ampm != curr_am_pm
+                        #     and card_item["schedule_on_off"] != "on"
+                        # ):
+                        #     pass
+
                         if (
                             hr == curr_hr
                             and mi == curr_min
@@ -364,7 +375,9 @@ def open_window(f, framelist):
                             and card_item["schedule_on_off"] == "on"
                         ):
                             pygame.mixer.music.load(f"music/{current_music}")
+                            # time.sleep(5)
                             pygame.mixer.music.play()
+                            exit()
 
                     def display_weeks():
                         if sun == "on":
@@ -427,7 +440,11 @@ def open_window(f, framelist):
                     window.destroy()
                     frame.pack(fill="x", expand=True, padx=20, pady=20)
 
-                    threading.Thread(target=start_threading).start()
+                    # threading.Thread(target=start_threading).start()
+                    # start_threading()
+                    # threading.Thread.join()
+                    new_thread = Thread(target=start_threading)
+                    new_thread.start()
 
                 display_card(framelist)
 
