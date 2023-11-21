@@ -1,8 +1,13 @@
 import customtkinter as ctk
 from tkinter import simpledialog
+import pygame
+import threading
 import os
 import pickle
 import time
+
+# Initialize pygame mixer
+pygame.mixer.init()
 
 root = ctk.CTk()
 root.geometry("900x600")
@@ -21,9 +26,11 @@ frame6_data = []
 hour = ctk.StringVar()
 minute = ctk.StringVar()
 am_pm = ctk.StringVar()
+
 curr_hr = time.strftime("%I")
 curr_min = time.strftime("%M")
 curr_am_pm = time.strftime("%p")
+
 name = ctk.StringVar(value="bell")
 sunday = ctk.StringVar(value="off")
 monday = ctk.StringVar(value="on")
@@ -337,7 +344,7 @@ def open_window(f, framelist):
                     }
                 )
 
-                print(card_item)
+                # print(card_item)
                 framelist.append(card_item)
                 # print(framelist)
                 print("\n")
@@ -345,10 +352,19 @@ def open_window(f, framelist):
 
                 def display_card(framelist):
                     global frame
-                    # frames.append(create_frame())
-                    # frames[-1].pack(fill="both", padx=10, pady=10)
 
                     week_days = []
+
+                    def start_threading():
+                        # music_file_path = f"music/{current_music}"
+                        if (
+                            hr == curr_hr
+                            and mi == curr_min
+                            and ampm == curr_am_pm
+                            and card_item["schedule_on_off"] == "on"
+                        ):
+                            pygame.mixer.music.load(f"music/{current_music}")
+                            pygame.mixer.music.play()
 
                     def display_weeks():
                         if sun == "on":
@@ -374,8 +390,8 @@ def open_window(f, framelist):
                         data = switch.get()
 
                         diction["schedule_on_off"] = data
-                        print(card_item)
-                        print(data)
+                        # print(card_item)
+                        # print(data)
 
                     frame = ctk.CTkFrame(f, fg_color="green")
                     timeFrame = ctk.CTkFrame(frame, fg_color="transparent")
@@ -410,6 +426,8 @@ def open_window(f, framelist):
                     delete_frame.pack()
                     window.destroy()
                     frame.pack(fill="x", expand=True, padx=20, pady=20)
+
+                    threading.Thread(target=start_threading).start()
 
                 display_card(framelist)
 
