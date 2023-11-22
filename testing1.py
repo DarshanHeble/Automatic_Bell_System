@@ -41,10 +41,7 @@ root.geometry("200x200")
 # current_time = time.localtime()
 # print(current_time)
 
-# curr_time = time.strftime("%d-%m-%Y %I:%M:%S %p")
-# # print(curr_time)
-# am_or_pm = time.strftime("%p")
-# print(am_or_pm)
+
 
 
 # spin = ttk.Spinbox(root)

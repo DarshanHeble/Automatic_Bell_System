@@ -71,27 +71,72 @@ def start_threading(
     current_music,
     card_item,
 ):
+    days_of_week = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
+
     # getting current time and days
     curr_hr = time.strftime("%I")
     curr_min = time.strftime("%M")
     curr_am_pm = time.strftime("%p")
 
+    # Get the current time as a struct_time object
+    current_time = time.localtime()
+
+    # Get the day of the week as an integer (0 for Monday, 1 for Tuesday, ..., 6 for Sunday)
+    current_day_in_number = current_time.tm_wday
+
+    # current_day
+    current_day = days_of_week[current_day_in_number]
+    print(current_day)
+    print(sun)
+
+    # proper music file path
     music_file_path = f"music/{current_music}"
+
+    # checking the time until the specified time occures
     while (
         hr != curr_hr
         and mi != curr_min
         and ampm != curr_am_pm
+        and (
+            current_day != sun
+            or current_day != mon
+            or current_day != tue
+            or current_day != wed
+            or current_day != thu
+            or current_day != fri
+            or current_day != sat
+        )
         and card_item["schedule_on_off"] != "on"
     ):
         curr_hr = time.strftime("%I")
         curr_min = time.strftime("%M")
         curr_am_pm = time.strftime("%p")
 
+        current_day = days_of_week[current_day_in_number]
+
+    # when time occures plat the music file
     if (
         hr == curr_hr
         and mi == curr_min
         and ampm == curr_am_pm
         and card_item["schedule_on_off"] == "on"
+        and (
+            current_day == sun
+            or current_day == mon
+            or current_day == tue
+            or current_day == wed
+            or current_day == thu
+            or current_day == fri
+            or current_day == sat
+        )
     ):
         pygame.mixer.music.load(f"music/{current_music}")
         # time.sleep(5)
@@ -141,8 +186,8 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
             variable=hour,
             width=100,
             height=50,
-            font=("helvitica", 20),
-            dropdown_font=("helvitica", 15),
+            font=("helvitica", 25),
+            dropdown_font=("helvitica", 20),
         )
         hrs.grid(row=0, column=0, padx=10)
         # =============================hours===============================
@@ -174,8 +219,8 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
             variable=minute,
             width=100,
             height=50,
-            font=("helvitica", 20),
-            dropdown_font=("helvitica", 15),
+            font=("helvitica", 25),
+            dropdown_font=("helvitica", 20),
         )
         min.grid(row=0, column=1, padx=10)
         # =============================hours===============================
@@ -189,8 +234,8 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
             variable=am_pm,
             width=100,
             height=50,
-            font=("helvitica", 20),
-            dropdown_font=("helvitica", 15),
+            font=("helvitica", 25),
+            dropdown_font=("helvitica", 20),
         )
         ampm.grid(row=0, column=2, padx=10)
 
@@ -425,8 +470,6 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
         current_music,
         card_item,
     ):
-        global frame
-
         week_days = []
 
         def display_weeks():
@@ -456,36 +499,43 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
             # print(card_item)
             # print(data)
 
-        frame = ctk.CTkFrame(f, fg_color="green")
-        timeFrame = ctk.CTkFrame(frame, fg_color="transparent")
+        frame = ctk.CTkFrame(f)
+        innerFrame = ctk.CTkFrame(frame)
+        timeFrame = ctk.CTkFrame(innerFrame, fg_color="transparent")
         time = ctk.CTkLabel(
-            timeFrame, text=f"{hr} : {mi} {ampm}", font=("helvitica", 35)
+            timeFrame, text=f"{hr} : {mi} {ampm}", font=("helvitica", 60, "bold")
         )
-        name_label = ctk.CTkLabel(frame, text=name)
-        week = ctk.CTkLabel(frame, text=" ".join(week_days))
-        music_label = ctk.CTkLabel(frame, text=current_music)
-        schedule_label = ctk.CTkSwitch(
-            frame,
+        name_label = ctk.CTkLabel(
+            innerFrame, text=name, font=("helvitica", 30, "normal")
+        )
+        week = ctk.CTkLabel(
+            innerFrame, text=" ".join(week_days), font=("helvitica", 30, "normal")
+        )
+        music_label = ctk.CTkLabel(innerFrame, text=current_music)
+        schedule_Switch = ctk.CTkSwitch(
+            innerFrame,
             text="",
             onvalue="on",
             offvalue="off",
-            # variable=schedule_switch,
+            switch_height=25,
+            switch_width=50,
             command=lambda: switcher(
-                schedule_label,
+                schedule_Switch,
             ),
         )
-        schedule_label.select()
-        delete_frame = ctk.CTkButton(frame, text="Delete", command=frame.destroy)
+        schedule_Switch.select()
+        delete_frame = ctk.CTkButton(innerFrame, text="Delete", command=frame.destroy)
         # print(schedule_label.cget())
 
         timeFrame.pack()
         time.pack()
-        schedule_label.pack()
+        schedule_Switch.pack()
         name_label.pack()
         week.pack()
         music_label.pack()
         delete_frame.pack()
         window.destroy()
+        innerFrame.pack(fill="x", expand=True, padx=20, pady=20)
         frame.pack(fill="x", expand=True, padx=20, pady=20)
 
         # threading.Thread(target=start_threading).start()
@@ -638,6 +688,7 @@ def btn():
     button0 = ctk.CTkButton(
         sidebar,
         text=button_list[0],
+        text_color=("black", "white"),
         fg_color="transparent",
         # border_color="yellow",
         # border_width=1,
@@ -656,6 +707,7 @@ def btn():
     button1 = ctk.CTkButton(
         sidebar,
         text=button_list[1],
+        text_color=("black", "white"),
         fg_color="transparent",
         hover_color="orange",
         font=("Times", 15),
@@ -671,6 +723,7 @@ def btn():
     button2 = ctk.CTkButton(
         sidebar,
         text=button_list[2],
+        text_color=("black", "white"),
         fg_color="transparent",
         hover_color="magenta",
         font=("Times", 15),
@@ -686,6 +739,7 @@ def btn():
     button3 = ctk.CTkButton(
         sidebar,
         text=button_list[3],
+        text_color=("black", "white"),
         fg_color="transparent",
         hover_color="royalblue",
         font=("Times", 15),
@@ -701,6 +755,7 @@ def btn():
     button4 = ctk.CTkButton(
         sidebar,
         text=button_list[4],
+        text_color=("black", "white"),
         fg_color="transparent",
         hover_color="teal",
         font=("Times", 15),
@@ -716,6 +771,7 @@ def btn():
     button5 = ctk.CTkButton(
         sidebar,
         text=button_list[5],
+        text_color=("black", "white"),
         fg_color="transparent",
         hover_color="crimson",
         font=("Times", 15),
@@ -731,6 +787,7 @@ def btn():
     button6 = ctk.CTkButton(
         sidebar,
         text=button_list[6],
+        text_color=("black", "white"),
         fg_color="transparent",
         hover_color="teal",
         font=("Times", 15),
@@ -780,7 +837,13 @@ def button_diff_frames():
         width=50,
         height=50,
         font=("arial", 40),
-        command=lambda: open_window(scrol_frame1, frame1_data),
+        command=lambda: open_window(
+            scrol_frame1,
+            frame1_data,
+            time.strftime("%I"),
+            time.strftime("%M"),
+            time.strftime("%p"),
+        ),
     )
     btn.pack(ipadx=5, ipady=5)
     buttonframe = ctk.CTkFrame(frame2, corner_radius=0)
@@ -792,7 +855,13 @@ def button_diff_frames():
         width=50,
         height=50,
         font=("arial", 40),
-        command=lambda: open_window(scrol_frame2, frame2_data),
+        command=lambda: open_window(
+            scrol_frame2,
+            frame2_data,
+            time.strftime("%I"),
+            time.strftime("%M"),
+            time.strftime("%p"),
+        ),
     )
     btn.pack(ipadx=5, ipady=5)
     buttonframe = ctk.CTkFrame(frame3, corner_radius=0)
@@ -804,7 +873,13 @@ def button_diff_frames():
         width=50,
         height=50,
         font=("arial", 40),
-        command=lambda: open_window(scrol_frame3, frame3_data),
+        command=lambda: open_window(
+            scrol_frame3,
+            frame3_data,
+            time.strftime("%I"),
+            time.strftime("%M"),
+            time.strftime("%p"),
+        ),
     )
     btn.pack(ipadx=5, ipady=5)
     buttonframe = ctk.CTkFrame(frame4, corner_radius=0)
@@ -816,7 +891,13 @@ def button_diff_frames():
         width=50,
         height=50,
         font=("arial", 40),
-        command=lambda: open_window(scrol_frame4, frame4_data),
+        command=lambda: open_window(
+            scrol_frame4,
+            frame4_data,
+            time.strftime("%I"),
+            time.strftime("%M"),
+            time.strftime("%p"),
+        ),
     )
     btn.pack(ipadx=5, ipady=5)
     buttonframe = ctk.CTkFrame(frame5, corner_radius=0)
@@ -828,7 +909,13 @@ def button_diff_frames():
         width=50,
         height=50,
         font=("arial", 40),
-        command=lambda: open_window(scrol_frame5, frame5_data),
+        command=lambda: open_window(
+            scrol_frame5,
+            frame5_data,
+            time.strftime("%I"),
+            time.strftime("%M"),
+            time.strftime("%p"),
+        ),
     )
     btn.pack(ipadx=5, ipady=5)
     buttonframe = ctk.CTkFrame(frame6, corner_radius=0)
@@ -840,7 +927,13 @@ def button_diff_frames():
         width=50,
         height=50,
         font=("arial", 40),
-        command=lambda: open_window(scrol_frame6, frame6_data),
+        command=lambda: open_window(
+            scrol_frame6,
+            frame6_data,
+            time.strftime("%I"),
+            time.strftime("%M"),
+            time.strftime("%p"),
+        ),
     )
     btn.pack(ipadx=5, ipady=5)
 
