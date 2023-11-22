@@ -27,9 +27,6 @@ hour = ctk.StringVar()
 minute = ctk.StringVar()
 am_pm = ctk.StringVar()
 
-# curr_hr = time.strftime("%I")
-# curr_min = time.strftime("%M")
-# curr_am_pm = time.strftime("%p")
 
 name = ctk.StringVar(value="bell")
 sunday = ctk.StringVar(value="off")
@@ -59,7 +56,49 @@ labels_dict = {}
 labels_list = []
 
 
-def open_window(f, framelist):
+def start_threading(
+    hr,
+    mi,
+    ampm,
+    name,
+    sun,
+    mon,
+    tue,
+    wed,
+    thu,
+    fri,
+    sat,
+    current_music,
+    card_item,
+):
+    # getting current time and days
+    curr_hr = time.strftime("%I")
+    curr_min = time.strftime("%M")
+    curr_am_pm = time.strftime("%p")
+
+    music_file_path = f"music/{current_music}"
+    while (
+        hr != curr_hr
+        and mi != curr_min
+        and ampm != curr_am_pm
+        and card_item["schedule_on_off"] != "on"
+    ):
+        curr_hr = time.strftime("%I")
+        curr_min = time.strftime("%M")
+        curr_am_pm = time.strftime("%p")
+
+    if (
+        hr == curr_hr
+        and mi == curr_min
+        and ampm == curr_am_pm
+        and card_item["schedule_on_off"] == "on"
+    ):
+        pygame.mixer.music.load(f"music/{current_music}")
+        # time.sleep(5)
+        pygame.mixer.music.play()
+
+
+def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
     window = ctk.CTkFrame(root)
     window.place(relx=0.5, rely=0.5, anchor="center")
     card = ctk.CTkFrame(window)
@@ -93,9 +132,9 @@ def open_window(f, framelist):
             "11",
             "12",
         )
-        global hour, curr_hr
-        h = time.strftime("%I")
-        hour.set(h)
+
+        global hour
+        hour.set(curr_hr)
         hrs = ctk.CTkOptionMenu(
             option_frame,
             values=hour_options,
@@ -113,6 +152,10 @@ def open_window(f, framelist):
             "05",
             "10",
             "15",
+            "16",
+            "17",
+            "18",
+            "19",
             "20",
             "25",
             "30",
@@ -123,9 +166,8 @@ def open_window(f, framelist):
             "55",
             "60",
         )
-        global minute, curr_min
-        m = time.strftime("%M")
-        minute.set(m)
+        global minute
+        minute.set(curr_min)
         min = ctk.CTkOptionMenu(
             option_frame,
             values=minute_options,
@@ -139,9 +181,8 @@ def open_window(f, framelist):
         # =============================hours===============================
         # =============================hours===============================
         am_pm_options = ("PM", "AM")
-        global am_pm, curr_am_pm
-        p = time.strftime("%p")
-        am_pm.set(p)
+        global am_pm
+        am_pm.set(curr_am_pm)
         ampm = ctk.CTkOptionMenu(
             option_frame,
             values=am_pm_options,
@@ -308,148 +349,169 @@ def open_window(f, framelist):
         switch_frame.pack()
         print("schedule_switch", schedule_switch.get())
 
+    def save_data_and_display_card(window, hour, minute, am_pm, name):
+        card_item = {}
+        # time
+        hr = hour.get()
+        mi = minute.get()
+        # print(mi)
+        ampm = am_pm.get()
+        # name
+        name = name.get()
+        # weeks
+        sun = sunday.get()
+        mon = monday.get()
+        tue = tuesday.get()
+        wed = wednesday.get()
+        thu = thursday.get()
+        fri = friday.get()
+        sat = saturday.get()
+        # music
+        current_music = curr_music.get()
+        card_item.update(
+            {
+                "hour": hr,
+                "minute": mi,
+                "am_pm": ampm,
+                "name": name,
+                "sunday": sun,
+                "monday": mon,
+                "tuesday": tue,
+                "wednesday": wed,
+                "thursday": thu,
+                "friday": fri,
+                "saturday": sat,
+                "schedule_on_off": "on",
+                "music": current_music,
+            }
+        )
+
+        # print(card_item)
+        framelist.append(card_item)
+        # print(framelist)
+        print("\n")
+        # print("data saved")
+
+        display_card(
+            framelist,
+            hr,
+            mi,
+            ampm,
+            name,
+            sun,
+            mon,
+            tue,
+            wed,
+            thu,
+            fri,
+            sat,
+            current_music,
+            card_item,
+        )
+
+    def display_card(
+        framelist,
+        hr,
+        mi,
+        ampm,
+        name,
+        sun,
+        mon,
+        tue,
+        wed,
+        thu,
+        fri,
+        sat,
+        current_music,
+        card_item,
+    ):
+        global frame
+
+        week_days = []
+
+        def display_weeks():
+            if sun == "on":
+                week_days.append("sun")
+            if mon == "on":
+                week_days.append("mon")
+            if tue == "on":
+                week_days.append("tue")
+            if wed == "on":
+                week_days.append("wed")
+            if thu == "on":
+                week_days.append("thu")
+            if fri == "on":
+                week_days.append("fri")
+            if sat == "on":
+                week_days.append("sat")
+
+        display_weeks()
+
+        def switcher(switch):
+            # print(switch.get())
+            diction = framelist[0]
+            data = switch.get()
+
+            diction["schedule_on_off"] = data
+            # print(card_item)
+            # print(data)
+
+        frame = ctk.CTkFrame(f, fg_color="green")
+        timeFrame = ctk.CTkFrame(frame, fg_color="transparent")
+        time = ctk.CTkLabel(
+            timeFrame, text=f"{hr} : {mi} {ampm}", font=("helvitica", 35)
+        )
+        name_label = ctk.CTkLabel(frame, text=name)
+        week = ctk.CTkLabel(frame, text=" ".join(week_days))
+        music_label = ctk.CTkLabel(frame, text=current_music)
+        schedule_label = ctk.CTkSwitch(
+            frame,
+            text="",
+            onvalue="on",
+            offvalue="off",
+            # variable=schedule_switch,
+            command=lambda: switcher(
+                schedule_label,
+            ),
+        )
+        schedule_label.select()
+        delete_frame = ctk.CTkButton(frame, text="Delete", command=frame.destroy)
+        # print(schedule_label.cget())
+
+        timeFrame.pack()
+        time.pack()
+        schedule_label.pack()
+        name_label.pack()
+        week.pack()
+        music_label.pack()
+        delete_frame.pack()
+        window.destroy()
+        frame.pack(fill="x", expand=True, padx=20, pady=20)
+
+        # threading.Thread(target=start_threading).start()
+        # start_threading()
+        # threading.Thread.join()
+        new_thread = Thread(
+            target=start_threading,
+            args=(
+                hr,
+                mi,
+                ampm,
+                name,
+                sun,
+                mon,
+                tue,
+                wed,
+                thu,
+                fri,
+                sat,
+                current_music,
+                card_item,
+            ),
+        )
+        new_thread.start()
+
     def btn(frame, framelist):
-        def save_data_and_display_card(window, hour, minute, am_pm, name):
-            def save_data(name):
-                card_item = {}
-                # time
-                hr = hour.get()
-                mi = minute.get()
-                # print(mi)
-                ampm = am_pm.get()
-                # name
-                name = name.get()
-                # weeks
-                sun = sunday.get()
-                mon = monday.get()
-                tue = tuesday.get()
-                wed = wednesday.get()
-                thu = thursday.get()
-                fri = friday.get()
-                sat = saturday.get()
-                # music
-                current_music = curr_music.get()
-                card_item.update(
-                    {
-                        "hour": hr,
-                        "minute": mi,
-                        "am_pm": ampm,
-                        "name": name,
-                        "sunday": sun,
-                        "monday": mon,
-                        "tuesday": tue,
-                        "wednesday": wed,
-                        "thursday": thu,
-                        "friday": fri,
-                        "saturday": sat,
-                        "schedule_on_off": "on",
-                        "music": current_music,
-                    }
-                )
-
-                # print(card_item)
-                framelist.append(card_item)
-                # print(framelist)
-                print("\n")
-                # print("data saved")
-
-                def display_card(framelist):
-                    global frame
-
-                    week_days = []
-
-                    def start_threading():
-                        # music_file_path = f"music/{current_music}"
-                        # while (
-                        #     hr != curr_hr
-                        #     and mi != curr_min
-                        #     and ampm != curr_am_pm
-                        #     and card_item["schedule_on_off"] != "on"
-                        # ):
-                        #     pass
-
-                        if (
-                            hr == curr_hr
-                            and mi == curr_min
-                            and ampm == curr_am_pm
-                            and card_item["schedule_on_off"] == "on"
-                        ):
-                            pygame.mixer.music.load(f"music/{current_music}")
-                            # time.sleep(5)
-                            pygame.mixer.music.play()
-                            exit()
-
-                    def display_weeks():
-                        if sun == "on":
-                            week_days.append("sun")
-                        if mon == "on":
-                            week_days.append("mon")
-                        if tue == "on":
-                            week_days.append("tue")
-                        if wed == "on":
-                            week_days.append("wed")
-                        if thu == "on":
-                            week_days.append("thu")
-                        if fri == "on":
-                            week_days.append("fri")
-                        if sat == "on":
-                            week_days.append("sat")
-
-                    display_weeks()
-
-                    def switcher(switch):
-                        print(switch.get())
-                        diction = framelist[0]
-                        data = switch.get()
-
-                        diction["schedule_on_off"] = data
-                        # print(card_item)
-                        # print(data)
-
-                    frame = ctk.CTkFrame(f, fg_color="green")
-                    timeFrame = ctk.CTkFrame(frame, fg_color="transparent")
-                    time = ctk.CTkLabel(
-                        timeFrame, text=f"{hr} : {mi} {ampm}", font=("helvitica", 35)
-                    )
-                    name_label = ctk.CTkLabel(frame, text=name)
-                    week = ctk.CTkLabel(frame, text=" ".join(week_days))
-                    music_label = ctk.CTkLabel(frame, text=current_music)
-                    schedule_label = ctk.CTkSwitch(
-                        frame,
-                        text="",
-                        onvalue="on",
-                        offvalue="off",
-                        # variable=schedule_switch,
-                        command=lambda: switcher(
-                            schedule_label,
-                        ),
-                    )
-                    schedule_label.select()
-                    delete_frame = ctk.CTkButton(
-                        frame, text="Delete", command=frame.destroy
-                    )
-                    # print(schedule_label.cget())
-
-                    timeFrame.pack()
-                    time.pack()
-                    schedule_label.pack()
-                    name_label.pack()
-                    week.pack()
-                    music_label.pack()
-                    delete_frame.pack()
-                    window.destroy()
-                    frame.pack(fill="x", expand=True, padx=20, pady=20)
-
-                    # threading.Thread(target=start_threading).start()
-                    # start_threading()
-                    # threading.Thread.join()
-                    new_thread = Thread(target=start_threading)
-                    new_thread.start()
-
-                display_card(framelist)
-
-            save_data(name)
-
         btn_frame = ctk.CTkFrame(card, fg_color="transparent")
         btn_frame.pack(pady=(0, 30))
         cancel_btn = ctk.CTkButton(
@@ -699,7 +761,13 @@ def button_diff_frames():
         width=50,
         height=50,
         font=("arial", 40),
-        command=lambda: open_window(scrol_frame0, frame0_data),
+        command=lambda: open_window(
+            scrol_frame0,
+            frame0_data,
+            time.strftime("%I"),
+            time.strftime("%M"),
+            time.strftime("%p"),
+        ),
     )
     btn.pack(ipadx=5, ipady=5)
 
