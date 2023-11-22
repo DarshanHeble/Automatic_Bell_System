@@ -94,8 +94,9 @@ def start_threading(
 
     # current_day
     current_day = days_of_week[current_day_in_number]
-    print(current_day)
-    print(sun)
+    # print(type(current_day))
+    # print(type(sun))
+    # print(type(card_item[current_day]))
 
     # proper music file path
     music_file_path = f"music/{current_music}"
@@ -105,21 +106,14 @@ def start_threading(
         hr != curr_hr
         and mi != curr_min
         and ampm != curr_am_pm
-        and (
-            current_day != sun
-            or current_day != mon
-            or current_day != tue
-            or current_day != wed
-            or current_day != thu
-            or current_day != fri
-            or current_day != sat
-        )
-        and card_item["schedule_on_off"] != "on"
+        and card_item[current_day] != "on"
+        # and card_item["schedule_on_off"] != "on"
     ):
         curr_hr = time.strftime("%I")
         curr_min = time.strftime("%M")
         curr_am_pm = time.strftime("%p")
 
+        current_day_in_number = current_time.tm_wday
         current_day = days_of_week[current_day_in_number]
 
     # when time occures plat the music file
@@ -127,16 +121,8 @@ def start_threading(
         hr == curr_hr
         and mi == curr_min
         and ampm == curr_am_pm
-        and card_item["schedule_on_off"] == "on"
-        and (
-            current_day == sun
-            or current_day == mon
-            or current_day == tue
-            or current_day == wed
-            or current_day == thu
-            or current_day == fri
-            or current_day == sat
-        )
+        # and card_item["schedule_on_off"] == "on"
+        and card_item[current_day] == "on"
     ):
         pygame.mixer.music.load(f"music/{current_music}")
         # time.sleep(5)
@@ -419,13 +405,13 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
                 "minute": mi,
                 "am_pm": ampm,
                 "name": name,
-                "sunday": sun,
-                "monday": mon,
-                "tuesday": tue,
-                "wednesday": wed,
-                "thursday": thu,
-                "friday": fri,
-                "saturday": sat,
+                "Sunday": sun,
+                "Monday": mon,
+                "Tuesday": tue,
+                "Wednesday": wed,
+                "Thursday": thu,
+                "Friday": fri,
+                "Saturday": sat,
                 "schedule_on_off": "on",
                 "music": current_music,
             }
