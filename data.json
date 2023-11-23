@@ -1,17 +1,20 @@
 [
   {
-    "time": "08:21 PM",
-    "text": "ahsb",
+    "time": "12:11 AM",
+    "text": "",
     "days": [
-      "Sun"
+      "Thu",
+      "Fri"
     ],
     "switch_state": true
   },
   {
-    "time": "00:00 AM",
+    "time": "12:13 AM",
     "text": "",
     "days": [
-      "Tue"
+      "Thu",
+      "Fri",
+      "Sat"
     ],
     "switch_state": true
   }
