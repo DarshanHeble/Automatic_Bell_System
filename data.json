@@ -1,0 +1,18 @@
+[
+  {
+    "time": "08:21 PM",
+    "text": "ahsb",
+    "days": [
+      "Sun"
+    ],
+    "switch_state": true
+  },
+  {
+    "time": "00:00 AM",
+    "text": "",
+    "days": [
+      "Tue"
+    ],
+    "switch_state": true
+  }
+]

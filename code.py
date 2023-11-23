@@ -15,7 +15,22 @@ days_of_week = [
     "Saturday",
     "Sunday",
 ]
-
+data = {
+    "hour": 2,
+    "minute": 20,
+    "am_pm": "am",
+    "name": "hello",
+    "Sunday": "on",
+    "Monday": "on",
+    "Tuesday": "on",
+    "Wednesday": "on",
+    "Thursday": "on",
+    "Friday": "on",
+    "Saturday": "on",
+    "schedule_on_off": "on",
+}
+data["hour"] = 3
+print(data["hour"])
 # Print the current day
 print("Current day:", days_of_week[current_day])
 curr_time = time.strftime("%d-%m-%Y %I:%M:%S %p")

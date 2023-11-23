@@ -107,11 +107,13 @@ def start_threading(
         and mi != curr_min
         and ampm != curr_am_pm
         and card_item[current_day] != "on"
-        # and card_item["schedule_on_off"] != "on"
+        and card_item["schedule_on_off"] != "on"
     ):
         curr_hr = time.strftime("%I")
         curr_min = time.strftime("%M")
         curr_am_pm = time.strftime("%p")
+
+        card_item["schedule_on_off"] = card_item["schedule_on_off"]
 
         current_day_in_number = current_time.tm_wday
         current_day = days_of_week[current_day_in_number]
@@ -121,7 +123,7 @@ def start_threading(
         hr == curr_hr
         and mi == curr_min
         and ampm == curr_am_pm
-        # and card_item["schedule_on_off"] == "on"
+        and card_item["schedule_on_off"] == "on"
         and card_item[current_day] == "on"
     ):
         pygame.mixer.music.load(f"music/{current_music}")
@@ -419,7 +421,7 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
 
         # print(card_item)
         framelist.append(card_item)
-        # print(framelist)
+        print(framelist)
         print("\n")
         # print("data saved")
 
@@ -476,13 +478,15 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
 
         display_weeks()
 
-        def switcher(switch):
+        def switcher(switch, framelist):
             # print(switch.get())
             diction = framelist[0]
+            print(diction)
             data = switch.get()
 
             diction["schedule_on_off"] = data
             # print(card_item)
+            # print(framelist)
             # print(data)
 
         frame = ctk.CTkFrame(f)
@@ -507,6 +511,7 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
             switch_width=50,
             command=lambda: switcher(
                 schedule_Switch,
+                framelist,
             ),
         )
         schedule_Switch.select()

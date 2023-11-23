@@ -1,502 +1,328 @@
-import customtkinter
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import ttk
+from tkinter import messagebox
+from customtkinter import CTkSwitch
+from tkinter import simpledialog
+import threading
+import time
+import json
 import os
-from os import listdir
-
-root = customtkinter.CTk()
-# customtkinter.set_appearance_mode("light")
-root.geometry("500x500")
-
-alarm_data = []
-hour = customtkinter.StringVar()
-minute = customtkinter.StringVar()
-second = customtkinter.StringVar()
-name = customtkinter.StringVar(value="bell")
-sunday = customtkinter.StringVar(value="off")
-monday = customtkinter.StringVar(value="on")
-tuesday = customtkinter.StringVar(value="on")
-wednesday = customtkinter.StringVar(value="on")
-thursday = customtkinter.StringVar(value="on")
-friday = customtkinter.StringVar(value="on")
-saturday = customtkinter.StringVar(value="on")
-# music_file
-music_files = []
-curr_music = customtkinter.StringVar()
-frames = []
-for frame in frames:
-    frames[-1].pack()
+import pygame
 
 
-def open_window():
-    # def name_increment():
-    #     global name
-    window = customtkinter.CTkFrame(root)
-    window.place(relx=0.5, rely=0.5, anchor="center")
-    card = customtkinter.CTkFrame(window)
-    card.pack(padx=1005, pady=1005)
-    heading = customtkinter.CTkLabel(
-        card,
-        text="Add New Bell",
-        font=("helvitica", 30, "bold"),
-    )
-    heading.pack(pady=20)
+class BellSystemApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.geometry("500x500")
+        self.master.title("Bell System")
 
-    def time():
-        option_frame = customtkinter.CTkFrame(card, fg_color="transparent")
-        option_frame.pack(pady=10, padx=10)
-        # =============================hours===============================
-        hour_options = (
-            "00",
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
+        self.load_data()
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Main Frame
+        self.main_frame = tk.Frame(self.master)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Left Frame
+        self.left_frame = tk.Frame(self.main_frame, width=200, bg="lightgray")
+        self.left_frame.pack(side=tk.LEFT, fill=tk.BOTH)
+
+        # Right Frame
+        self.right_frame = tk.Frame(self.main_frame, bg="white")
+        self.right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+        # Add Alarm Button
+        add_alarm_button = tk.Button(
+            self.left_frame, text="Add Alarm", command=self.add_alarm
         )
-        global hour
-        hour.set(hour_options[0])
-        hrs = customtkinter.CTkOptionMenu(
-            option_frame,
-            values=hour_options,
-            variable=hour,
-            width=100,
-            height=50,
-            font=("helvitica", 20),
-            dropdown_font=("helvitica", 15),
-        )
-        hrs.grid(row=0, column=0, padx=10)
-        # =============================hours===============================
-        # =============================hours===============================
-        minute_options = (
-            "00",
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-            "32",
-            "33",
-            "34",
-            "35",
-            "36",
-            "37",
-            "38",
-            "39",
-            "49",
-            "41",
-            "42",
-            "43",
-            "44",
-            "45",
-            "46",
-            "47",
-            "48",
-            "49",
-            "50",
-            "51",
-            "52",
-            "53",
-            "54",
-            "55",
-            "56",
-            "57",
-            "58",
-            "59",
-            "60",
-        )
-        global minute
-        minute.set(minute_options[0])
-        min = customtkinter.CTkOptionMenu(
-            option_frame,
-            values=minute_options,
-            variable=minute,
-            width=100,
-            height=50,
-            font=("helvitica", 20),
-            dropdown_font=("helvitica", 15),
-        )
-        min.grid(row=0, column=1, padx=10)
-        # =============================hours===============================
-        # =============================hours===============================
-        second_options = (
-            "00",
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-            "32",
-            "33",
-            "34",
-            "35",
-            "36",
-            "37",
-            "38",
-            "39",
-            "49",
-            "41",
-            "42",
-            "43",
-            "44",
-            "45",
-            "46",
-            "47",
-            "48",
-            "49",
-            "50",
-            "51",
-            "52",
-            "53",
-            "54",
-            "55",
-            "56",
-            "57",
-            "58",
-            "59",
-            "60",
-        )
-        global second
-        second.set(second_options[0])
-        sec = customtkinter.CTkOptionMenu(
-            option_frame,
-            values=second_options,
-            variable=second,
-            width=100,
-            height=50,
-            font=("helvitica", 20),
-            dropdown_font=("helvitica", 15),
-        )
-        sec.grid(row=0, column=2, padx=10)
+        add_alarm_button.pack(pady=10)
 
-    def name():
-        name_frame = customtkinter.CTkFrame(card, fg_color="transparent")
-        name_frame.pack(pady=20, padx=25)
-        name_label = customtkinter.CTkLabel(
-            name_frame, text="Label : ", font=("helvitica", 20)
+        # Display Alarms Frame
+        self.display_alarms_frame = tk.Frame(self.right_frame)
+        self.display_alarms_frame.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
+
+        # Start background thread
+        self.check_alarm_thread = threading.Thread(target=self.check_alarm)
+        self.check_alarm_thread.daemon = True
+        self.check_alarm_thread.start()
+
+        # Load and display existing alarms
+        self.display_alarms()
+
+    def add_alarm(self):
+        # Sub-window for adding alarm
+        add_alarm_window = tk.Toplevel(self.master)
+        add_alarm_window.title("Add Alarm")
+
+        # Widgets in the sub-window
+        ttk.Label(add_alarm_window, text="Add Alarm").grid(
+            row=0, column=0, columnspan=2
         )
-        name_label.pack(padx=5, side="left")
-        global name
-        name_entry = customtkinter.CTkEntry(
-            name_frame, font=("helvitica", 20), textvariable=name
+
+        hour_label = ttk.Label(add_alarm_window, text="Hour:")
+        hour_label.grid(row=1, column=0, pady=5)
+        hour_var = tk.StringVar(add_alarm_window)
+        hour_var.set("00")
+        hour_entry = ttk.Combobox(
+            add_alarm_window,
+            textvariable=hour_var,
+            values=[str(i).zfill(2) for i in range(1, 13)],
         )
-        name_entry.pack(padx=5)
+        hour_entry.grid(row=1, column=1, pady=5)
 
-    # def weeks():
-    #     weekd_days_frame = customtkinter.CTkFrame(card, fg_color="transparent")
-    #     weekd_days_frame.pack(pady=15, padx=25)
-    #     global sunday, monday, tuesday, wednesday, thursday, friday, saturday
-    #     sun_cb = customtkinter.CTkCheckBox(
-    #         weekd_days_frame,
-    #         text="sun",
-    #         corner_radius=50,
-    #         border_width=2,
-    #         width=20,
-    #         onvalue="on",
-    #         offvalue="off",
-    #         variable=sunday,
-    #     )
-    #     mon_cb = customtkinter.CTkCheckBox(
-    #         weekd_days_frame,
-    #         text="mon",
-    #         corner_radius=50,
-    #         border_width=2,
-    #         width=20,
-    #         onvalue="on",
-    #         offvalue="off",
-    #         variable=monday,
-    #     )
-    #     tue_cb = customtkinter.CTkCheckBox(
-    #         weekd_days_frame,
-    #         text="tue",
-    #         corner_radius=50,
-    #         border_width=2,
-    #         width=20,
-    #         onvalue="on",
-    #         offvalue="off",
-    #         variable=tuesday,
-    #     )
-    #     wed_cb = customtkinter.CTkCheckBox(
-    #         weekd_days_frame,
-    #         text="wed",
-    #         corner_radius=50,
-    #         border_width=2,
-    #         width=20,
-    #         onvalue="on",
-    #         offvalue="off",
-    #         variable=wednesday,
-    #     )
-    #     thu_cb = customtkinter.CTkCheckBox(
-    #         weekd_days_frame,
-    #         text="thu",
-    #         corner_radius=50,
-    #         border_width=2,
-    #         width=20,
-    #         onvalue="on",
-    #         offvalue="off",
-    #         variable=thursday,
-    #     )
-    #     fri_cb = customtkinter.CTkCheckBox(
-    #         weekd_days_frame,
-    #         text="fri",
-    #         corner_radius=50,
-    #         border_width=2,
-    #         width=20,
-    #         onvalue="on",
-    #         offvalue="off",
-    #         variable=friday,
-    #     )
-    #     sat_cb = customtkinter.CTkCheckBox(
-    #         weekd_days_frame,
-    #         text="sat",
-    #         corner_radius=50,
-    #         border_width=2,
-    #         width=20,
-    #         onvalue="on",
-    #         offvalue="off",
-    #         variable=saturday,
-    #     )
-    #     sun_cb.grid(row=0, column=1, sticky="w")
-    #     mon_cb.grid(row=0, column=2, sticky="w", padx=10)
-    #     tue_cb.grid(row=0, column=3, sticky="w")
-    #     wed_cb.grid(row=0, column=4, sticky="w", padx=10)
-    #     thu_cb.grid(row=0, column=5, sticky="w")
-    #     fri_cb.grid(row=0, column=6, sticky="w", padx=10)
-    #     sat_cb.grid(row=0, column=7, sticky="w")
+        minute_label = ttk.Label(add_alarm_window, text="Minute:")
+        minute_label.grid(row=2, column=0, pady=5)
+        minute_var = tk.StringVar(add_alarm_window)
+        minute_var.set("00")
+        minute_entry = ttk.Combobox(
+            add_alarm_window,
+            textvariable=minute_var,
+            values=[str(i).zfill(2) for i in range(60)],
+        )
+        minute_entry.grid(row=2, column=1, pady=5)
 
-    def weeks():
-        days_of_week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        am_pm_label = ttk.Label(add_alarm_window, text="AM/PM:")
+        am_pm_label.grid(row=3, column=0, pady=5)
+        am_pm_var = tk.StringVar(add_alarm_window)
+        am_pm_var.set("AM")
+        am_pm_entry = ttk.Combobox(
+            add_alarm_window, textvariable=am_pm_var, values=["AM", "PM"]
+        )
+        am_pm_entry.grid(row=3, column=1, pady=5)
 
-        weekd_days_frame = customtkinter.CTkFrame(card, fg_color="transparent")
-        weekd_days_frame.pack(pady=15, padx=25)
+        text_label = ttk.Label(add_alarm_window, text="Text:")
+        text_label.grid(row=4, column=0, pady=5)
+        text_entry = ttk.Entry(add_alarm_window)
+        text_entry.grid(row=4, column=1, pady=5)
 
-        day_checkboxes = []
-        for i, day in enumerate(days_of_week):
-            day_var = customtkinter.StringVar(value="on")
-            day_cb = customtkinter.CTkCheckBox(
-                weekd_days_frame,
-                text=day.lower(),
-                corner_radius=50,
-                border_width=2,
-                width=20,
-                onvalue="on",
-                offvalue="off",
-                variable=day_var,
+        days_label = ttk.Label(add_alarm_window, text="Days:")
+        days_label.grid(row=5, column=0, pady=5)
+        days_var = {}
+        for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
+            days_var[day] = tk.BooleanVar(add_alarm_window)
+            ttk.Checkbutton(add_alarm_window, text=day, variable=days_var[day]).grid(
+                row=5, column=i + 1, pady=5
             )
-            day_cb.grid(row=0, column=i + 1, sticky="w")
-            day_checkboxes.append(day_var)
 
-        # Now you can access the state of each day's checkbox using day_checkboxes list.
-        sunday, monday, tuesday, wednesday, thursday, friday, saturday = day_checkboxes
-
-    def music():
-        def get_music_files(folder_path):
-            global music_files
-            for file in os.listdir(folder_path):
-                if (
-                    file.endswith(".mp3")
-                    or file.endswith(".wav")
-                    or file.endswith(".ogg")
-                    or file.endswith(".aiff")
-                    or file.endswith(".flac")
-                    or file.endswith(".acc")
-                    or file.endswith(".wma")
-                ):
-                    music_files.append(file)
-            return music_files
-
-        music_frame = customtkinter.CTkFrame(card, fg_color="transparent")
-        music_frame.pack(pady=15)
-        music_label = customtkinter.CTkLabel(
-            music_frame, text="Select Music : ", font=("helvitica", 20)
+        cancel_button = ttk.Button(
+            add_alarm_window, text="Cancel", command=add_alarm_window.destroy
         )
-        music_label.pack(side="left", padx=5)
-        music_files = get_music_files("music")
-        curr_music.set(music_files[0])
-        select_bell = customtkinter.CTkOptionMenu(
-            music_frame,
-            values=music_files,
-            variable=curr_music,
-        )
-        print()
-        select_bell.pack(side="left", padx=5)
+        cancel_button.grid(row=6, column=0, columnspan=2, pady=10)
 
-    def btn():
-        def save_data_and_display_card(window, hour, minute, second, name):
-            def save_data(name):
-                card_item = {}
-                # time
-                hr = hour.get()
-                mi = minute.get()
-                sec = second.get()
-                # name
-                name = name.get()
-                # weeks
-                sun = sunday.get()
-                mon = monday.get()
-                tue = tuesday.get()
-                wed = wednesday.get()
-                thu = thursday.get()
-                fri = friday.get()
-                sat = saturday.get()
-                # music
-                current_music = curr_music.get()
-                card_item.update(
-                    {
-                        "hour": hr,
-                        "minute": mi,
-                        "second": sec,
-                        "name": name,
-                        "sunday": sun,
-                        "monday": mon,
-                        "tuesday": tue,
-                        "wednesday": wed,
-                        "thursday": thu,
-                        "friday": fri,
-                        "saturday": sat,
-                        "music": current_music,
-                    }
-                )
-                print(hour)
-                print(hr)
-                print("data saved")
-
-                def display_card():
-                    global frame
-                    # frames.append(create_frame())
-                    # frames[-1].pack(fill="both", padx=10, pady=10)
-                    frame = customtkinter.CTkFrame(Scrll_frame)
-                    time = customtkinter.CTkLabel(frame, text=hr)
-                    time.pack()
-
-                    delete_frame = customtkinter.CTkButton(
-                        frame, text="Delete", command=frame.destroy
-                    )
-                    delete_frame.pack()
-                    window.destroy()
-                    frame.pack(fill="both", padx=10, pady=10)
-
-                display_card()
-
-            save_data(name)
-
-        btn_frame = customtkinter.CTkFrame(card)
-        btn_frame.pack(padx=20, pady=20)
-        cancel_btn = customtkinter.CTkButton(
-            btn_frame,
-            text="Cancel",
-            font=("helvitica", 20, "bold"),
-            command=window.destroy,
-        )
-        cancel_btn.pack(side="left")
-        global name, hour, minute, second
-        save_btn = customtkinter.CTkButton(
-            btn_frame,
-            text="Save Bell",
-            font=("helvitica", 20, "bold"),
-            command=lambda: save_data_and_display_card(
-                window, hour, minute, second, name
+        save_button = ttk.Button(
+            add_alarm_window,
+            text="Save",
+            command=lambda: self.save_alarm(
+                hour_var.get(),
+                minute_var.get(),
+                am_pm_var.get(),
+                text_entry.get(),
+                days_var,
+                add_alarm_window,
             ),
         )
-        save_btn.pack()
+        save_button.grid(row=6, column=0, columnspan=2, pady=10)
 
-    time()
-    name()
-    weeks()
-    music()
-    btn()
+    def save_alarm(self, hour, minute, am_pm, text, days_var, add_alarm_window):
+        alarm_time = f"{hour}:{minute} {am_pm}"
+        days_selected = [day for day, var in days_var.items() if var.get()]
+
+        if not days_selected:
+            messagebox.showwarning("Error", "Select at least one day for the alarm.")
+            return
+
+        alarm_data = {
+            "time": alarm_time,
+            "text": text,
+            "days": days_selected,
+            "switch_state": True,  # default to True
+        }
+
+        self.alarms.append(alarm_data)
+        self.save_data()
+
+        add_alarm_window.destroy()
+        self.display_alarms()
+
+    def display_alarms(self):
+        # Clear existing widgets in the display frame
+        for widget in self.display_alarms_frame.winfo_children():
+            widget.destroy()
+
+        # Display alarms in the display frame
+        for i, alarm in enumerate(self.alarms):
+            alarm_frame = tk.Frame(self.display_alarms_frame, bd=2, relief=tk.GROOVE)
+            alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
+
+            ttk.Label(alarm_frame, text=f"Time: {alarm['time']}").grid(
+                row=0, column=0, sticky="w"
+            )
+            ttk.Label(alarm_frame, text=f"Text: {alarm['text']}").grid(
+                row=1, column=0, sticky="w"
+            )
+            ttk.Label(alarm_frame, text=f"Days: {', '.join(alarm['days'])}").grid(
+                row=2, column=0, sticky="w"
+            )
+
+            switch_var = tk.BooleanVar(value=alarm["switch_state"])
+            switch_widget = CTkSwitch(alarm_frame, variable=switch_var)
+            switch_widget.grid(row=0, column=1, rowspan=3, padx=10)
+
+            delete_button = ttk.Button(
+                alarm_frame, text="Delete", command=lambda a=alarm: self.delete_alarm(a)
+            )
+            delete_button.grid(row=3, column=0, pady=5)
+
+            edit_button = ttk.Button(
+                alarm_frame, text="Edit", command=lambda a=alarm: self.edit_alarm(a)
+            )
+            edit_button.grid(row=3, column=1, pady=5)
+
+    def delete_alarm(self, alarm):
+        self.alarms.remove(alarm)
+        self.save_data()
+        self.display_alarms()
+
+    def edit_alarm(self, alarm):
+        edit_alarm_window = tk.Toplevel(self.master)
+        edit_alarm_window.title("Edit Alarm")
+
+        # Widgets in the sub-window
+        ttk.Label(edit_alarm_window, text="Edit Alarm").grid(
+            row=0, column=0, columnspan=2
+        )
+
+        hour_label = ttk.Label(edit_alarm_window, text="Hour:")
+        hour_label.grid(row=1, column=0, pady=5)
+        hour_var = tk.StringVar(edit_alarm_window)
+        hour_var.set(alarm["time"].split(":")[0])
+        hour_entry = ttk.Combobox(
+            edit_alarm_window,
+            textvariable=hour_var,
+            values=[str(i).zfill(2) for i in range(1, 13)],
+        )
+        hour_entry.grid(row=1, column=1, pady=5)
+
+        minute_label = ttk.Label(edit_alarm_window, text="Minute:")
+        minute_label.grid(row=2, column=0, pady=5)
+        minute_var = tk.StringVar(edit_alarm_window)
+        minute_var.set(alarm["time"].split(":")[1].split()[0])
+        minute_entry = ttk.Combobox(
+            edit_alarm_window,
+            textvariable=minute_var,
+            values=[str(i).zfill(2) for i in range(60)],
+        )
+        minute_entry.grid(row=2, column=1, pady=5)
+
+        am_pm_label = ttk.Label(edit_alarm_window, text="AM/PM:")
+        am_pm_label.grid(row=3, column=0, pady=5)
+        am_pm_var = tk.StringVar(edit_alarm_window)
+        am_pm_var.set(alarm["time"].split()[1])
+        am_pm_entry = ttk.Combobox(
+            edit_alarm_window, textvariable=am_pm_var, values=["AM", "PM"]
+        )
+        am_pm_entry.grid(row=3, column=1, pady=5)
+
+        text_label = ttk.Label(edit_alarm_window, text="Text:")
+        text_label.grid(row=4, column=0, pady=5)
+        text_var = tk.StringVar(edit_alarm_window)
+        text_var.set(alarm["text"])
+        text_entry = ttk.Entry(edit_alarm_window, textvariable=text_var)
+        text_entry.grid(row=4, column=1, pady=5)
+
+        days_label = ttk.Label(edit_alarm_window, text="Days:")
+        days_label.grid(row=5, column=0, pady=5)
+        days_var = {}
+        for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
+            days_var[day] = tk.BooleanVar(
+                edit_alarm_window, value=(day in alarm["days"])
+            )
+            ttk.Checkbutton(edit_alarm_window, text=day, variable=days_var[day]).grid(
+                row=5, column=i + 1, pady=5
+            )
+
+        cancel_button = ttk.Button(
+            edit_alarm_window, text="Cancel", command=edit_alarm_window.destroy
+        )
+        cancel_button.grid(row=6, column=0, columnspan=2, pady=10)
+
+        save_button = ttk.Button(
+            edit_alarm_window,
+            text="Save",
+            command=lambda: self.save_edited_alarm(
+                hour_var.get(),
+                minute_var.get(),
+                am_pm_var.get(),
+                text_var.get(),
+                days_var,
+                alarm,
+                edit_alarm_window,
+            ),
+        )
+        save_button.grid(row=6, column=0, columnspan=2, pady=10)
+
+    def save_edited_alarm(
+        self, hour, minute, am_pm, text, days_var, old_alarm, edit_alarm_window
+    ):
+        self.alarms.remove(old_alarm)
+
+        alarm_time = f"{hour}:{minute} {am_pm}"
+        days_selected = [day for day, var in days_var.items() if var.get()]
+
+        if not days_selected:
+            messagebox.showwarning("Error", "Select at least one day for the alarm.")
+            return
+
+        edited_alarm = {
+            "time": alarm_time,
+            "text": text,
+            "days": days_selected,
+            "switch_state": True,  # default to True
+        }
+
+        self.alarms.append(edited_alarm)
+        self.save_data()
+
+        edit_alarm_window.destroy()
+        self.display_alarms()
+
+    def check_alarm(self):
+        while True:
+            current_time = time.strftime("%I:%M %p")
+            current_day = time.strftime("%a")
+
+            for alarm in self.alarms:
+                if (
+                    alarm["time"] == current_time
+                    and current_day in alarm["days"]
+                    and alarm["switch_state"]
+                ):
+                    # Play sound (cross-platform)
+                    pygame.mixer.init()
+                    pygame.mixer.music.load("School-Period-bell.mp3")
+                    pygame.mixer.music.play()
+
+            time.sleep(1)  # Check every second
+
+    def delete_alarm(self, alarm):
+        self.alarms.remove(alarm)
+        self.save_data()
+        self.display_alarms()
+
+    def load_data(self):
+        try:
+            with open("data.json", "r") as file:
+                self.alarms = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.alarms = []
+
+    def save_data(self):
+        with open("data.json", "w") as file:
+            json.dump(self.alarms, file, indent=2)
 
 
-mainframe = customtkinter.CTkFrame(root)
-mainframe.pack(fill="both", expand=True)
-
-Scrll_frame = customtkinter.CTkScrollableFrame(mainframe)
-Scrll_frame.pack(fill="both", expand=True)
-
-buttonframe = customtkinter.CTkFrame(
-    mainframe,
-)
-buttonframe.place(relx=0.94, rely=0.94, anchor="se")
-
-btn = customtkinter.CTkButton(
-    buttonframe,
-    text="+",
-    width=50,
-    height=50,
-    font=("arial", 40),
-    command=open_window,
-)
-btn.pack(ipadx=5, ipady=5, padx=5, pady=5)
-
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = BellSystemApp(root)
+    root.mainloop()
