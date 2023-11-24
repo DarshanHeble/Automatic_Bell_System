@@ -34,7 +34,7 @@ class BellSystemApp:
 
         # Add Alarm Button
         add_alarm_button = tk.Button(
-            self.left_frame, text="Add Alarm", command=self.add_alarm
+            self.right_frame, text="Add Alarm", command=self.add_alarm
         )
         add_alarm_button.pack(pady=10)
 
