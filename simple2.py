@@ -12,6 +12,10 @@ class BellSystemApp:
         # Load button names from JSON file
         self.button_names = self.load_button_names()
 
+        # load data
+        self.load_data()
+
+        # create all widgets
         self.create_widgets()
 
     def create_widgets(self):
@@ -190,10 +194,63 @@ class BellSystemApp:
         }
 
         self.alarms.append(alarm_data)
-        self.save_data()
+        # self.save_data()
 
         add_alarm_window.destroy()
         self.display_alarms()
+
+    def display_alarms(self):
+        # Clear existing widgets in the display frame
+        for widget in self.display_alarms_frame.winfo_children():
+            widget.destroy()
+
+        # Display alarms in the display frame
+        for i, alarm in enumerate(self.alarms):
+            alarm_frame = tk.Frame(self.display_alarms_frame, bd=2, relief=tk.GROOVE)
+            alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
+
+            ttk.Label(alarm_frame, text=f"Time: {alarm['time']}").grid(
+                row=0, column=0, sticky="w"
+            )
+            ttk.Label(alarm_frame, text=f"Text: {alarm['text']}").grid(
+                row=1, column=0, sticky="w"
+            )
+            ttk.Label(alarm_frame, text=f"Days: {', '.join(alarm['days'])}").grid(
+                row=2, column=0, sticky="w"
+            )
+
+            switch_var = tk.BooleanVar(value=alarm["switch_state"])
+            switch_widget = CTkSwitch(
+                alarm_frame,
+                variable=switch_var,
+                command=lambda: self.toggle_switch(alarm, switch_var),
+            )
+            switch_widget.grid(row=0, column=1, rowspan=3, padx=10)
+
+            delete_button = ttk.Button(
+                alarm_frame, text="Delete", command=lambda a=alarm: self.delete_alarm(a)
+            )
+            delete_button.grid(row=3, column=0, pady=5)
+
+            edit_button = ttk.Button(
+                alarm_frame, text="Edit", command=lambda a=alarm: self.edit_alarm(a)
+            )
+            edit_button.grid(row=3, column=1, pady=5)
+
+    def save_data(self):
+        with open("data2.json", "w") as file:
+            json.dump(self.alarms, file, indent=2)
+
+    def load_data(self):
+        try:
+            with open("data2.json", "r") as file:
+                self.alarms = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.alarms = []
+
+    def save_data(self):
+        with open("data.json", "w") as file:
+            json.dump(self.alarms, file, indent=2)
 
 
 if __name__ == "__main__":
