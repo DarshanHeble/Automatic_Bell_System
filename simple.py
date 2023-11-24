@@ -166,7 +166,11 @@ class BellSystemApp:
             )
 
             switch_var = tk.BooleanVar(value=alarm["switch_state"])
-            switch_widget = CTkSwitch(alarm_frame, variable=switch_var)
+            switch_widget = CTkSwitch(
+                alarm_frame,
+                variable=switch_var,
+                command=lambda: self.toggle_switch(alarm, switch_var),
+            )
             switch_widget.grid(row=0, column=1, rowspan=3, padx=10)
 
             delete_button = ttk.Button(
@@ -178,6 +182,10 @@ class BellSystemApp:
                 alarm_frame, text="Edit", command=lambda a=alarm: self.edit_alarm(a)
             )
             edit_button.grid(row=3, column=1, pady=5)
+
+    def toggle_switch(self, alarm, switch_var):
+        alarm["switch_state"] = switch_var.get()
+        self.save_data()
 
     def delete_alarm(self, alarm):
         self.alarms.remove(alarm)
@@ -288,22 +296,30 @@ class BellSystemApp:
         self.display_alarms()
 
     def check_alarm(self):
-        while True:
-            current_time = time.strftime("%I:%M %p")
-            current_day = time.strftime("%a")
+        current_time = time.strftime("%I:%M %p")
+        current_day = time.strftime("%a")
 
-            for alarm in self.alarms:
-                if (
-                    alarm["time"] == current_time
-                    and current_day in alarm["days"]
-                    and alarm["switch_state"]
-                ):
-                    # Play sound (cross-platform)
-                    pygame.mixer.init()
-                    pygame.mixer.music.load("School-Period-bell.mp3")
-                    pygame.mixer.music.play()
+        # Initialize pygame outside the loop (call it once)
+        pygame.mixer.init()
 
-            time.sleep(1)  # Check every second
+        # Load the sound file once
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+
+        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+
+        for alarm in self.alarms:
+            # print(f"Checking alarm: {alarm}")
+            if (
+                alarm["time"] == current_time
+                and current_day in alarm["days"]
+                and alarm["switch_state"]
+            ):
+                # print(f"Playing sound for alarm: {alarm}")
+                sound.play()
+                time.sleep(120)
+
+        # Schedule the check_alarm function to run again after 1000 milliseconds (1 second)
+        self.master.after(1000, self.check_alarm)
 
     def delete_alarm(self, alarm):
         self.alarms.remove(alarm)
