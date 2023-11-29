@@ -1,11 +1,9 @@
 [
   {
-    "time": "04:02 PM",
-    "text": "hvhv",
+    "time": "00:00 AM",
+    "text": "",
     "days": [
-      "Sun",
-      "Tue",
-      "Wed"
+      "Tue"
     ],
     "switch_state": true
   }

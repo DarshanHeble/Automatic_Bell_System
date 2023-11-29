@@ -53,9 +53,9 @@ class BellSystemApp:
                 "<Double-Button-1>",
                 lambda event, btn=button, idx=i: self.rename_button(btn, idx),
             )
-            # button.bind(
-            #     "<Button-1>", lambda event, idx=i: self.show_frame(idx, button_name)
-            # )
+            button.bind(
+                "<Button-1>", lambda event, idx=i: self.show_frame(idx, button_name)
+            )
 
         # Initial frame in the right frame
         self.default_frame = ctk.CTkFrame(self.right_frame)
@@ -78,6 +78,27 @@ class BellSystemApp:
             self.button_names[str(button_index)] = new_name
             # Save the updated data to the JSON file
             self.save_button_names()
+
+    def show_frame(self, idx, button_name):
+        # Unpack all frames in the right frame
+        for child in self.right_frame.winfo_children():
+            child.pack_forget()
+
+        # Create or show the specific frame based on the button clicked
+        frame_name = f"Frame {idx}"
+        frame = tk.Frame(self.right_frame, bg="white")
+        frame.pack(fill=tk.BOTH, expand=True, padx=20)
+        label = tk.Label(frame, text=f"{frame_name} - {button_name}")
+        label.pack(pady=10)
+
+        # Button for each frame in the specific frame
+        frame_button = tk.Button(
+            frame,
+            text="Add Alarm",
+            # command=lambda: self.show_frame(idx, button_name),
+            command=self.open_add_alarm_window,
+        )
+        frame_button.pack()
 
     def save_button_names(self):
         # Save the button names to a JSON file
