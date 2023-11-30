@@ -79,33 +79,32 @@ class BellSystemApp:
         # label.pack(pady=10)
 
         self.create_frames_for_right_frame(self.right_frame)
-        self.create_buttons_for_right_frame_frames(self)
         self.create_buttons_for_left_frame(self.left_frame)
 
     def create_frames_for_right_frame(self, right_frame):
         self.frame1 = ctk.CTkFrame(right_frame, fg_color="orange")
-        scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
-        label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
+        self.scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
+        self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
         self.frame2 = ctk.CTkFrame(right_frame, fg_color="magenta")
-        scrol_frame2 = ctk.CTkScrollableFrame(self.frame2, corner_radius=0)
-        label2 = ctk.CTkLabel(self.frame2, text=self.button_names["2"])
+        self.scrol_frame2 = ctk.CTkScrollableFrame(self.frame2, corner_radius=0)
+        self.label2 = ctk.CTkLabel(self.frame2, text=self.button_names["2"])
 
         self.frame3 = ctk.CTkFrame(right_frame, fg_color="royalblue")
-        scrol_frame3 = ctk.CTkScrollableFrame(self.frame3, corner_radius=0)
-        label3 = ctk.CTkLabel(self.frame3, text=self.button_names["3"])
+        self.scrol_frame3 = ctk.CTkScrollableFrame(self.frame3, corner_radius=0)
+        self.label3 = ctk.CTkLabel(self.frame3, text=self.button_names["3"])
 
         self.frame4 = ctk.CTkFrame(right_frame, fg_color="purple")
-        scrol_frame4 = ctk.CTkScrollableFrame(self.frame4, corner_radius=0)
-        label4 = ctk.CTkLabel(self.frame4, text=self.button_names["4"])
+        self.scrol_frame4 = ctk.CTkScrollableFrame(self.frame4, corner_radius=0)
+        self.label4 = ctk.CTkLabel(self.frame4, text=self.button_names["4"])
 
         self.frame5 = ctk.CTkFrame(right_frame, fg_color="crimson")
-        scrol_frame5 = ctk.CTkScrollableFrame(self.frame5, corner_radius=0)
-        label5 = ctk.CTkLabel(self.frame5, text=self.button_names["5"])
+        self.scrol_frame5 = ctk.CTkScrollableFrame(self.frame5, corner_radius=0)
+        self.label5 = ctk.CTkLabel(self.frame5, text=self.button_names["5"])
 
         self.frame6 = ctk.CTkFrame(right_frame, fg_color="teal")
-        scrol_frame6 = ctk.CTkScrollableFrame(self.frame6, corner_radius=0)
-        label6 = ctk.CTkLabel(self.frame6, text=self.button_names["6"])
+        self.scrol_frame6 = ctk.CTkScrollableFrame(self.frame6, corner_radius=0)
+        self.label6 = ctk.CTkLabel(self.frame6, text=self.button_names["6"])
 
         def pack():
             self.frame1.pack()
@@ -114,18 +113,18 @@ class BellSystemApp:
             self.frame4.pack()
             self.frame5.pack()
             self.frame6.pack()
-            label1.pack()
-            label2.pack()
-            label3.pack()
-            label4.pack()
-            label5.pack()
-            label6.pack()
-            scrol_frame1.pack(expand=True, fill="both")
-            scrol_frame2.pack(expand=True, fill="both")
-            scrol_frame3.pack(expand=True, fill="both")
-            scrol_frame4.pack(expand=True, fill="both")
-            scrol_frame5.pack(expand=True, fill="both")
-            scrol_frame6.pack(expand=True, fill="both")
+            self.label1.pack()
+            self.label2.pack()
+            self.label3.pack()
+            self.label4.pack()
+            self.label5.pack()
+            self.label6.pack()
+            self.scrol_frame1.pack(expand=True, fill="both")
+            self.scrol_frame2.pack(expand=True, fill="both")
+            self.scrol_frame3.pack(expand=True, fill="both")
+            self.scrol_frame4.pack(expand=True, fill="both")
+            self.scrol_frame5.pack(expand=True, fill="both")
+            self.scrol_frame6.pack(expand=True, fill="both")
             self.frame1.forget()
             self.frame2.forget()
             self.frame3.forget()
@@ -133,6 +132,119 @@ class BellSystemApp:
             self.frame5.forget()
             self.frame6.forget()
             self.frame1.pack(expand=True, fill="both")
+
+        pack()
+        self.create_buttons_for_right_frame_frames()
+
+    def create_buttons_for_right_frame_frames(self):
+        buttonframe = ctk.CTkFrame(self.frame1, corner_radius=0)
+        buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+        btn = ctk.CTkButton(
+            buttonframe,
+            text="+",
+            width=50,
+            height=50,
+            font=("arial", 40),
+            command=lambda: open_add_alarm_window(
+                scrol_frame1,
+                frame1_data,
+                time.strftime("%I"),
+                time.strftime("%M"),
+                time.strftime("%p"),
+            ),
+        )
+        btn.pack(ipadx=5, ipady=5)
+        buttonframe = ctk.CTkFrame(self.frame2, corner_radius=0)
+        buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+        btn = ctk.CTkButton(
+            buttonframe,
+            text="+",
+            width=50,
+            height=50,
+            font=("arial", 40),
+            command=lambda: open_window(
+                scrol_frame2,
+                frame2_data,
+                time.strftime("%I"),
+                time.strftime("%M"),
+                time.strftime("%p"),
+            ),
+        )
+        btn.pack(ipadx=5, ipady=5)
+        buttonframe = ctk.CTkFrame(self.frame3, corner_radius=0)
+        buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+        btn = ctk.CTkButton(
+            buttonframe,
+            text="+",
+            width=50,
+            height=50,
+            font=("arial", 40),
+            command=lambda: open_window(
+                scrol_frame3,
+                frame3_data,
+                time.strftime("%I"),
+                time.strftime("%M"),
+                time.strftime("%p"),
+            ),
+        )
+        btn.pack(ipadx=5, ipady=5)
+        buttonframe = ctk.CTkFrame(self.frame4, corner_radius=0)
+        buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+        btn = ctk.CTkButton(
+            buttonframe,
+            text="+",
+            width=50,
+            height=50,
+            font=("arial", 40),
+            command=lambda: open_window(
+                scrol_frame4,
+                frame4_data,
+                time.strftime("%I"),
+                time.strftime("%M"),
+                time.strftime("%p"),
+            ),
+        )
+        btn.pack(ipadx=5, ipady=5)
+        buttonframe = ctk.CTkFrame(self.frame5, corner_radius=0)
+        buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+        btn = ctk.CTkButton(
+            buttonframe,
+            text="+",
+            width=50,
+            height=50,
+            font=("arial", 40),
+            command=lambda: open_window(
+                scrol_frame5,
+                frame5_data,
+                time.strftime("%I"),
+                time.strftime("%M"),
+                time.strftime("%p"),
+            ),
+        )
+        btn.pack(ipadx=5, ipady=5)
+        buttonframe = ctk.CTkFrame(self.frame6, corner_radius=0)
+        buttonframe.place(relx=0.94, rely=0.94, anchor="se")
+
+        btn = ctk.CTkButton(
+            buttonframe,
+            text="+",
+            width=50,
+            height=50,
+            font=("arial", 40),
+            command=lambda: open_window(
+                scrol_frame6,
+                frame6_data,
+                time.strftime("%I"),
+                time.strftime("%M"),
+                time.strftime("%p"),
+            ),
+        )
+        btn.pack(ipadx=5, ipady=5)
 
     def create_buttons_for_left_frame(self, left_frame):
         button1 = ctk.CTkButton(
@@ -147,7 +259,9 @@ class BellSystemApp:
         button1.pack()
         button1.bind(
             "<Double-Button-1>",
-            lambda event, btn=button1, idx=1: self.rename_button(btn, idx),
+            lambda event, btn=button1, idx=1, label=self.label1: self.rename_button(
+                btn, idx, label
+            ),
         ),
 
         button2 = ctk.CTkButton(
@@ -162,7 +276,9 @@ class BellSystemApp:
         button2.pack()
         button2.bind(
             "<Double-Button-1>",
-            lambda event, btn=button1, idx=1: self.rename_button(btn, idx),
+            lambda event, btn=button2, idx=2, label=self.label2: self.rename_button(
+                btn, idx, label
+            ),
         ),
         button3 = ctk.CTkButton(
             self.left_frame,
@@ -176,7 +292,9 @@ class BellSystemApp:
         button3.pack()
         button3.bind(
             "<Double-Button-1>",
-            lambda event, btn=button1, idx=1: self.rename_button(btn, idx),
+            lambda event, btn=button3, idx=3, label=self.label3: self.rename_button(
+                btn, idx, label
+            ),
         ),
         button4 = ctk.CTkButton(
             self.left_frame,
@@ -190,7 +308,9 @@ class BellSystemApp:
         button4.pack()
         button4.bind(
             "<Double-Button-1>",
-            lambda event, btn=button1, idx=1: self.rename_button(btn, idx),
+            lambda event, btn=button4, idx=4, label=self.label4: self.rename_button(
+                btn, idx, label
+            ),
         ),
         button5 = ctk.CTkButton(
             self.left_frame,
@@ -204,7 +324,9 @@ class BellSystemApp:
         button5.pack()
         button5.bind(
             "<Double-Button-1>",
-            lambda event, btn=button1, idx=1: self.rename_button(btn, idx),
+            lambda event, btn=button5, idx=5, label=self.label5: self.rename_button(
+                btn, idx, label
+            ),
         ),
         button6 = ctk.CTkButton(
             self.left_frame,
@@ -218,7 +340,9 @@ class BellSystemApp:
         button6.pack()
         button6.bind(
             "<Double-Button-1>",
-            lambda event, btn=button1, idx=1: self.rename_button(btn, idx),
+            lambda event, btn=button6, idx=6, label=self.label6: self.rename_button(
+                btn, idx, label
+            ),
         ),
 
     def open_add_alarm_window(self):
@@ -326,7 +450,7 @@ class BellSystemApp:
         add_alarm_window.destroy()
         self.display_alarms()
 
-    def rename_button(self, button, button_index):
+    def rename_button(self, button, button_index, label):
         current_text = button.cget("text")
 
         # new_name = simpledialog.askstring(
@@ -337,6 +461,7 @@ class BellSystemApp:
         ).get_input()
         if new_name:
             button.configure(text=new_name)
+            label.configure(text=new_name)
             # Update the button name in the loaded data
             self.button_names[str(button_index)] = new_name
             # Save the updated data to the JSON file
