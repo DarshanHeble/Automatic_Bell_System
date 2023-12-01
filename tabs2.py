@@ -153,7 +153,7 @@ class BellSystemApp:
             width=50,
             height=50,
             font=("arial", 40),
-            command=lambda: open_add_alarm_window(
+            command=lambda: self.open_add_alarm_window(
                 self.scrol_frame1, self.alarms1, self.data1
             ),
         )
@@ -167,7 +167,7 @@ class BellSystemApp:
             width=50,
             height=50,
             font=("arial", 40),
-            command=lambda: open_add_alarm_window(
+            command=lambda: self.open_add_alarm_window(
                 self.scrol_frame2, self.alarms2, self.data2
             ),
         )
@@ -181,7 +181,7 @@ class BellSystemApp:
             width=50,
             height=50,
             font=("arial", 40),
-            command=lambda: open_add_alarm_window(
+            command=lambda: self.open_add_alarm_window(
                 self.scrol_frame3, self.alarms3, self.data3
             ),
         )
@@ -195,7 +195,7 @@ class BellSystemApp:
             width=50,
             height=50,
             font=("arial", 40),
-            command=lambda: open_add_alarm_window(
+            command=lambda: self.open_add_alarm_window(
                 self.scrol_frame4, self.alarms4, self.data4
             ),
         )
@@ -209,7 +209,7 @@ class BellSystemApp:
             width=50,
             height=50,
             font=("arial", 40),
-            command=lambda: open_add_alarm_window(
+            command=lambda: self.open_add_alarm_window(
                 self.scrol_frame5, self.alarms5, self.data5
             ),
         )
@@ -223,7 +223,7 @@ class BellSystemApp:
             width=50,
             height=50,
             font=("arial", 40),
-            command=lambda: open_add_alarm_window(
+            command=lambda: self.open_add_alarm_window(
                 self.scrol_frame6, self.alarms6, self.data6
             ),
         )
@@ -406,11 +406,25 @@ class BellSystemApp:
                 text_entry.get(),
                 days_var,
                 add_alarm_window,
+                scrol_frame,
+                alarm,
+                data,
             ),
         )
         save_button.grid(row=7, column=0, columnspan=2, pady=10)
 
-    def save_alarm(self, hour, minute, am_pm, text, days_var, add_alarm_window):
+    def save_alarm(
+        self,
+        hour,
+        minute,
+        am_pm,
+        text,
+        days_var,
+        add_alarm_window,
+        scrol_frame,
+        alarm,
+        data,
+    ):
         alarm_time = f"{hour}:{minute} {am_pm}"
         days_selected = [day for day, var in days_var.items() if var.get()]
 
@@ -427,47 +441,51 @@ class BellSystemApp:
             "switch_state": True,  # default to True
         }
 
-        self.alarms.append(alarm_data)
-        self.save_data()
+        alarm.append(alarm_data)
+        self.save_data(alarm, data)
 
         add_alarm_window.destroy()
-        self.display_alarms()
+        self.display_alarms(scrol_frame, alarm, data)
 
-    def display_alarms(self):
+    def display_alarms(self, scrol_frame, alarm, data):
         # Clear existing widgets in the display frame
-        for widget in self.display_alarms_frame.winfo_children():
+        for widget in scrol_frame.winfo_children():
             widget.destroy()
 
         # Display alarms in the display frame
-        for i, alarm in enumerate(self.alarms):
-            alarm_frame = tk.Frame(self.display_alarms_frame, bd=2, relief=tk.GROOVE)
+        for i, alar in enumerate(alarm):
+            alarm_frame = ctk.CTkFrame(scrol_frame)
             alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
 
-            ttk.Label(alarm_frame, text=f"Time: {alarm['time']}").grid(
+            ctk.CTkLabel(alarm_frame, text=f"Time: {alar['time']}").grid(
                 row=0, column=0, sticky="w"
             )
-            ttk.Label(alarm_frame, text=f"Text: {alarm['text']}").grid(
+            ctk.CTkLabel(alarm_frame, text=f"Text: {alar['text']}").grid(
                 row=1, column=0, sticky="w"
             )
-            ttk.Label(alarm_frame, text=f"Days: {', '.join(alarm['days'])}").grid(
+            ctk.CTkLabel(alarm_frame, text=f"Days: {', '.join(alar['days'])}").grid(
                 row=2, column=0, sticky="w"
             )
 
-            switch_var = tk.BooleanVar(value=alarm["switch_state"])
-            switch_widget = CTkSwitch(
+            switch_var = ctk.BooleanVar(value=alar["switch_state"])
+            switch_widget = ctk.CTkSwitch(
                 alarm_frame,
                 variable=switch_var,
-                command=lambda: self.toggle_switch(alarm, switch_var),
+                command=lambda: self.toggle_switch(alar, switch_var),
             )
             switch_widget.grid(row=0, column=1, rowspan=3, padx=10)
 
-            delete_button = ttk.Button(
-                alarm_frame, text="Delete", command=lambda a=alarm: self.delete_alarm(a)
+            delete_button = ctk.CTkButton(
+                alarm_frame,
+                text="Delete",
+                command=lambda a=alar, scrol_frame=scrol_frame, alarm=alarm, data=data: self.delete_alarm(
+                    a, scrol_frame, alarm, data
+                ),
             )
             delete_button.grid(row=3, column=0, pady=5)
 
-            edit_button = ttk.Button(
-                alarm_frame, text="Edit", command=lambda a=alarm: self.edit_alarm(a)
+            edit_button = ctk.CTkButton(
+                alarm_frame, text="Edit", command=lambda a=alar: self.edit_alarm(a)
             )
             edit_button.grid(row=3, column=1, pady=5)
 
@@ -487,6 +505,15 @@ class BellSystemApp:
             self.button_names[str(button_index)] = new_name
             # Save the updated data to the JSON file
             self.save_button_names()
+
+    def toggle_switch(self, alar, switch_var):
+        alar["switch_state"] = switch_var.get()
+        self.save_data()
+
+    def delete_alarm(self, alar, scrol_frame, alarm, data):
+        alarm.remove(alar)
+        self.save_data(alarm, data)
+        self.display_alarms(scrol_frame, alarm, data)
 
     def open_frame(self, frame):
         # Unpack all frames in the right frame
@@ -540,7 +567,7 @@ class BellSystemApp:
             with open("data.json", "r") as file:
                 self.alarms = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
-            # self.alarms = []
+            self.alarms = []
             pass
 
     def load_alarms(self, filename):
@@ -550,9 +577,9 @@ class BellSystemApp:
         except (FileNotFoundError, json.JSONDecodeError):
             return []
 
-    def save_data(self):
-        with open("data.json", "w") as file:
-            json.dump(self.alarms, file, indent=2)
+    def save_data(self, alarm, data):
+        with open(data, "w") as file:
+            json.dump(alarm, file, indent=2)
 
 
 if __name__ == "__main__":
