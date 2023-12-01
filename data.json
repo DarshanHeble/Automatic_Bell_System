@@ -1,18 +1,19 @@
 [
   {
     "time": "00:00 AM",
-    "text": "",
-    "days": [
-      "Tue"
-    ],
-    "switch_state": true
-  },
-  {
-    "time": "00:00 AM",
     "text": "yug",
     "days": [
       "Fri"
     ],
-    "switch_state": true
+    "switch_state": false
+  },
+  {
+    "time": "00:00 AM",
+    "text": "",
+    "days": [
+      "Mon",
+      "Tue"
+    ],
+    "switch_state": false
   }
 ]

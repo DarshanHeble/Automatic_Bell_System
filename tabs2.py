@@ -471,7 +471,7 @@ class BellSystemApp:
             switch_widget = ctk.CTkSwitch(
                 alarm_frame,
                 variable=switch_var,
-                command=lambda: self.toggle_switch(alar, switch_var),
+                command=lambda: self.toggle_switch(alar, switch_var, alarm, data),
             )
             switch_widget.grid(row=0, column=1, rowspan=3, padx=10)
 
@@ -506,14 +506,92 @@ class BellSystemApp:
             # Save the updated data to the JSON file
             self.save_button_names()
 
-    def toggle_switch(self, alar, switch_var):
+    def toggle_switch(self, alar, switch_var, alarm, data):
         alar["switch_state"] = switch_var.get()
-        self.save_data()
+        self.save_data(alarm, data)
 
     def delete_alarm(self, alar, scrol_frame, alarm, data):
         alarm.remove(alar)
         self.save_data(alarm, data)
         self.display_alarms(scrol_frame, alarm, data)
+
+    def edit_alarm(self, alarm):
+        edit_alarm_window = tk.Toplevel(self.master)
+        edit_alarm_window.title("Edit Alarm")
+
+        # Widgets in the sub-window
+        ttk.Label(edit_alarm_window, text="Edit Alarm").grid(
+            row=0, column=0, columnspan=2
+        )
+
+        hour_label = ttk.Label(edit_alarm_window, text="Hour:")
+        hour_label.grid(row=1, column=0, pady=5)
+        hour_var = tk.StringVar(edit_alarm_window)
+        hour_var.set(alarm["time"].split(":")[0])
+        hour_entry = ttk.Combobox(
+            edit_alarm_window,
+            textvariable=hour_var,
+            values=[str(i).zfill(2) for i in range(1, 13)],
+        )
+        hour_entry.grid(row=1, column=1, pady=5)
+
+        minute_label = ttk.Label(edit_alarm_window, text="Minute:")
+        minute_label.grid(row=2, column=0, pady=5)
+        minute_var = tk.StringVar(edit_alarm_window)
+        minute_var.set(alarm["time"].split(":")[1].split()[0])
+        minute_entry = ttk.Combobox(
+            edit_alarm_window,
+            textvariable=minute_var,
+            values=[str(i).zfill(2) for i in range(60)],
+        )
+        minute_entry.grid(row=2, column=1, pady=5)
+
+        am_pm_label = ttk.Label(edit_alarm_window, text="AM/PM:")
+        am_pm_label.grid(row=3, column=0, pady=5)
+        am_pm_var = tk.StringVar(edit_alarm_window)
+        am_pm_var.set(alarm["time"].split()[1])
+        am_pm_entry = ttk.Combobox(
+            edit_alarm_window, textvariable=am_pm_var, values=["AM", "PM"]
+        )
+        am_pm_entry.grid(row=3, column=1, pady=5)
+
+        text_label = ttk.Label(edit_alarm_window, text="Text:")
+        text_label.grid(row=4, column=0, pady=5)
+        text_var = tk.StringVar(edit_alarm_window)
+        text_var.set(alarm["text"])
+        text_entry = ttk.Entry(edit_alarm_window, textvariable=text_var)
+        text_entry.grid(row=4, column=1, pady=5)
+
+        days_label = ttk.Label(edit_alarm_window, text="Days:")
+        days_label.grid(row=5, column=0, pady=5)
+        days_var = {}
+        for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
+            days_var[day] = tk.BooleanVar(
+                edit_alarm_window, value=(day in alarm["days"])
+            )
+            ttk.Checkbutton(edit_alarm_window, text=day, variable=days_var[day]).grid(
+                row=5, column=i + 1, pady=5
+            )
+
+        cancel_button = ttk.Button(
+            edit_alarm_window, text="Cancel", command=edit_alarm_window.destroy
+        )
+        cancel_button.grid(row=6, column=0, columnspan=2, pady=10)
+
+        save_button = ttk.Button(
+            edit_alarm_window,
+            text="Save",
+            command=lambda: self.save_edited_alarm(
+                hour_var.get(),
+                minute_var.get(),
+                am_pm_var.get(),
+                text_var.get(),
+                days_var,
+                alarm,
+                edit_alarm_window,
+            ),
+        )
+        save_button.grid(row=6, column=0, columnspan=2, pady=10)
 
     def open_frame(self, frame):
         # Unpack all frames in the right frame
