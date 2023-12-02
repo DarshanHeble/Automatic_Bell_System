@@ -6,6 +6,14 @@
       "Mon",
       "Tue"
     ],
-    "switch_state": true
+    "switch_state": false
+  },
+  {
+    "time": "07:19 PM",
+    "text": "",
+    "days": [
+      "Mon"
+    ],
+    "switch_state": false
   }
 ]

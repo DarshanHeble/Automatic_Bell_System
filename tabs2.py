@@ -31,6 +31,7 @@ class BellSystemApp:
 
         # load data
         # self.load_data()
+        
         self.alarms1 = self.load_alarms(self.data1)
         self.alarms2 = self.load_alarms(self.data2)
         self.alarms3 = self.load_alarms(self.data3)
@@ -452,6 +453,9 @@ class BellSystemApp:
         for widget in scrol_frame.winfo_children():
             widget.destroy()
 
+        # List to store switch variables
+        switch_vars = []
+
         # Display alarms in the display frame
         for i, alar in enumerate(alarm):
             alarm_frame = ctk.CTkFrame(scrol_frame)
@@ -468,10 +472,15 @@ class BellSystemApp:
             )
 
             switch_var = ctk.BooleanVar(value=alar["switch_state"])
+            # store variable in list 
+            switch_vars.append(switch_var)
+            
             switch_widget = ctk.CTkSwitch(
                 alarm_frame,
                 variable=switch_var,
-                command=lambda: self.toggle_switch(alar, switch_var, alarm, data),
+                command=lambda alar=alar, sv=switch_var, alarm=alarm, data=data: self.toggle_switch(
+                    alar, sv, alarm, data
+                ),
             )
             switch_widget.grid(row=0, column=1, rowspan=3, padx=10)
 

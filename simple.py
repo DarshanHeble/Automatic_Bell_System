@@ -50,6 +50,13 @@ class BellSystemApp:
         # Load and display existing alarms
         self.display_alarms()
 
+        # Load and display existing alarms
+        self.load_and_display_alarms()
+
+    def load_and_display_alarms(self):
+        self.load_data()
+        self.display_alarms()
+
     def add_alarm(self):
         # Sub-window for adding alarm
         add_alarm_window = tk.Toplevel(self.master)
@@ -150,6 +157,9 @@ class BellSystemApp:
         for widget in self.display_alarms_frame.winfo_children():
             widget.destroy()
 
+        # List to store switch variables
+        switch_vars = []
+
         # Display alarms in the display frame
         for i, alarm in enumerate(self.alarms):
             alarm_frame = tk.Frame(self.display_alarms_frame, bd=2, relief=tk.GROOVE)
@@ -166,10 +176,11 @@ class BellSystemApp:
             )
 
             switch_var = tk.BooleanVar(value=alarm["switch_state"])
+            switch_vars.append(switch_var)
             switch_widget = CTkSwitch(
                 alarm_frame,
                 variable=switch_var,
-                command=lambda: self.toggle_switch(alarm, switch_var),
+                command=lambda a=alarm, sv=switch_var: self.toggle_switch(a, sv),
             )
             switch_widget.grid(row=0, column=1, rowspan=3, padx=10)
 
