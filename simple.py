@@ -51,11 +51,11 @@ class BellSystemApp:
         self.display_alarms()
 
         # Load and display existing alarms
-        self.load_and_display_alarms()
+    #     self.load_and_display_alarms()
 
-    def load_and_display_alarms(self):
-        self.load_data()
-        self.display_alarms()
+    # def load_and_display_alarms(self):
+    #     self.load_data()
+    #     self.display_alarms()
 
     def add_alarm(self):
         # Sub-window for adding alarm

@@ -22,6 +22,7 @@ class BellSystemApp:
         # Load button names from JSON file
         self.button_names = self.load_button_names()
 
+        # Taking all files names to a variable
         self.data1 = "data1.json"
         self.data2 = "data2.json"
         self.data3 = "data3.json"
@@ -29,9 +30,12 @@ class BellSystemApp:
         self.data5 = "data5.json"
         self.data6 = "data6.json"
 
-        # load data
-        # self.load_data()
-        
+        # Start background thread
+        self.check_alarm_thread = threading.Thread(target=self.check_alarm)
+        self.check_alarm_thread.daemon = True
+        self.check_alarm_thread.start()
+
+        # Load all alarm data to its List
         self.alarms1 = self.load_alarms(self.data1)
         self.alarms2 = self.load_alarms(self.data2)
         self.alarms3 = self.load_alarms(self.data3)
@@ -54,31 +58,6 @@ class BellSystemApp:
         # Right Frame
         self.right_frame = ctk.CTkFrame(self.main_frame)
         self.right_frame.pack(side=RIGHT, fill="both", expand=True)
-
-        # Create 6 buttons in the left frame
-        # for i in range(1, 7):
-        #     # Check if button name exists in the loaded data
-        #     if str(i) in self.button_names:
-        #         button_name = self.button_names[str(i)]
-        #     else:
-        #         button_name = f"Button {i}"
-
-        #     button_frame = ctk.CTkFrame(self.left_frame)
-        #     button_frame.grid(row=i, column=0, pady=5, sticky="ew")
-
-        #     button = ctk.CTkButton(button_frame, text=button_name)
-        #     button.pack(expand=True, fill="both")
-        #     button.bind(
-        #         "<Double-Button-1>",
-        #         lambda event, btn=button, idx=i: self.rename_button(btn, idx),
-        #     )
-        #     frame = f"frame{i}"
-        #     button.bind(
-        #         "<Button-1>",
-        #         lambda event, btn_name=button_name, idx=i: self.open_frame(
-        #             idx, btn_name
-        #         ),
-        #     )
 
         # Initial frame in the right frame
         # self.default_frame = ctk.CTkFrame(self.right_frame)
@@ -113,6 +92,13 @@ class BellSystemApp:
         self.frame6 = ctk.CTkFrame(right_frame, fg_color="teal")
         self.scrol_frame6 = ctk.CTkScrollableFrame(self.frame6, corner_radius=0)
         self.label6 = ctk.CTkLabel(self.frame6, text=self.button_names["6"])
+
+        self.display_alarms(self.scrol_frame1, self.alarms1, self.data1)
+        self.display_alarms(self.scrol_frame2, self.alarms2, self.data2)
+        self.display_alarms(self.scrol_frame3, self.alarms3, self.data3)
+        self.display_alarms(self.scrol_frame4, self.alarms4, self.data4)
+        self.display_alarms(self.scrol_frame5, self.alarms5, self.data5)
+        self.display_alarms(self.scrol_frame6, self.alarms6, self.data6)
 
         def pack():
             self.frame1.pack()
@@ -448,6 +434,32 @@ class BellSystemApp:
         add_alarm_window.destroy()
         self.display_alarms(scrol_frame, alarm, data)
 
+    def check_alarm(self):
+        current_time = time.strftime("%I:%M %p")
+        current_day = time.strftime("%a")
+
+        # Initialize pygame outside the loop (call it once)
+        pygame.mixer.init()
+
+        # Load the sound file once
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+
+        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+
+        for alarm in self.alarms:
+            # print(f"Checking alarm: {alarm}")
+            if (
+                alarm["time"] == current_time
+                and current_day in alarm["days"]
+                and alarm["switch_state"]
+            ):
+                # print(f"Playing sound for alarm: {alarm}")
+                sound.play()
+                time.sleep(120)
+
+        # Schedule the check_alarm function to run again after 1000 milliseconds (1 second)
+        self.master.after(1000, self.check_alarm)
+
     def display_alarms(self, scrol_frame, alarm, data):
         # Clear existing widgets in the display frame
         for widget in scrol_frame.winfo_children():
@@ -472,9 +484,9 @@ class BellSystemApp:
             )
 
             switch_var = ctk.BooleanVar(value=alar["switch_state"])
-            # store variable in list 
+            # store variable in list
             switch_vars.append(switch_var)
-            
+
             switch_widget = ctk.CTkSwitch(
                 alarm_frame,
                 variable=switch_var,
@@ -524,70 +536,75 @@ class BellSystemApp:
         self.save_data(alarm, data)
         self.display_alarms(scrol_frame, alarm, data)
 
-    def edit_alarm(self, alarm):
-        edit_alarm_window = tk.Toplevel(self.master)
+    def edit_alarm(self, alar):
+        edit_alarm_window = ctk.CTkToplevel(self.master)
         edit_alarm_window.title("Edit Alarm")
 
         # Widgets in the sub-window
-        ttk.Label(edit_alarm_window, text="Edit Alarm").grid(
+        ctk.CTkLabel(edit_alarm_window, text="Edit Alarm").grid(
             row=0, column=0, columnspan=2
         )
 
-        hour_label = ttk.Label(edit_alarm_window, text="Hour:")
+        hour_label = ctk.CTkLabel(edit_alarm_window, text="Hour:")
         hour_label.grid(row=1, column=0, pady=5)
-        hour_var = tk.StringVar(edit_alarm_window)
-        hour_var.set(alarm["time"].split(":")[0])
+        hour_var = ctk.StringVar(edit_alarm_window)
+        hour_var.set(alar["time"].split(":")[0])
         hour_entry = ttk.Combobox(
             edit_alarm_window,
             textvariable=hour_var,
+            font=("arial", 15),
             values=[str(i).zfill(2) for i in range(1, 13)],
         )
         hour_entry.grid(row=1, column=1, pady=5)
 
-        minute_label = ttk.Label(edit_alarm_window, text="Minute:")
+        minute_label = ctk.CTkLabel(edit_alarm_window, text="Minute:")
         minute_label.grid(row=2, column=0, pady=5)
-        minute_var = tk.StringVar(edit_alarm_window)
-        minute_var.set(alarm["time"].split(":")[1].split()[0])
+        minute_var = ctk.StringVar(edit_alarm_window)
+        minute_var.set(alar["time"].split(":")[1].split()[0])
         minute_entry = ttk.Combobox(
             edit_alarm_window,
             textvariable=minute_var,
+            font=("arial", 15),
             values=[str(i).zfill(2) for i in range(60)],
         )
         minute_entry.grid(row=2, column=1, pady=5)
 
-        am_pm_label = ttk.Label(edit_alarm_window, text="AM/PM:")
+        am_pm_label = ctk.CTkLabel(edit_alarm_window, text="AM/PM:")
         am_pm_label.grid(row=3, column=0, pady=5)
-        am_pm_var = tk.StringVar(edit_alarm_window)
-        am_pm_var.set(alarm["time"].split()[1])
+        am_pm_var = ctk.StringVar(edit_alarm_window)
+        am_pm_var.set(alar["time"].split()[1])
         am_pm_entry = ttk.Combobox(
-            edit_alarm_window, textvariable=am_pm_var, values=["AM", "PM"]
+            edit_alarm_window,
+            textvariable=am_pm_var,
+            font=("arial", 15),
+            values=["AM", "PM"],
         )
         am_pm_entry.grid(row=3, column=1, pady=5)
 
-        text_label = ttk.Label(edit_alarm_window, text="Text:")
+        text_label = ctk.CTkLabel(edit_alarm_window, text="Text:")
         text_label.grid(row=4, column=0, pady=5)
-        text_var = tk.StringVar(edit_alarm_window)
-        text_var.set(alarm["text"])
+        text_var = ctk.StringVar(edit_alarm_window)
+        text_var.set(alar["text"])
         text_entry = ttk.Entry(edit_alarm_window, textvariable=text_var)
         text_entry.grid(row=4, column=1, pady=5)
 
-        days_label = ttk.Label(edit_alarm_window, text="Days:")
+        days_label = ctk.CTkLabel(edit_alarm_window, text="Days:")
         days_label.grid(row=5, column=0, pady=5)
         days_var = {}
         for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
             days_var[day] = tk.BooleanVar(
-                edit_alarm_window, value=(day in alarm["days"])
+                edit_alarm_window, value=(day in alar["days"])
             )
-            ttk.Checkbutton(edit_alarm_window, text=day, variable=days_var[day]).grid(
+            ctk.CTkCheckBox(edit_alarm_window, text=day, variable=days_var[day]).grid(
                 row=5, column=i + 1, pady=5
             )
 
-        cancel_button = ttk.Button(
+        cancel_button = ctk.CTkButton(
             edit_alarm_window, text="Cancel", command=edit_alarm_window.destroy
         )
         cancel_button.grid(row=6, column=0, columnspan=2, pady=10)
 
-        save_button = ttk.Button(
+        save_button = ctk.CTkButton2(
             edit_alarm_window,
             text="Save",
             command=lambda: self.save_edited_alarm(
@@ -596,11 +613,36 @@ class BellSystemApp:
                 am_pm_var.get(),
                 text_var.get(),
                 days_var,
-                alarm,
+                alar,
                 edit_alarm_window,
             ),
         )
         save_button.grid(row=6, column=0, columnspan=2, pady=10)
+
+    def save_edited_alarm(
+        self, hour, minute, am_pm, text, days_var, old_alarm, edit_alarm_window
+    ):
+        self.alarms.remove(old_alarm)
+
+        alarm_time = f"{hour}:{minute} {am_pm}"
+        days_selected = [day for day, var in days_var.items() if var.get()]
+
+        if not days_selected:
+            messagebox.showwarning("Error", "Select at least one day for the alarm.")
+            return
+
+        edited_alarm = {
+            "time": alarm_time,
+            "text": text,
+            "days": days_selected,
+            "switch_state": True,  # default to True
+        }
+
+        self.alarms.append(edited_alarm)
+        self.save_data()
+
+        edit_alarm_window.destroy()
+        self.display_alarms()
 
     def open_frame(self, frame):
         # Unpack all frames in the right frame
@@ -615,27 +657,6 @@ class BellSystemApp:
         # print(i)
         frame.pack(expand=True, fill="both")
 
-    def show_frame(self, idx, button_name):
-        # Unpack all frames in the right frame
-        for child in self.right_frame.winfo_children():
-            child.pack_forget()
-
-        # Create or show the specific frame based on the button clicked
-        frame_name = f"Frame {idx}"
-        frame = ctk.CTkFrame(self.right_frame)
-        frame.pack(fill="both", expand=True, padx=20)
-        label = ctk.CTkLabel(frame, text=f"{frame_name} - {button_name}")
-        label.pack(pady=10)
-
-        # Button for each frame in the specific frame
-        frame_button = ctk.CTkButton(
-            frame,
-            text="Add Alarm",
-            # command=lambda: self.show_frame(idx, button_name),
-            command=self.open_add_alarm_window,
-        )
-        frame_button.pack()
-
     def save_button_names(self):
         # Save the button names to a JSON file
         with open("button_names.json", "w") as file:
@@ -648,14 +669,6 @@ class BellSystemApp:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             return {}
-
-    def load_data(self):
-        try:
-            with open("data.json", "r") as file:
-                self.alarms = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            self.alarms = []
-            pass
 
     def load_alarms(self, filename):
         try:
