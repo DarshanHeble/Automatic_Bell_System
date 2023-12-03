@@ -19,6 +19,9 @@ class BellSystemApp:
         self.load_data()
         self.create_widgets()
 
+        # Flag to signal the thread to stop
+        self.stop_thread = False
+
     def create_widgets(self):
         # Main Frame
         self.main_frame = tk.Frame(self.master)
@@ -51,7 +54,8 @@ class BellSystemApp:
         self.display_alarms()
 
         # Load and display existing alarms
-    #     self.load_and_display_alarms()
+
+        # self.load_and_display_alarms()
 
     # def load_and_display_alarms(self):
     #     self.load_data()
@@ -316,21 +320,38 @@ class BellSystemApp:
         # Load the sound file once
         sound = pygame.mixer.Sound("School-Period-bell.mp3")
 
-        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+        # Flag to track whether the music has been played for the current alarm
+        # music_played = False
 
-        for alarm in self.alarms:
-            # print(f"Checking alarm: {alarm}")
-            if (
-                alarm["time"] == current_time
-                and current_day in alarm["days"]
-                and alarm["switch_state"]
-            ):
-                # print(f"Playing sound for alarm: {alarm}")
-                sound.play()
-                time.sleep(120)
+        while not self.stop_thread:
+            for alarm in self.alarms:
+                if (
+                    alarm["time"] == current_time
+                    and current_day in alarm["days"]
+                    and alarm["switch_state"]
+                    # and not music_played
+                ):
+                    sound.play()
+                    # music_played = True
 
-        # Schedule the check_alarm function to run again after 1000 milliseconds (1 second)
-        self.master.after(1000, self.check_alarm)
+            # Reset the flag when the alarm condition is no longer met
+            # if music_played and all(
+            #     alarm["time"] != current_time
+            #     or current_day not in alarm["days"]
+            #     or not alarm["switch_state"]
+            #     for alarm in self.alarms
+            # ):
+            #     music_played = False
+
+            time.sleep(1)
+
+    def on_closing(self):
+        # Stop the background thread
+        self.stop_thread = True
+        # Stop the Pygame mixer
+        pygame.mixer.quit()
+        # Close the application
+        self.master.destroy()
 
     def delete_alarm(self, alarm):
         self.alarms.remove(alarm)
@@ -352,4 +373,8 @@ class BellSystemApp:
 if __name__ == "__main__":
     root = tk.Tk()
     app = BellSystemApp(root)
+
+    # Bind the on_closing method to the close event of the main window
+    root.protocol("WM_DELETE_WINDOW", app.on_closing)
+
     root.mainloop()

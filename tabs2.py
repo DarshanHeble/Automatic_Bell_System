@@ -9,9 +9,6 @@ import json
 import os
 import pygame
 
-# Initialize pygame mixer
-pygame.mixer.init()
-
 
 class BellSystemApp:
     def __init__(self, master):
@@ -30,10 +27,33 @@ class BellSystemApp:
         self.data5 = "data5.json"
         self.data6 = "data6.json"
 
+        # Flag to signal the thread to stop
+        self.stop_thread = False
+
         # Start background thread
-        self.check_alarm_thread = threading.Thread(target=self.check_alarm)
-        self.check_alarm_thread.daemon = True
-        self.check_alarm_thread.start()
+        self.check_alarm_thread1 = threading.Thread(target=self.check_alarm1)
+        self.check_alarm_thread1.daemon = True
+        self.check_alarm_thread1.start()
+
+        # self.check_alarm_thread2 = threading.Thread(target=self.check_alarm2)
+        # self.check_alarm_thread2.daemon = True
+        # self.check_alarm_thread2.start()
+
+        # self.check_alarm_thread3 = threading.Thread(target=self.check_alarm3)
+        # self.check_alarm_thread3.daemon = True
+        # self.check_alarm_thread3.start()
+
+        # self.check_alarm_thread4 = threading.Thread(target=self.check_alarm4)
+        # self.check_alarm_thread4.daemon = True
+        # self.check_alarm_thread4.start()
+
+        # self.check_alarm_thread5 = threading.Thread(target=self.check_alarm5)
+        # self.check_alarm_thread5.daemon = True
+        # self.check_alarm_thread5.start()
+
+        # self.check_alarm_thread6 = threading.Thread(target=self.check_alarm6)
+        # self.check_alarm_thread6.daemon = True
+        # self.check_alarm_thread6.start()
 
         # Load all alarm data to its List
         self.alarms1 = self.load_alarms(self.data1)
@@ -434,7 +454,7 @@ class BellSystemApp:
         add_alarm_window.destroy()
         self.display_alarms(scrol_frame, alarm, data)
 
-    def check_alarm(self):
+    def check_alarm1(self):
         current_time = time.strftime("%I:%M %p")
         current_day = time.strftime("%a")
 
@@ -446,19 +466,25 @@ class BellSystemApp:
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
-        for alarm in self.alarms:
-            # print(f"Checking alarm: {alarm}")
-            if (
-                alarm["time"] == current_time
-                and current_day in alarm["days"]
-                and alarm["switch_state"]
-            ):
-                # print(f"Playing sound for alarm: {alarm}")
-                sound.play()
-                time.sleep(120)
+        while not self.stop_thread:
+            for alarm in self.alarms1:
+                if (
+                    alarm["time"] == current_time
+                    and current_day in alarm["days"]
+                    and alarm["switch_state"]
+                ):
+                    sound.play()
+                    time.sleep(120)
 
-        # Schedule the check_alarm function to run again after 1000 milliseconds (1 second)
-        self.master.after(1000, self.check_alarm)
+            time.sleep(1)
+
+    def on_closing(self):
+        # Stop the background thread
+        self.stop_thread = True
+        # Stop the Pygame mixer
+        pygame.mixer.quit()
+        # Close the application
+        self.master.destroy()
 
     def display_alarms(self, scrol_frame, alarm, data):
         # Clear existing widgets in the display frame
@@ -506,7 +532,11 @@ class BellSystemApp:
             delete_button.grid(row=3, column=0, pady=5)
 
             edit_button = ctk.CTkButton(
-                alarm_frame, text="Edit", command=lambda a=alar: self.edit_alarm(a)
+                alarm_frame,
+                text="Edit",
+                command=lambda a=alar, scrol_frame=scrol_frame, alarm=alarm, data=data: self.edit_alarm(
+                    a, scrol_frame, alarm, data
+                ),
             )
             edit_button.grid(row=3, column=1, pady=5)
 
@@ -536,7 +566,7 @@ class BellSystemApp:
         self.save_data(alarm, data)
         self.display_alarms(scrol_frame, alarm, data)
 
-    def edit_alarm(self, alar):
+    def edit_alarm(self, alar, scrol_frame, alarm, data):
         edit_alarm_window = ctk.CTkToplevel(self.master)
         edit_alarm_window.title("Edit Alarm")
 
@@ -585,7 +615,7 @@ class BellSystemApp:
         text_label.grid(row=4, column=0, pady=5)
         text_var = ctk.StringVar(edit_alarm_window)
         text_var.set(alar["text"])
-        text_entry = ttk.Entry(edit_alarm_window, textvariable=text_var)
+        text_entry = ctk.CTkEntry(edit_alarm_window, textvariable=text_var)
         text_entry.grid(row=4, column=1, pady=5)
 
         days_label = ctk.CTkLabel(edit_alarm_window, text="Days:")
@@ -604,7 +634,7 @@ class BellSystemApp:
         )
         cancel_button.grid(row=6, column=0, columnspan=2, pady=10)
 
-        save_button = ctk.CTkButton2(
+        save_button = ctk.CTkButton(
             edit_alarm_window,
             text="Save",
             command=lambda: self.save_edited_alarm(
@@ -614,21 +644,35 @@ class BellSystemApp:
                 text_var.get(),
                 days_var,
                 alar,
+                scrol_frame,
+                alarm,
+                data,
                 edit_alarm_window,
             ),
         )
         save_button.grid(row=6, column=0, columnspan=2, pady=10)
 
     def save_edited_alarm(
-        self, hour, minute, am_pm, text, days_var, old_alarm, edit_alarm_window
+        self,
+        hour,
+        minute,
+        am_pm,
+        text,
+        days_var,
+        old_alarm,
+        scrol_frame,
+        alarm,
+        data,
+        edit_alarm_window,
     ):
-        self.alarms.remove(old_alarm)
+        alarm.remove(old_alarm)
 
         alarm_time = f"{hour}:{minute} {am_pm}"
         days_selected = [day for day, var in days_var.items() if var.get()]
 
         if not days_selected:
             messagebox.showwarning("Error", "Select at least one day for the alarm.")
+            CTkMessagebox(title="Error", message="Select atleast 1 day", icon="cancel")
             return
 
         edited_alarm = {
@@ -638,11 +682,11 @@ class BellSystemApp:
             "switch_state": True,  # default to True
         }
 
-        self.alarms.append(edited_alarm)
-        self.save_data()
+        alarm.append(edited_alarm)
+        self.save_data(alarm, data)
 
         edit_alarm_window.destroy()
-        self.display_alarms()
+        self.display_alarms(scrol_frame, alarm, data)
 
     def open_frame(self, frame):
         # Unpack all frames in the right frame
@@ -685,4 +729,8 @@ class BellSystemApp:
 if __name__ == "__main__":
     root = ctk.CTk()
     app = BellSystemApp(root)
+
+    # Bind the on_closing method to the close event of the main window
+    root.protocol("WM_DELETE_WINDOW", app.on_closing)
+
     root.mainloop()
