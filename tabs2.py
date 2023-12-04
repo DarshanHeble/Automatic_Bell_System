@@ -455,26 +455,42 @@ class BellSystemApp:
         self.display_alarms(scrol_frame, alarm, data)
 
     def check_alarm1(self):
-        current_time = time.strftime("%I:%M %p")
-        current_day = time.strftime("%a")
-
         # Initialize pygame outside the loop (call it once)
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+        sound = pygame.mixer.Sound("music\Handbell.mp3")
 
-        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+        # Flag to track whether the music has been played for the current alarm
+        music_played = False
 
         while not self.stop_thread:
             for alarm in self.alarms1:
+                current_time = time.strftime("%I:%M %p")
+                current_day = time.strftime("%a")
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
                     and alarm["switch_state"]
+                    and not music_played
                 ):
                     sound.play()
-                    time.sleep(120)
+                    music_played = True
+                    time.sleep(60)
+                    current_time = time.strftime("%I:%M %p")
+                    current_day = time.strftime("%a")
+
+            current_time = time.strftime("%I:%M %p")
+            current_day = time.strftime("%a")
+
+            # Reset the flag when the alarm condition is no longer met
+            if music_played and all(
+                alarm["time"] != current_time
+                or current_day not in alarm["days"]
+                or not alarm["switch_state"]
+                for alarm in self.alarms
+            ):
+                music_played = False
 
             time.sleep(1)
 
