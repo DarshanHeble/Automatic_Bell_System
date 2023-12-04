@@ -74,7 +74,8 @@ class BellSystemApp:
         hour_label = ttk.Label(add_alarm_window, text="Hour:")
         hour_label.grid(row=1, column=0, pady=5)
         hour_var = tk.StringVar(add_alarm_window)
-        hour_var.set("00")
+        hr = time.strftime("%I")
+        hour_var.set(hr)
         hour_entry = ttk.Combobox(
             add_alarm_window,
             textvariable=hour_var,
@@ -85,7 +86,8 @@ class BellSystemApp:
         minute_label = ttk.Label(add_alarm_window, text="Minute:")
         minute_label.grid(row=2, column=0, pady=5)
         minute_var = tk.StringVar(add_alarm_window)
-        minute_var.set("00")
+        min = time.strftime("%M")
+        minute_var.set(min)
         minute_entry = ttk.Combobox(
             add_alarm_window,
             textvariable=minute_var,
@@ -96,7 +98,8 @@ class BellSystemApp:
         am_pm_label = ttk.Label(add_alarm_window, text="AM/PM:")
         am_pm_label.grid(row=3, column=0, pady=5)
         am_pm_var = tk.StringVar(add_alarm_window)
-        am_pm_var.set("AM")
+        ampm = time.strftime("%p")
+        am_pm_var.set(ampm)
         am_pm_entry = ttk.Combobox(
             add_alarm_window, textvariable=am_pm_var, values=["AM", "PM"]
         )

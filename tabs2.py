@@ -35,25 +35,25 @@ class BellSystemApp:
         self.check_alarm_thread1.daemon = True
         self.check_alarm_thread1.start()
 
-        # self.check_alarm_thread2 = threading.Thread(target=self.check_alarm2)
-        # self.check_alarm_thread2.daemon = True
-        # self.check_alarm_thread2.start()
+        self.check_alarm_thread2 = threading.Thread(target=self.check_alarm2)
+        self.check_alarm_thread2.daemon = True
+        self.check_alarm_thread2.start()
 
-        # self.check_alarm_thread3 = threading.Thread(target=self.check_alarm3)
-        # self.check_alarm_thread3.daemon = True
-        # self.check_alarm_thread3.start()
+        self.check_alarm_thread3 = threading.Thread(target=self.check_alarm3)
+        self.check_alarm_thread3.daemon = True
+        self.check_alarm_thread3.start()
 
-        # self.check_alarm_thread4 = threading.Thread(target=self.check_alarm4)
-        # self.check_alarm_thread4.daemon = True
-        # self.check_alarm_thread4.start()
+        self.check_alarm_thread4 = threading.Thread(target=self.check_alarm4)
+        self.check_alarm_thread4.daemon = True
+        self.check_alarm_thread4.start()
 
-        # self.check_alarm_thread5 = threading.Thread(target=self.check_alarm5)
-        # self.check_alarm_thread5.daemon = True
-        # self.check_alarm_thread5.start()
+        self.check_alarm_thread5 = threading.Thread(target=self.check_alarm5)
+        self.check_alarm_thread5.daemon = True
+        self.check_alarm_thread5.start()
 
-        # self.check_alarm_thread6 = threading.Thread(target=self.check_alarm6)
-        # self.check_alarm_thread6.daemon = True
-        # self.check_alarm_thread6.start()
+        self.check_alarm_thread6 = threading.Thread(target=self.check_alarm6)
+        self.check_alarm_thread6.daemon = True
+        self.check_alarm_thread6.start()
 
         # Load all alarm data to its List
         self.alarms1 = self.load_alarms(self.data1)
@@ -468,6 +468,126 @@ class BellSystemApp:
 
         while not self.stop_thread:
             for alarm in self.alarms1:
+                if (
+                    alarm["time"] == current_time
+                    and current_day in alarm["days"]
+                    and alarm["switch_state"]
+                ):
+                    sound.play()
+                    time.sleep(120)
+
+            time.sleep(1)
+
+    def check_alarm2(self):
+        current_time = time.strftime("%I:%M %p")
+        current_day = time.strftime("%a")
+
+        # Initialize pygame outside the loop (call it once)
+        pygame.mixer.init()
+
+        # Load the sound file once
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+
+        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+
+        while not self.stop_thread:
+            for alarm in self.alarms2:
+                if (
+                    alarm["time"] == current_time
+                    and current_day in alarm["days"]
+                    and alarm["switch_state"]
+                ):
+                    sound.play()
+                    time.sleep(120)
+
+            time.sleep(1)
+
+    def check_alarm3(self):
+        current_time = time.strftime("%I:%M %p")
+        current_day = time.strftime("%a")
+
+        # Initialize pygame outside the loop (call it once)
+        pygame.mixer.init()
+
+        # Load the sound file once
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+
+        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+
+        while not self.stop_thread:
+            for alarm in self.alarms3:
+                if (
+                    alarm["time"] == current_time
+                    and current_day in alarm["days"]
+                    and alarm["switch_state"]
+                ):
+                    sound.play()
+                    time.sleep(120)
+
+            time.sleep(1)
+
+    def check_alarm4(self):
+        current_time = time.strftime("%I:%M %p")
+        current_day = time.strftime("%a")
+
+        # Initialize pygame outside the loop (call it once)
+        pygame.mixer.init()
+
+        # Load the sound file once
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+
+        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+
+        while not self.stop_thread:
+            for alarm in self.alarms4:
+                if (
+                    alarm["time"] == current_time
+                    and current_day in alarm["days"]
+                    and alarm["switch_state"]
+                ):
+                    sound.play()
+                    time.sleep(120)
+
+            time.sleep(1)
+
+    def check_alarm5(self):
+        current_time = time.strftime("%I:%M %p")
+        current_day = time.strftime("%a")
+
+        # Initialize pygame outside the loop (call it once)
+        pygame.mixer.init()
+
+        # Load the sound file once
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+
+        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+
+        while not self.stop_thread:
+            for alarm in self.alarms5:
+                if (
+                    alarm["time"] == current_time
+                    and current_day in alarm["days"]
+                    and alarm["switch_state"]
+                ):
+                    sound.play()
+                    time.sleep(120)
+
+            time.sleep(1)
+
+    def check_alarm6(self):
+        current_time = time.strftime("%I:%M %p")
+        current_day = time.strftime("%a")
+
+        # Initialize pygame outside the loop (call it once)
+        pygame.mixer.init()
+
+        # Load the sound file once
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+
+        # print(f"Current Time: {current_time}, Current Day: {current_day}")
+
+        while not self.stop_thread:
+            for alarm in self.alarms6:
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
