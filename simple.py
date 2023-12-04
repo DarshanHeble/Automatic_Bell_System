@@ -22,6 +22,22 @@ class BellSystemApp:
         # Flag to signal the thread to stop
         self.stop_thread = False
 
+        # Bind the resize method to the Configure event of the root window
+        self.master.bind("<Configure>", self.resize)
+
+    def resize(self, event):
+        width = event.width
+        if width > 400:
+            columns = 3
+        elif width > 200:
+            columns = 2
+        else:
+            columns = 1
+
+        # Configure the column weights of the display_alarms_frame
+        for i in range(columns + 1):  # +1 to include the switch column
+            self.display_alarms_frame.grid_columnconfigure(i, weight=1)
+
     def create_widgets(self):
         # Main Frame
         self.main_frame = tk.Frame(self.master)
@@ -52,14 +68,6 @@ class BellSystemApp:
 
         # Load and display existing alarms
         self.display_alarms()
-
-        # Load and display existing alarms
-
-        # self.load_and_display_alarms()
-
-    # def load_and_display_alarms(self):
-    #     self.load_data()
-    #     self.display_alarms()
 
     def add_alarm(self):
         # Sub-window for adding alarm
