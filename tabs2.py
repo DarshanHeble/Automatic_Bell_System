@@ -29,7 +29,7 @@ class BellSystemApp:
 
         # Flag to signal the thread to stop
         self.stop_thread = False
-        
+
         # Start background thread
         self.start_threading()
 

@@ -26,17 +26,23 @@ class BellSystemApp:
         self.master.bind("<Configure>", self.resize)
 
     def resize(self, event):
-        width = event.width
-        if width > 400:
-            columns = 3
-        elif width > 200:
-            columns = 2
-        else:
-            columns = 1
+        # width = event.width
+        width = self.master.winfo_width()
+        height = self.master.winfo_height()
+        print(f"w= {width}")
+        print(f"h= {height}")
+
+        # print(width)
+        # if width > 400:
+        #     columns = 3
+        # elif width > 200:
+        #     columns = 2
+        # else:
+        #     columns = 1
 
         # Configure the column weights of the display_alarms_frame
-        for i in range(columns + 1):  # +1 to include the switch column
-            self.display_alarms_frame.grid_columnconfigure(i, weight=1)
+        # for i in range(columns + 1):  # +1 to include the switch column
+        #     self.display_alarms_frame.grid_columnconfigure(i, weight=1)
 
     def create_widgets(self):
         # Main Frame
