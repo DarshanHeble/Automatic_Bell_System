@@ -29,31 +29,9 @@ class BellSystemApp:
 
         # Flag to signal the thread to stop
         self.stop_thread = False
-
+        
         # Start background thread
-        self.check_alarm_thread1 = threading.Thread(target=self.check_alarm1)
-        self.check_alarm_thread1.daemon = True
-        self.check_alarm_thread1.start()
-
-        self.check_alarm_thread2 = threading.Thread(target=self.check_alarm2)
-        self.check_alarm_thread2.daemon = True
-        self.check_alarm_thread2.start()
-
-        self.check_alarm_thread3 = threading.Thread(target=self.check_alarm3)
-        self.check_alarm_thread3.daemon = True
-        self.check_alarm_thread3.start()
-
-        self.check_alarm_thread4 = threading.Thread(target=self.check_alarm4)
-        self.check_alarm_thread4.daemon = True
-        self.check_alarm_thread4.start()
-
-        self.check_alarm_thread5 = threading.Thread(target=self.check_alarm5)
-        self.check_alarm_thread5.daemon = True
-        self.check_alarm_thread5.start()
-
-        self.check_alarm_thread6 = threading.Thread(target=self.check_alarm6)
-        self.check_alarm_thread6.daemon = True
-        self.check_alarm_thread6.start()
+        self.start_threading()
 
         # Load all alarm data to its List
         self.alarms1 = self.load_alarms(self.data1)
@@ -65,6 +43,13 @@ class BellSystemApp:
 
         # create all widgets
         self.create_widgets()
+
+    def mode(self):
+        appearence = ctk.get_appearance_mode()
+        if appearence == "Dark":
+            ctk.set_appearance_mode("light")
+        else:
+            ctk.set_appearance_mode("Dark")
 
     def create_widgets(self):
         # Main Frame
@@ -335,6 +320,9 @@ class BellSystemApp:
             ),
         ),
 
+        mode = ctk.CTkButton(self.left_frame, text="Change Theme", command=self.mode)
+        mode.pack(side="bottom")
+
     def open_add_alarm_window(self, scrol_frame, alarm, data):
         # Sub-window for adding alarm
         add_alarm_window = ctk.CTkToplevel(self.master)
@@ -453,6 +441,32 @@ class BellSystemApp:
 
         add_alarm_window.destroy()
         self.display_alarms(scrol_frame, alarm, data)
+
+    def start_threading(self):
+        # Start background thread
+        self.check_alarm_thread1 = threading.Thread(target=self.check_alarm1)
+        self.check_alarm_thread1.daemon = True
+        self.check_alarm_thread1.start()
+
+        self.check_alarm_thread2 = threading.Thread(target=self.check_alarm2)
+        self.check_alarm_thread2.daemon = True
+        self.check_alarm_thread2.start()
+
+        self.check_alarm_thread3 = threading.Thread(target=self.check_alarm3)
+        self.check_alarm_thread3.daemon = True
+        self.check_alarm_thread3.start()
+
+        self.check_alarm_thread4 = threading.Thread(target=self.check_alarm4)
+        self.check_alarm_thread4.daemon = True
+        self.check_alarm_thread4.start()
+
+        self.check_alarm_thread5 = threading.Thread(target=self.check_alarm5)
+        self.check_alarm_thread5.daemon = True
+        self.check_alarm_thread5.start()
+
+        self.check_alarm_thread6 = threading.Thread(target=self.check_alarm6)
+        self.check_alarm_thread6.daemon = True
+        self.check_alarm_thread6.start()
 
     def check_alarm1(self):
         # Initialize pygame outside the loop (call it once)
@@ -807,7 +821,6 @@ class BellSystemApp:
         days_selected = [day for day, var in days_var.items() if var.get()]
 
         if not days_selected:
-            messagebox.showwarning("Error", "Select at least one day for the alarm.")
             CTkMessagebox(title="Error", message="Select atleast 1 day", icon="cancel")
             return
 
