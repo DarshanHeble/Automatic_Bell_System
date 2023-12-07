@@ -29,8 +29,7 @@ class BellSystemApp:
         # width = event.width
         width = self.master.winfo_width()
         height = self.master.winfo_height()
-        print(f"w= {width}")
-        print(f"h= {height}")
+        print(f"w= {width} \t h= {height}")
 
         # print(width)
         # if width > 400:
