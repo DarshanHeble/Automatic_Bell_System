@@ -12,23 +12,31 @@ class BellSystemApp:
         # Bind the resize method to the Configure event of the root window
         self.master.bind("<Configure>", self.resize)
 
-        # Initialize empty frame dictionary
-        self.frames = {}
+        # Track previous window width
+        self.previous_width = None
 
-        # self.rows = 0
-        # self.columns = 0
+        self.row = 0
+        self.column_length = 0
 
         # create all widgets
         self.create_widgets()
-        self.display_frames(1)
+        self.display_frames(self.column_length)
 
     def resize(self, event):
-        # Cancel any scheduled update
-        if self.resize_task is not None:
-            self.master.after_cancel(self.resize_task)
+        # Get current window width
+        current_width = str(self.master.winfo_width())
 
-        # Schedule update with a delay of 100 milliseconds
-        self.resize_task = self.master.after(100, self.update_frames)
+        # Check if window size changed
+        if current_width != self.previous_width:
+            # Update previous width
+            self.previous_width = current_width
+
+            # Cancel any scheduled update
+            if self.resize_task is not None:
+                self.master.after_cancel(self.resize_task)
+
+            # Schedule update with a delay of 100 milliseconds
+            self.resize_task = self.master.after(1, self.update_frames)
 
     def update_frames(self):
         width = str(self.master.winfo_width())
@@ -36,25 +44,18 @@ class BellSystemApp:
         self.label.configure(text=(width + " " + height))
         self.text = width
 
-        if width >= "500" and width <= "1000":
-            self.display_frames(3)
+        if width <= "500":
+            self.column_length = 1
+            # print(self.column_length)
+        if width > "500" and width < "1000":
+            self.column_length = 2
+            print(self.column_length + "red")
 
-    # def resize(self, event):
-    #     width = str(self.master.winfo_width())
-    #     height = str(self.master.winfo_height())
+        # Only run display_frames if width changed
 
-    #     self.label.configure(text=(width + " " + height))
-    #     self.text = width
-    #     # print(f"w= {width} \t h= {height}")
-    #     if width >= "500" or width <= "1000":
-    #         print("1000")
-    #         # self.columns = 3
-
-    #         # Cancel any scheduled update
-    #         self.master.after_cancel(self.resize_task)
-
-    #         # Schedule update with a delay of 100 milliseconds
-    #         self.resize_task = self.master.after(100, self.update_frames)
+        if width != self.previous_width:
+            print(self.column_length)
+            self.display_frames(self.column_length)
 
     def create_widgets(self):
         # Main Frame
@@ -68,18 +69,17 @@ class BellSystemApp:
         row_length = int(n / (column_length + 1))
         row = 0
         col = 0
-        print(column_length + 1)
-        print(row_length)
+        # print(column_length + 1)
+        # print(row_length)
+        print("displaing")
         self.delete_frames()
         for i in range(n):
+            frame = ctk.CTkFrame(self.mainContainer, fg_color="green", width=300)
+            frame.grid(row=row, column=col, padx=15, pady=15, sticky="nesw")
+            col = col + 1
             if col == column_length + 1:
                 col = 0
                 row += 1
-            frame = ctk.CTkFrame(self.mainContainer, fg_color="green")
-            frame.grid(row=row, column=col, padx=15, pady=15, sticky="nesw")
-            col = col + 1
-            print(col)
-            # frame.pack()
 
     def delete_frames(self):
         for widget in self.mainContainer.winfo_children():
