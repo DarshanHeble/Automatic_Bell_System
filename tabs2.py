@@ -56,13 +56,22 @@ class BellSystemApp:
         self.main_frame = ctk.CTkFrame(self.master)
         self.main_frame.pack(fill="both", expand=True)
 
+        self.main_frame.rowconfigure(0, weight=1)
+        self.main_frame.columnconfigure(0, weight=1)
+        self.main_frame.columnconfigure(1, weight=1)
+        self.main_frame.columnconfigure(2, weight=1)
+        self.main_frame.columnconfigure(3, weight=1)
+        self.main_frame.columnconfigure(4, weight=1)
+
         # Left Frame
-        self.left_frame = ctk.CTkFrame(self.main_frame, width=200)
-        self.left_frame.pack(side=LEFT, fill="both")
+        self.left_frame = ctk.CTkFrame(self.main_frame)
+        # self.left_frame.pack(side=LEFT, fill="both")
+        self.left_frame.grid(row=0, column=0, sticky="swne")
 
         # Right Frame
         self.right_frame = ctk.CTkFrame(self.main_frame)
-        self.right_frame.pack(side=RIGHT, fill="both", expand=True)
+        # self.right_frame.pack(side=RIGHT, fill="both", expand=True)
+        self.right_frame.grid(row=0, column=1, columnspan=5, sticky="swen")
 
         # Initial frame in the right frame
         # self.default_frame = ctk.CTkFrame(self.right_frame)
