@@ -525,7 +525,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -549,7 +549,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -573,7 +573,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -597,7 +597,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -621,7 +621,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("School-Period-bell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
