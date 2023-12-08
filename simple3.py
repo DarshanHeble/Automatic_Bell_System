@@ -46,10 +46,10 @@ class BellSystemApp:
 
         if width <= "500":
             self.column_length = 1
-            # print(self.column_length)
-        elif width >= "500" and width <= "1000":
+            print(self.column_length)
+        elif width > "500" and width < "1000":
+            print(self.column_length, "red")
             self.column_length = 2
-            print(self.column_length + "red")
 
         # Only run display_frames if width changed
 
