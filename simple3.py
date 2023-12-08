@@ -1,5 +1,4 @@
-import customtkinter as ctk
-from customtkinter import *
+import tkinter as tk
 
 
 class BellSystemApp:
@@ -8,78 +7,73 @@ class BellSystemApp:
         self.master.geometry("500x500")
         self.master.title("Bell System")
         self.resize_task = None
-
-        # Bind the resize method to the Configure event of the root window
-        self.master.bind("<Configure>", self.resize)
-
-        # Track previous window width
         self.previous_width = None
-
-        self.row = 0
         self.column_length = 0
 
-        # create all widgets
+        self.master.bind("<Configure>", self.resize)
+
+        self.row = 0
+
         self.create_widgets()
-        self.display_frames(self.column_length)
+        self.display_frames()
 
     def resize(self, event):
-        # Get current window width
-        current_width = str(self.master.winfo_width())
+        current_width = self.master.winfo_width()
 
-        # Check if window size changed
         if current_width != self.previous_width:
-            # Update previous width
             self.previous_width = current_width
 
-            # Cancel any scheduled update
             if self.resize_task is not None:
                 self.master.after_cancel(self.resize_task)
 
-            # Schedule update with a delay of 100 milliseconds
             self.resize_task = self.master.after(1, self.update_frames)
 
     def update_frames(self):
-        width = str(self.master.winfo_width())
-        height = str(self.master.winfo_height())
-        self.label.configure(text=(width + " " + height))
-        self.text = width
+        width = self.master.winfo_width()
+        height = self.master.winfo_height()
+        self.label.configure(text=(f"{width} {height}"))
 
-        if width <= "500":
+        self.calculate_columns(width)
+        self.display_frames()
+
+    def calculate_columns(self, width):
+        if 0 <= width < 500:
             self.column_length = 1
-            print(self.column_length)
-        elif width > "500" and width < "1000":
-            print(self.column_length, "red")
+        elif 500 <= width < 1000:
             self.column_length = 2
-
-        # Only run display_frames if width changed
-
-        if width != self.previous_width:
-            print(self.column_length)
-            self.display_frames(self.column_length)
+        elif 1000 <= width < 1500:
+            self.column_length = 3
 
     def create_widgets(self):
-        # Main Frame
-        self.label = ctk.CTkLabel(self.master)
+        self.label = tk.Label(self.master)
         self.label.pack()
-        self.mainContainer = ctk.CTkScrollableFrame(self.master)
+        self.mainContainer = tk.Frame(self.master)
         self.mainContainer.pack(expand=True, fill="both")
+        self.mainContainer.update_idletasks()
 
-    def display_frames(self, column_length):
+    def display_frames(self):
         n = 7
-        row_length = int(n / (column_length + 1))
+        row_length = int(n / (self.column_length + 1))
         row = 0
         col = 0
-        # print(column_length + 1)
-        # print(row_length)
-        print("displaing")
+
         self.delete_frames()
         for i in range(n):
-            frame = ctk.CTkFrame(self.mainContainer, fg_color="green", width=300)
-            frame.grid(row=row, column=col, padx=15, pady=15, sticky="nesw")
+            frame = tk.Frame(self.mainContainer, bg="green")
+            frame.grid(
+                row=row, column=col, ipadx=30, ipady=30, padx=30, pady=30, sticky="nesw"
+            )
+
+            label = tk.Label(frame, text=i)
+            label.pack()
             col = col + 1
-            if col == column_length + 1:
+            if col == self.column_length + 1:
                 col = 0
                 row += 1
+
+        # Set weight 1 for all columns in the main container
+        for c in range(self.column_length + 1):
+            self.mainContainer.columnconfigure(c, weight=1)
 
     def delete_frames(self):
         for widget in self.mainContainer.winfo_children():
@@ -87,7 +81,7 @@ class BellSystemApp:
 
 
 if __name__ == "__main__":
-    root = ctk.CTk()
+    root = tk.Tk()
     app = BellSystemApp(root)
 
     root.mainloop()
