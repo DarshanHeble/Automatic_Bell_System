@@ -12,8 +12,6 @@ class BellSystemApp:
 
         self.master.bind("<Configure>", self.resize)
 
-        self.row = 0
-
         self.create_widgets()
         self.display_frames()
 

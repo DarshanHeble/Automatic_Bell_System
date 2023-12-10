@@ -6,7 +6,6 @@ from customtkinter import *
 import threading
 import time
 import json
-import os
 import pygame
 
 

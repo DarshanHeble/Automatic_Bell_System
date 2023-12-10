@@ -16,6 +16,10 @@ class BellSystemApp:
         self.master.geometry("500x500")
         self.master.title("Bell System")
 
+        self.resize_task = None
+        self.previous_width = None
+        self.column_length = 0
+
         # Load button names from JSON file
         self.button_names = self.load_button_names()
 
@@ -44,6 +48,34 @@ class BellSystemApp:
         # create all widgets
         self.create_widgets()
 
+        self.master.bind("<Configure>", self.resize)
+
+    def resize(self, event):
+        current_width = self.master.winfo_width()
+
+        if current_width != self.previous_width:
+            self.previous_width = current_width
+
+            if self.resize_task is not None:
+                self.master.after_cancel(self.resize_task)
+
+            self.resize_task = self.master.after(1, self.update_frames)
+
+    def update_frames(self):
+        width = self.master.winfo_width()
+        height = self.master.winfo_height()
+
+        self.calculate_columns(width)
+        self.display_alarms()
+
+    def calculate_columns(self, width):
+        if 0 <= width < 500:
+            self.column_length = 1
+        elif 500 <= width < 1000:
+            self.column_length = 2
+        elif 1000 <= width < 1500:
+            self.column_length = 3
+
     def mode(self):
         appearence = ctk.get_appearance_mode()
         if appearence == "Dark":
@@ -65,12 +97,10 @@ class BellSystemApp:
 
         # Left Frame
         self.left_frame = ctk.CTkFrame(self.main_frame)
-        # self.left_frame.pack(side=LEFT, fill="both")
         self.left_frame.grid(row=0, column=0, sticky="swne")
 
         # Right Frame
         self.right_frame = ctk.CTkFrame(self.main_frame)
-        # self.right_frame.pack(side=RIGHT, fill="both", expand=True)
         self.right_frame.grid(row=0, column=1, columnspan=5, sticky="swen")
 
         # Initial frame in the right frame
@@ -85,6 +115,7 @@ class BellSystemApp:
     def create_frames_for_right_frame(self, right_frame):
         self.frame1 = ctk.CTkFrame(right_frame, fg_color="orange")
         self.scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
+        self.scrol_frame1.update_idletasks()
         self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
         self.frame2 = ctk.CTkFrame(right_frame, fg_color="magenta")
@@ -655,8 +686,11 @@ class BellSystemApp:
 
         # Display alarms in the display frame
         for i, alar in enumerate(alarm):
+            row = 0
+            col = 0
+
             alarm_frame = ctk.CTkFrame(scrol_frame)
-            alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
+            alarm_frame.grid(row=row, column=col, pady=5, padx=5, sticky="ew")
 
             ctk.CTkLabel(alarm_frame, text=f"Time: {alar['time']}").grid(
                 row=0, column=0, sticky="w"
@@ -698,6 +732,12 @@ class BellSystemApp:
                 ),
             )
             edit_button.grid(row=3, column=1, pady=5)
+
+            # update row and col
+            col += 1
+            if col == self.column_length + 1:
+                col = 0
+                row += 1
 
     def rename_button(self, button, button_index, label):
         current_text = button.cget("text")
