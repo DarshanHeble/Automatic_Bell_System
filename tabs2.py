@@ -24,12 +24,12 @@ class BellSystemApp:
         self.button_names = self.load_button_names()
 
         # Taking all files names to a variable
-        self.data1 = "data1.json"
-        self.data2 = "data2.json"
-        self.data3 = "data3.json"
-        self.data4 = "data4.json"
-        self.data5 = "data5.json"
-        self.data6 = "data6.json"
+        self.data1 = "./data/data1.json"
+        self.data2 = "./data/data2.json"
+        self.data3 = "./data/data3.json"
+        self.data4 = "./data/data4.json"
+        self.data5 = "./data/data5.json"
+        self.data6 = "./data/data6.json"
 
         # Flag to signal the thread to stop
         self.stop_thread = False
@@ -117,12 +117,6 @@ class BellSystemApp:
     def create_frames_for_right_frame(self, right_frame):
         self.frame1 = ctk.CTkFrame(right_frame, fg_color="orange")
         self.scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
-        self.scrol_frame1.bind(
-            "<Configure>",
-            lambda scrol_frame=self.scrol_frame1, alarms=self.alarms1, data=self.data1: self.resize(
-                scrol_frame, alarms, data
-            ),
-        )
         self.scrol_frame1.update_idletasks()
         self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
@@ -697,8 +691,10 @@ class BellSystemApp:
             row = 0
             col = 0
 
+        # Display alarms in the display frame
+        for i, alar in enumerate(alarm):
             alarm_frame = ctk.CTkFrame(scrol_frame)
-            alarm_frame.grid(row=row, column=col, pady=5, padx=5, sticky="ew")
+            alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
 
             ctk.CTkLabel(alarm_frame, text=f"Time: {alar['time']}").grid(
                 row=0, column=0, sticky="w"
