@@ -48,9 +48,9 @@ class BellSystemApp:
         # create all widgets
         self.create_widgets()
 
-        self.master.bind("<Configure>", self.resize)
+        # self.master.bind("<Configure>", self.resize)
 
-    def resize(self, event):
+    def resize(self, scrol_frame, alarm, data):
         current_width = self.master.winfo_width()
 
         if current_width != self.previous_width:
@@ -59,14 +59,16 @@ class BellSystemApp:
             if self.resize_task is not None:
                 self.master.after_cancel(self.resize_task)
 
-            self.resize_task = self.master.after(1, self.update_frames)
+            self.resize_task = self.master.after(
+                1, lambda: self.update_frames(scrol_frame, alarm, data)
+            )
 
-    def update_frames(self):
+    def update_frames(self, scrol_frame, alarm, data):
         width = self.master.winfo_width()
         height = self.master.winfo_height()
 
         self.calculate_columns(width)
-        self.display_alarms()
+        self.display_alarms(scrol_frame, alarm, data)
 
     def calculate_columns(self, width):
         if 0 <= width < 500:
@@ -115,6 +117,12 @@ class BellSystemApp:
     def create_frames_for_right_frame(self, right_frame):
         self.frame1 = ctk.CTkFrame(right_frame, fg_color="orange")
         self.scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
+        self.scrol_frame1.bind(
+            "<Configure>",
+            lambda scrol_frame=self.scrol_frame1, alarms=self.alarms1, data=self.data1: self.resize(
+                scrol_frame, alarms, data
+            ),
+        )
         self.scrol_frame1.update_idletasks()
         self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 

@@ -35,11 +35,13 @@ class BellSystemApp:
         self.display_frames()
 
     def calculate_columns(self, width):
-        if 0 <= width < 500:
+        if 0 <= width < 400:
+            self.column_length = 0
+        elif 400 <= width < 800:
             self.column_length = 1
-        elif 500 <= width < 1000:
+        elif 800 <= width < 1200:
             self.column_length = 2
-        elif 1000 <= width < 1500:
+        elif 1200 <= width < 1600:
             self.column_length = 3
 
     def create_widgets(self):
@@ -59,7 +61,7 @@ class BellSystemApp:
         for i in range(n):
             frame = tk.Frame(self.mainContainer, bg="green")
             frame.grid(
-                row=row, column=col, ipadx=30, ipady=30, padx=30, pady=30, sticky="nesw"
+                row=row, column=col, ipadx=30, ipady=50, padx=10, pady=10, sticky="nesw"
             )
 
             label = tk.Label(frame, text=i)
