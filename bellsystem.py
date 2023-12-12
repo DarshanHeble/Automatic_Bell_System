@@ -6,7 +6,7 @@ from customtkinter import *
 import threading
 import time
 import json
-import os
+from PIL import Image
 import pygame
 
 
@@ -231,6 +231,9 @@ class BellSystemApp:
         btn.pack(ipadx=5, ipady=5)
 
     def create_buttons_for_left_frame(self, left_frame):
+        dark_image = Image.open("Assets/Images/message_icon-1.jpg")
+        light_image = Image.open("Assets/Images/message_icon-1.jpg")
+
         button1 = ctk.CTkButton(
             self.left_frame,
             text=self.button_names["1"],
@@ -238,6 +241,7 @@ class BellSystemApp:
             fg_color="transparent",
             hover_color="orange",
             font=("Times", 15),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame1),
         )
         button1.pack()

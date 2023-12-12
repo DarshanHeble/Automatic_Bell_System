@@ -10,7 +10,7 @@ import customtkinter as ctk
 class BellSystemApp:
     def __init__(self, master):
         self.master = master
-        self.master.geometry("500x500")
+        self.master.geometry("1000x500")
         self.master.title("Bell System")
 
         self.resize_task = None
@@ -51,7 +51,8 @@ class BellSystemApp:
                 self.master.after_cancel(self.resize_task)
 
             self.resize_task = self.master.after(
-                1, lambda: self.update_frames(scrol_frame, alarm, data)
+                1,
+                lambda: self.update_frames(scrol_frame, alarm, data),
             )
 
     def update_frames(self, scrol_frame, alarm, data):
@@ -62,12 +63,14 @@ class BellSystemApp:
         self.display_alarms(scrol_frame, alarm, data)
 
     def calculate_columns(self, width):
-        if 0 <= width < 500:
+        if 0 <= width < 400:
             self.column_length = 1
-        elif 500 <= width < 1000:
+        elif 400 <= width < 800:
             self.column_length = 2
-        elif 1000 <= width < 1500:
+        elif 800 <= width < 1200:
             self.column_length = 3
+        elif 1200 <= width < 1600:
+            self.column_length = 4
 
     def create_widgets(self):
         # Main Frame
@@ -102,6 +105,10 @@ class BellSystemApp:
         self.frame1 = tk.Frame(right_frame)
         self.scrol_frame1 = tk.Frame(self.frame1, bg="red")
         self.scrol_frame1.update_idletasks()
+        self.scrol_frame1.bind(
+            "<Configure>",
+            self.resize(self.scrol_frame1, self.alarms1, self.data1),
+        )
         self.label1 = tk.Label(self.frame1, text=self.button_names["1"])
 
         self.frame2 = tk.Frame(right_frame)
@@ -445,6 +452,8 @@ class BellSystemApp:
         self.display_alarms(scrol_frame, alarm, data)
 
     def display_alarms(self, scrol_frame, alarm, data):
+        row = 0
+        col = 0
         # Clear existing widgets in the display frame
         for widget in scrol_frame.winfo_children():
             widget.destroy()
@@ -454,11 +463,8 @@ class BellSystemApp:
 
         # Display alarms in the display frame
         for i, alar in enumerate(alarm):
-            row = 0
-            col = 0
-
             alarm_frame = tk.Frame(scrol_frame, bg="green")
-            alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
+            alarm_frame.grid(row=row, column=col, pady=5, padx=5, sticky="ew")
 
             tk.Label(alarm_frame, text=f"Time: {alar['time']}").grid(
                 row=0, column=0, sticky="w"
@@ -493,7 +499,7 @@ class BellSystemApp:
             delete_button.grid(row=3, column=0, pady=5)
 
             # update row and col
-            col += 1
+            col = col + 1
             if col == self.column_length + 1:
                 col = 0
                 row += 1
