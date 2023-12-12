@@ -6,6 +6,7 @@ from customtkinter import *
 import threading
 import time
 import json
+import os
 import pygame
 
 
@@ -19,12 +20,12 @@ class BellSystemApp:
         self.button_names = self.load_button_names()
 
         # Taking all files names to a variable
-        self.data1 = "data1.json"
-        self.data2 = "data2.json"
-        self.data3 = "data3.json"
-        self.data4 = "data4.json"
-        self.data5 = "data5.json"
-        self.data6 = "data6.json"
+        self.data1 = "Assets/json/data1.json"
+        self.data2 = "Assets/json/data2.json"
+        self.data3 = "Assets/json/data3.json"
+        self.data4 = "Assets/json/data4.json"
+        self.data5 = "Assets/json/data5.json"
+        self.data6 = "Assets/json/data6.json"
 
         # Flag to signal the thread to stop
         self.stop_thread = False
@@ -481,7 +482,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # Flag to track whether the music has been played for the current alarm
         music_played = False
@@ -524,7 +525,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -548,7 +549,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -572,7 +573,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -596,7 +597,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -620,7 +621,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("School-Period-bell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -701,9 +702,6 @@ class BellSystemApp:
     def rename_button(self, button, button_index, label):
         current_text = button.cget("text")
 
-        # new_name = simpledialog.askstring(
-        #     "Rename Button", "Enter new name:", initialvalue=current_text
-        # )
         new_name = ctk.CTkInputDialog(
             title="Rename Button", text="Enter new name:"
         ).get_input()
@@ -860,13 +858,13 @@ class BellSystemApp:
 
     def save_button_names(self):
         # Save the button names to a JSON file
-        with open("button_names.json", "w") as file:
+        with open("Assets/json/button_names.json", "w") as file:
             json.dump(self.button_names, file, indent=2)
 
     def load_button_names(self):
         # Load button names from a JSON file
         try:
-            with open("button_names.json", "r") as file:
+            with open("Assets/json/button_names.json", "r") as file:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             return {}
