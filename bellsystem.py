@@ -53,7 +53,7 @@ class BellSystemApp:
 
     def create_widgets(self):
         # Main Frame
-        self.main_frame = ctk.CTkFrame(self.master)
+        self.main_frame = ctk.CTkFrame(self.master, fg_color="transparent")
         self.main_frame.pack(fill="both", expand=True)
 
         self.main_frame.rowconfigure(0, weight=1)
@@ -64,7 +64,7 @@ class BellSystemApp:
         self.main_frame.columnconfigure(4, weight=1)
 
         # Left Frame
-        self.left_frame = ctk.CTkFrame(self.main_frame)
+        self.left_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         # self.left_frame.pack(side=LEFT, fill="both")
         self.left_frame.grid(row=0, column=0, sticky="swne")
 
@@ -231,8 +231,8 @@ class BellSystemApp:
         btn.pack(ipadx=5, ipady=5)
 
     def create_buttons_for_left_frame(self, left_frame):
-        dark_image = Image.open("Assets/Images/message_icon-1.jpg")
-        light_image = Image.open("Assets/Images/message_icon-1.jpg")
+        dark_image = Image.open("Assets/Images/bell_icon.png")
+        light_image = Image.open("Assets/Images/bell_icon.png")
 
         button1 = ctk.CTkButton(
             self.left_frame,
@@ -240,7 +240,7 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="orange",
-            font=("Times", 15),
+            font=("Arial", 17),
             image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame1),
         )
@@ -258,7 +258,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="magenta",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame2),
         )
         button2.pack()
@@ -274,7 +275,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="royalblue",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame3),
         )
         button3.pack()
@@ -290,7 +292,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="teal",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame4),
         )
         button4.pack()
@@ -306,7 +309,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="crimson",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame5),
         )
         button5.pack()
@@ -322,7 +326,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="teal",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame6),
         )
         button6.pack()
@@ -354,7 +359,7 @@ class BellSystemApp:
         hour_entry = ttk.Combobox(
             add_alarm_window,
             textvariable=hour_var,
-            font=("arial", 15),
+            font=("arial", 17),
             values=[str(i).zfill(2) for i in range(1, 13)],
         )
         hour_entry.grid(row=1, column=1, pady=5, padx=5)
@@ -366,7 +371,7 @@ class BellSystemApp:
         minute_var.set(min)
         minute_entry = ttk.Combobox(
             add_alarm_window,
-            font=("arial", 15),
+            font=("arial", 17),
             textvariable=minute_var,
             values=[str(i).zfill(2) for i in range(60)],
         )
@@ -381,7 +386,7 @@ class BellSystemApp:
             add_alarm_window,
             textvariable=am_pm_var,
             values=["AM", "PM"],
-            font=("arial", 15),
+            font=("arial", 17),
         )
         am_pm_entry.grid(row=3, column=1, pady=5)
 
@@ -659,7 +664,7 @@ class BellSystemApp:
 
         # Display alarms in the display frame
         for i, alar in enumerate(alarm):
-            alarm_frame = ctk.CTkFrame(scrol_frame)
+            alarm_frame = ctk.CTkFrame(scrol_frame, fg_color="#222327")
             alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
 
             ctk.CTkLabel(alarm_frame, text=f"Time: {alar['time']}").grid(
@@ -742,7 +747,7 @@ class BellSystemApp:
         hour_entry = ttk.Combobox(
             edit_alarm_window,
             textvariable=hour_var,
-            font=("arial", 15),
+            font=("arial", 17),
             values=[str(i).zfill(2) for i in range(1, 13)],
         )
         hour_entry.grid(row=1, column=1, pady=5)
@@ -754,7 +759,7 @@ class BellSystemApp:
         minute_entry = ttk.Combobox(
             edit_alarm_window,
             textvariable=minute_var,
-            font=("arial", 15),
+            font=("arial", 17),
             values=[str(i).zfill(2) for i in range(60)],
         )
         minute_entry.grid(row=2, column=1, pady=5)
@@ -766,7 +771,7 @@ class BellSystemApp:
         am_pm_entry = ttk.Combobox(
             edit_alarm_window,
             textvariable=am_pm_var,
-            font=("arial", 15),
+            font=("arial", 17),
             values=["AM", "PM"],
         )
         am_pm_entry.grid(row=3, column=1, pady=5)
