@@ -25,6 +25,7 @@ class BellSystemApp:
                 self.master.after_cancel(self.resize_task)
 
             self.resize_task = self.master.after(1, self.update_frames)
+            print(self.resize_task)
 
     def update_frames(self):
         width = self.master.winfo_width()

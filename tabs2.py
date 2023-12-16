@@ -16,6 +16,10 @@ class BellSystemApp:
         self.master.geometry("500x500")
         self.master.title("Bell System")
 
+        self.resize_task = None
+        self.previous_width = None
+        self.column_length = 0
+
         # Load button names from JSON file
         self.button_names = self.load_button_names()
 
@@ -44,8 +48,36 @@ class BellSystemApp:
         # create all widgets
         self.create_widgets()
 
-    def resize(self, event):
-        print(event)
+    def resize(self, event, scrol_frame, alarm, data):
+        current_width = event.width
+        # print(type(current_width))
+        if current_width != self.previous_width:
+            self.previous_width = current_width
+
+            if self.resize_task is not None:
+                self.master.after_cancel(self.resize_task)
+
+            self.resize_task = self.master.after(
+                1,
+                lambda: self.update_frames(event, scrol_frame, alarm, data),
+            )
+
+    def update_frames(self, event, scrol_frame, alarm, data):
+        width = event.width
+        # height = self.master.winfo_height()
+
+        self.calculate_columns(width)
+        self.display_alarms(scrol_frame, alarm, data)
+
+    def calculate_columns(self, width):
+        if 0 <= width < 400:
+            self.column_length = 1
+        elif 400 <= width < 800:
+            self.column_length = 2
+        elif 800 <= width < 1200:
+            self.column_length = 3
+        elif 1200 <= width < 1600:
+            self.column_length = 4
 
     def mode(self):
         appearence = ctk.get_appearance_mode()
@@ -87,8 +119,15 @@ class BellSystemApp:
 
     def create_frames_for_right_frame(self, right_frame):
         self.frame1 = ctk.CTkFrame(right_frame, fg_color="orange")
-        self.frame1.bind("<Configure>", lambda event: self.resize(event))
         self.scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
+        # giving frame a resize function
+        self.frame1.bind(
+            "<Configure>",
+            lambda event: self.resize(
+                event, self.scrol_frame1, self.alarms1, self.data1
+            ),
+        )
+        self.frame1.update_idletasks()
         self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
         self.frame2 = ctk.CTkFrame(right_frame, fg_color="magenta")

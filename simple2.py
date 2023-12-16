@@ -57,6 +57,7 @@ class BellSystemApp:
 
     def update_frames(self, scrol_frame, alarm, data):
         width = self.master.winfo_width()
+        print(type(width))
         height = self.master.winfo_height()
 
         self.calculate_columns(width)
