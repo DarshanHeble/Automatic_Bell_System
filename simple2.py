@@ -21,12 +21,12 @@ class BellSystemApp:
         self.button_names = self.load_button_names()
 
         # Taking all files names to a variable
-        self.data1 = "./data/data1.json"
-        self.data2 = "./data/data2.json"
-        self.data3 = "./data/data3.json"
-        self.data4 = "./data/data4.json"
-        self.data5 = "./data/data5.json"
-        self.data6 = "./data/data6.json"
+        self.data1 = "Assets/json/data1.json"
+        self.data2 = "Assets/json/data2.json"
+        self.data3 = "Assets/json/data3.json"
+        self.data4 = "Assets/json/data4.json"
+        self.data5 = "Assets/json/data5.json"
+        self.data6 = "Assets/json/data6.json"
 
         # Load all alarm data to its List
         self.alarms1 = self.load_alarms(self.data1)
@@ -41,7 +41,7 @@ class BellSystemApp:
 
         # self.master.bind("<Configure>", self.resize)
 
-    def resize(self, scrol_frame, alarm, data):
+    def resize(self, event, scrol_frame, alarm, data):
         current_width = self.master.winfo_width()
 
         if current_width != self.previous_width:
@@ -105,9 +105,11 @@ class BellSystemApp:
         self.frame1 = tk.Frame(right_frame)
         self.scrol_frame1 = tk.Frame(self.frame1, bg="red")
         self.scrol_frame1.update_idletasks()
-        self.scrol_frame1.bind(
+        self.master.bind(
             "<Configure>",
-            self.resize(self.scrol_frame1, self.alarms1, self.data1),
+            lambda event: self.resize(
+                event, self.scrol_frame1, self.alarms1, self.data1
+            ),
         )
         self.label1 = tk.Label(self.frame1, text=self.button_names["1"])
 
@@ -528,13 +530,13 @@ class BellSystemApp:
 
     def save_button_names(self):
         # Save the button names to a JSON file
-        with open("button_names.json", "w") as file:
+        with open("Assets/json/button_names.json", "w") as file:
             json.dump(self.button_names, file, indent=2)
 
     def load_button_names(self):
         # Load button names from a JSON file
         try:
-            with open("button_names.json", "r") as file:
+            with open("Assets/json/button_names.json", "r") as file:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             return {}

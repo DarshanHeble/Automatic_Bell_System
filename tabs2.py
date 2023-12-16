@@ -6,7 +6,7 @@ from customtkinter import *
 import threading
 import time
 import json
-
+from PIL import Image
 import pygame
 
 
@@ -16,20 +16,16 @@ class BellSystemApp:
         self.master.geometry("500x500")
         self.master.title("Bell System")
 
-        self.resize_task = None
-        self.previous_width = None
-        self.column_length = 0
-
         # Load button names from JSON file
         self.button_names = self.load_button_names()
 
         # Taking all files names to a variable
-        self.data1 = "./data/data1.json"
-        self.data2 = "./data/data2.json"
-        self.data3 = "./data/data3.json"
-        self.data4 = "./data/data4.json"
-        self.data5 = "./data/data5.json"
-        self.data6 = "./data/data6.json"
+        self.data1 = "Assets/json/data1.json"
+        self.data2 = "Assets/json/data2.json"
+        self.data3 = "Assets/json/data3.json"
+        self.data4 = "Assets/json/data4.json"
+        self.data5 = "Assets/json/data5.json"
+        self.data6 = "Assets/json/data6.json"
 
         # Flag to signal the thread to stop
         self.stop_thread = False
@@ -48,35 +44,8 @@ class BellSystemApp:
         # create all widgets
         self.create_widgets()
 
-        # self.master.bind("<Configure>", self.resize)
-
-    def resize(self, scrol_frame, alarm, data):
-        current_width = self.master.winfo_width()
-
-        if current_width != self.previous_width:
-            self.previous_width = current_width
-
-            if self.resize_task is not None:
-                self.master.after_cancel(self.resize_task)
-
-            self.resize_task = self.master.after(
-                1, lambda: self.update_frames(scrol_frame, alarm, data)
-            )
-
-    def update_frames(self, scrol_frame, alarm, data):
-        width = self.master.winfo_width()
-        height = self.master.winfo_height()
-
-        self.calculate_columns(width)
-        self.display_alarms(scrol_frame, alarm, data)
-
-    def calculate_columns(self, width):
-        if 0 <= width < 500:
-            self.column_length = 1
-        elif 500 <= width < 1000:
-            self.column_length = 2
-        elif 1000 <= width < 1500:
-            self.column_length = 3
+    def resize(self, event):
+        print(event)
 
     def mode(self):
         appearence = ctk.get_appearance_mode()
@@ -87,7 +56,7 @@ class BellSystemApp:
 
     def create_widgets(self):
         # Main Frame
-        self.main_frame = ctk.CTkFrame(self.master)
+        self.main_frame = ctk.CTkFrame(self.master, fg_color="transparent")
         self.main_frame.pack(fill="both", expand=True)
 
         self.main_frame.rowconfigure(0, weight=1)
@@ -98,11 +67,13 @@ class BellSystemApp:
         self.main_frame.columnconfigure(4, weight=1)
 
         # Left Frame
-        self.left_frame = ctk.CTkFrame(self.main_frame)
+        self.left_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
+        # self.left_frame.pack(side=LEFT, fill="both")
         self.left_frame.grid(row=0, column=0, sticky="swne")
 
         # Right Frame
         self.right_frame = ctk.CTkFrame(self.main_frame)
+        # self.right_frame.pack(side=RIGHT, fill="both", expand=True)
         self.right_frame.grid(row=0, column=1, columnspan=5, sticky="swen")
 
         # Initial frame in the right frame
@@ -116,8 +87,8 @@ class BellSystemApp:
 
     def create_frames_for_right_frame(self, right_frame):
         self.frame1 = ctk.CTkFrame(right_frame, fg_color="orange")
+        self.frame1.bind("<Configure>", lambda event: self.resize(event))
         self.scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
-        self.scrol_frame1.update_idletasks()
         self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
         self.frame2 = ctk.CTkFrame(right_frame, fg_color="magenta")
@@ -264,13 +235,17 @@ class BellSystemApp:
         btn.pack(ipadx=5, ipady=5)
 
     def create_buttons_for_left_frame(self, left_frame):
+        dark_image = Image.open("Assets/Images/bell_icon.png")
+        light_image = Image.open("Assets/Images/bell_icon.png")
+
         button1 = ctk.CTkButton(
             self.left_frame,
             text=self.button_names["1"],
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="orange",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame1),
         )
         button1.pack()
@@ -287,7 +262,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="magenta",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame2),
         )
         button2.pack()
@@ -303,7 +279,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="royalblue",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame3),
         )
         button3.pack()
@@ -319,7 +296,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="teal",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame4),
         )
         button4.pack()
@@ -335,7 +313,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="crimson",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame5),
         )
         button5.pack()
@@ -351,7 +330,8 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="teal",
-            font=("Times", 15),
+            font=("Arial", 17),
+            image=CTkImage(dark_image=dark_image, light_image=light_image),
             command=lambda: self.open_frame(self.frame6),
         )
         button6.pack()
@@ -383,7 +363,7 @@ class BellSystemApp:
         hour_entry = ttk.Combobox(
             add_alarm_window,
             textvariable=hour_var,
-            font=("arial", 15),
+            font=("arial", 17),
             values=[str(i).zfill(2) for i in range(1, 13)],
         )
         hour_entry.grid(row=1, column=1, pady=5, padx=5)
@@ -395,7 +375,7 @@ class BellSystemApp:
         minute_var.set(min)
         minute_entry = ttk.Combobox(
             add_alarm_window,
-            font=("arial", 15),
+            font=("arial", 17),
             textvariable=minute_var,
             values=[str(i).zfill(2) for i in range(60)],
         )
@@ -410,7 +390,7 @@ class BellSystemApp:
             add_alarm_window,
             textvariable=am_pm_var,
             values=["AM", "PM"],
-            font=("arial", 15),
+            font=("arial", 17),
         )
         am_pm_entry.grid(row=3, column=1, pady=5)
 
@@ -515,7 +495,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # Flag to track whether the music has been played for the current alarm
         music_played = False
@@ -558,7 +538,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -582,7 +562,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -606,7 +586,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -630,7 +610,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -654,7 +634,7 @@ class BellSystemApp:
         pygame.mixer.init()
 
         # Load the sound file once
-        sound = pygame.mixer.Sound("music\Handbell.mp3")
+        sound = pygame.mixer.Sound("Assets/music/Handbell.mp3")
 
         # print(f"Current Time: {current_time}, Current Day: {current_day}")
 
@@ -688,12 +668,7 @@ class BellSystemApp:
 
         # Display alarms in the display frame
         for i, alar in enumerate(alarm):
-            row = 0
-            col = 0
-
-        # Display alarms in the display frame
-        for i, alar in enumerate(alarm):
-            alarm_frame = ctk.CTkFrame(scrol_frame)
+            alarm_frame = ctk.CTkFrame(scrol_frame, fg_color="#222327")
             alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
 
             ctk.CTkLabel(alarm_frame, text=f"Time: {alar['time']}").grid(
@@ -737,18 +712,9 @@ class BellSystemApp:
             )
             edit_button.grid(row=3, column=1, pady=5)
 
-            # update row and col
-            col += 1
-            if col == self.column_length + 1:
-                col = 0
-                row += 1
-
     def rename_button(self, button, button_index, label):
         current_text = button.cget("text")
 
-        # new_name = simpledialog.askstring(
-        #     "Rename Button", "Enter new name:", initialvalue=current_text
-        # )
         new_name = ctk.CTkInputDialog(
             title="Rename Button", text="Enter new name:"
         ).get_input()
@@ -785,7 +751,7 @@ class BellSystemApp:
         hour_entry = ttk.Combobox(
             edit_alarm_window,
             textvariable=hour_var,
-            font=("arial", 15),
+            font=("arial", 17),
             values=[str(i).zfill(2) for i in range(1, 13)],
         )
         hour_entry.grid(row=1, column=1, pady=5)
@@ -797,7 +763,7 @@ class BellSystemApp:
         minute_entry = ttk.Combobox(
             edit_alarm_window,
             textvariable=minute_var,
-            font=("arial", 15),
+            font=("arial", 17),
             values=[str(i).zfill(2) for i in range(60)],
         )
         minute_entry.grid(row=2, column=1, pady=5)
@@ -809,7 +775,7 @@ class BellSystemApp:
         am_pm_entry = ttk.Combobox(
             edit_alarm_window,
             textvariable=am_pm_var,
-            font=("arial", 15),
+            font=("arial", 17),
             values=["AM", "PM"],
         )
         am_pm_entry.grid(row=3, column=1, pady=5)
@@ -905,13 +871,13 @@ class BellSystemApp:
 
     def save_button_names(self):
         # Save the button names to a JSON file
-        with open("button_names.json", "w") as file:
+        with open("Assets/json/button_names.json", "w") as file:
             json.dump(self.button_names, file, indent=2)
 
     def load_button_names(self):
         # Load button names from a JSON file
         try:
-            with open("button_names.json", "r") as file:
+            with open("Assets/json/button_names.json", "r") as file:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             return {}
