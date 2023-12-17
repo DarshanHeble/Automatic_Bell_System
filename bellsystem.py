@@ -231,8 +231,8 @@ class BellSystemApp:
         btn.pack(ipadx=5, ipady=5)
 
     def create_buttons_for_left_frame(self, left_frame):
-        dark_image = Image.open("Assets/Images/bell_icon.png")
-        light_image = Image.open("Assets/Images/bell_icon.png")
+        dark_image = Image.open("Assets/Images/dark_mode_bell2.png")
+        light_image = Image.open("Assets/Images/light_mode_bell2.png")
 
         button1 = ctk.CTkButton(
             self.left_frame,
@@ -664,7 +664,7 @@ class BellSystemApp:
 
         # Display alarms in the display frame
         for i, alar in enumerate(alarm):
-            alarm_frame = ctk.CTkFrame(scrol_frame, fg_color="#222327")
+            alarm_frame = ctk.CTkFrame(scrol_frame, fg_color=("white", "#222327"))
             alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
 
             ctk.CTkLabel(alarm_frame, text=f"Time: {alar['time']}").grid(
