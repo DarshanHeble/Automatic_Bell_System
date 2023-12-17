@@ -757,6 +757,7 @@ class BellSystemApp:
 
             alarm_frame = ctk.CTkFrame(scrol_frame, fg_color=("white", "#222327"))
             alarm_frame.grid(row=row, column=col, pady=5, padx=5, sticky="snew")
+            
 
             ctk.CTkLabel(alarm_frame, text=f"Time: {alar['time']}").grid(
                 row=0, column=0, sticky="w"
