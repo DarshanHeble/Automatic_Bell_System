@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "time": "08:19 PM",
+    "text": "",
+    "days": [
+      "Thu"
+    ],
+    "switch_state": true
+  },
+  {
+    "time": "08:19 PM",
+    "text": "",
+    "days": [
+      "Fri"
+    ],
+    "switch_state": true
+  }
+]

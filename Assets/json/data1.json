@@ -1,6 +1,6 @@
 [
   {
-    "time": "12:22 AM",
+    "time": "07:46 PM",
     "text": "",
     "days": [
       "Thu"
@@ -8,10 +8,18 @@
     "switch_state": true
   },
   {
-    "time": "12:22 AM",
+    "time": "08:46 PM",
     "text": "",
     "days": [
-      "Fri"
+      "Mon"
+    ],
+    "switch_state": true
+  },
+  {
+    "time": "01:53 PM",
+    "text": "",
+    "days": [
+      "Mon"
     ],
     "switch_state": true
   }

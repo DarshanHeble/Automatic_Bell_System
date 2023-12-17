@@ -20,6 +20,8 @@ class BellSystemApp:
         self.previous_width = None
         self.column_length = 0
 
+        self.first_breakpoint = self.second_breakpoint = self.third_breakpoint = False
+
         # Load button names from JSON file
         self.button_names = self.load_button_names()
 
@@ -49,35 +51,30 @@ class BellSystemApp:
         self.create_widgets()
 
     def resize(self, event, scrol_frame, alarm, data):
+        # get the current width of the frame
         current_width = event.width
-        # print(type(current_width))
-        if current_width != self.previous_width:
-            self.previous_width = current_width
 
-            if self.resize_task is not None:
-                self.master.after_cancel(self.resize_task)
-
-            self.resize_task = self.master.after(
-                1,
-                lambda: self.update_frames(event, scrol_frame, alarm, data),
-            )
-
-    def update_frames(self, event, scrol_frame, alarm, data):
-        width = event.width
-        # height = self.master.winfo_height()
-
-        self.calculate_columns(width)
-        self.display_alarms(scrol_frame, alarm, data)
-
-    def calculate_columns(self, width):
-        if 0 <= width < 400:
+        # check the width of the frame
+        if 0 <= current_width < 600 and not self.first_breakpoint:
+            # print("1")
+            self.first_breakpoint = True
+            self.second_breakpoint = self.third_breakpoint = False
             self.column_length = 1
-        elif 400 <= width < 800:
+            self.display_alarms(scrol_frame, alarm, data)
+
+        elif 600 <= current_width < 1200 and not self.second_breakpoint:
+            # print("2")
+            self.second_breakpoint = True
+            self.first_breakpoint = self.third_breakpoint = False
             self.column_length = 2
-        elif 800 <= width < 1200:
+            self.display_alarms(scrol_frame, alarm, data)
+
+        elif 1200 <= current_width < 1800 and not self.third_breakpoint:
+            # print("2")
+            self.third_breakpoint = True
+            self.first_breakpoint = self.second_breakpoint = False
             self.column_length = 3
-        elif 1200 <= width < 1600:
-            self.column_length = 4
+            self.display_alarms(scrol_frame, alarm, data)
 
     def mode(self):
         appearence = ctk.get_appearance_mode()
@@ -131,23 +128,68 @@ class BellSystemApp:
         self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
         self.frame2 = ctk.CTkFrame(right_frame, fg_color="magenta")
-        self.scrol_frame2 = ctk.CTkScrollableFrame(self.frame2, corner_radius=0)
+        self.scrol_frame2 = ctk.CTkScrollableFrame(
+            self.frame2, corner_radius=0
+        )  # giving frame a resize function
+        self.frame2.bind(
+            "<Configure>",
+            lambda event: self.resize(
+                event, self.scrol_frame2, self.alarms2, self.data2
+            ),
+        )
+        self.frame1.update_idletasks()
         self.label2 = ctk.CTkLabel(self.frame2, text=self.button_names["2"])
 
         self.frame3 = ctk.CTkFrame(right_frame, fg_color="royalblue")
-        self.scrol_frame3 = ctk.CTkScrollableFrame(self.frame3, corner_radius=0)
+        self.scrol_frame3 = ctk.CTkScrollableFrame(
+            self.frame3, corner_radius=0
+        )  # giving frame a resize function
+        self.frame3.bind(
+            "<Configure>",
+            lambda event: self.resize(
+                event, self.scrol_frame3, self.alarms3, self.data3
+            ),
+        )
+        self.frame1.update_idletasks()
         self.label3 = ctk.CTkLabel(self.frame3, text=self.button_names["3"])
 
         self.frame4 = ctk.CTkFrame(right_frame, fg_color="purple")
-        self.scrol_frame4 = ctk.CTkScrollableFrame(self.frame4, corner_radius=0)
+        self.scrol_frame4 = ctk.CTkScrollableFrame(
+            self.frame4, corner_radius=0
+        )  # giving frame a resize function
+        self.frame4.bind(
+            "<Configure>",
+            lambda event: self.resize(
+                event, self.scrol_frame4, self.alarms4, self.data4
+            ),
+        )
+        self.frame1.update_idletasks()
         self.label4 = ctk.CTkLabel(self.frame4, text=self.button_names["4"])
 
         self.frame5 = ctk.CTkFrame(right_frame, fg_color="crimson")
-        self.scrol_frame5 = ctk.CTkScrollableFrame(self.frame5, corner_radius=0)
+        self.scrol_frame5 = ctk.CTkScrollableFrame(
+            self.frame5, corner_radius=0
+        )  # giving frame a resize function
+        self.frame5.bind(
+            "<Configure>",
+            lambda event: self.resize(
+                event, self.scrol_frame5, self.alarms5, self.data5
+            ),
+        )
+        self.frame1.update_idletasks()
         self.label5 = ctk.CTkLabel(self.frame5, text=self.button_names["5"])
 
         self.frame6 = ctk.CTkFrame(right_frame, fg_color="teal")
-        self.scrol_frame6 = ctk.CTkScrollableFrame(self.frame6, corner_radius=0)
+        self.scrol_frame6 = ctk.CTkScrollableFrame(
+            self.frame6, corner_radius=0
+        )  # giving frame a resize function
+        self.frame6.bind(
+            "<Configure>",
+            lambda event: self.resize(
+                event, self.scrol_frame6, self.alarms6, self.data6
+            ),
+        )
+        self.frame1.update_idletasks()
         self.label6 = ctk.CTkLabel(self.frame6, text=self.button_names["6"])
 
         self.display_alarms(self.scrol_frame1, self.alarms1, self.data1)
@@ -274,8 +316,8 @@ class BellSystemApp:
         btn.pack(ipadx=5, ipady=5)
 
     def create_buttons_for_left_frame(self, left_frame):
-        dark_image = Image.open("Assets/Images/bell_icon.png")
-        light_image = Image.open("Assets/Images/bell_icon.png")
+        dark_image = Image.open("Assets/Images/dark_mode_bell2.png")
+        light_image = Image.open("Assets/Images/light_mode_bell2.png")
 
         button1 = ctk.CTkButton(
             self.left_frame,
@@ -705,10 +747,16 @@ class BellSystemApp:
         # List to store switch variables
         switch_vars = []
 
+        row = col = 0
+
         # Display alarms in the display frame
         for i, alar in enumerate(alarm):
-            alarm_frame = ctk.CTkFrame(scrol_frame, fg_color="#222327")
-            alarm_frame.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
+            if col == self.column_length:
+                col = 0
+                row += 1
+
+            alarm_frame = ctk.CTkFrame(scrol_frame, fg_color=("white", "#222327"))
+            alarm_frame.grid(row=row, column=col, pady=5, padx=5, sticky="snew")
 
             ctk.CTkLabel(alarm_frame, text=f"Time: {alar['time']}").grid(
                 row=0, column=0, sticky="w"
@@ -726,6 +774,7 @@ class BellSystemApp:
 
             switch_widget = ctk.CTkSwitch(
                 alarm_frame,
+                text="",
                 variable=switch_var,
                 command=lambda alar=alar, sv=switch_var, alarm=alarm, data=data: self.toggle_switch(
                     alar, sv, alarm, data
@@ -750,6 +799,11 @@ class BellSystemApp:
                 ),
             )
             edit_button.grid(row=3, column=1, pady=5)
+            # update the column size
+            col += 1
+
+        for c in range(self.column_length):
+            scrol_frame.columnconfigure(c, weight=1)
 
     def rename_button(self, button, button_index, label):
         current_text = button.cget("text")

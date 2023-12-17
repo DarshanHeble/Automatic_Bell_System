@@ -37,13 +37,13 @@ class BellSystemApp:
 
     def calculate_columns(self, width):
         if 0 <= width < 400:
-            self.column_length = 0
-        elif 400 <= width < 800:
             self.column_length = 1
-        elif 800 <= width < 1200:
+        elif 400 <= width < 800:
             self.column_length = 2
-        elif 1200 <= width < 1600:
+        elif 800 <= width < 1200:
             self.column_length = 3
+        elif 1200 <= width < 1600:
+            self.column_length = 4
 
     def create_widgets(self):
         self.label = tk.Label(self.master)
@@ -53,8 +53,8 @@ class BellSystemApp:
         self.mainContainer.update_idletasks()
 
     def display_frames(self):
-        n = 7
-        row_length = int(n / (self.column_length + 1))
+        n = 3
+        # row_length = int(n / (self.column_length + 1))
         row = 0
         col = 0
 
@@ -68,12 +68,12 @@ class BellSystemApp:
             label = tk.Label(frame, text=i)
             label.pack()
             col = col + 1
-            if col == self.column_length + 1:
+            if col == self.column_length:
                 col = 0
                 row += 1
 
         # Set weight 1 for all columns in the main container
-        for c in range(self.column_length + 1):
+        for c in range(self.column_length):
             self.mainContainer.columnconfigure(c, weight=1)
 
     def delete_frames(self):
