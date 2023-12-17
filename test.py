@@ -3,11 +3,6 @@ from CTkMessagebox import CTkMessagebox
 import tkinter as tk
 from tkinter import ttk
 from customtkinter import *
-import threading
-import time
-import json
-
-import pygame
 
 
 class BellSystemApp:
@@ -15,14 +10,16 @@ class BellSystemApp:
         self.master = master
         self.master.geometry("500x500")
         self.master.title("Bell System")
-        self.frame = ctk.CTkFrame(self.master)
-        self.frame.pack(expand=True, fill="both", pady=10, padx=20)
-        self.frame.bind("<Configure>", lambda event: self.resize(event, "1"))
 
-        self.frame1 = ctk.CTkFrame(self.master)
-        self.frame1.pack(expand=True, fill="both", pady=10, padx=20)
-        self.frame1.bind("<Configure>", lambda event: self.resize(event, "2"))
-        self.frame.forget()
+        self.frame = ctk.CTkScrollableFrame(self.master)
+        self.frame.pack(expand=True, fill="both", ipadx=200)
+
+        self.frame1 = ctk.CTkFrame(self.frame, fg_color="grey")
+        self.frame1.pack(pady=10, expand=True, fill="both")
+        self.frame2 = ctk.CTkFrame(self.frame, fg_color="grey")
+        self.frame2.pack(pady=10, expand=True, fill="both")
+        self.frame3 = ctk.CTkFrame(self.frame, fg_color="grey")
+        self.frame3.pack(pady=10, expand=True, fill="both")
 
     def resize(self, event, str):
         print(event.width, str)

@@ -135,7 +135,6 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
     window = ctk.CTkFrame(root)
     window.place(relx=0.5, rely=0.5, anchor="center")
     card = ctk.CTkFrame(window)
-    card.pack(padx=1005, pady=1005, ipadx=30)
 
     heading = ctk.CTkLabel(
         card,
@@ -357,7 +356,7 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
             music_frame, text="Select Music : ", font=("helvitica", 23)
         )
         music_label.pack(side="left", padx=5)
-        music_files = get_music_files("music")
+        music_files = get_music_files("Assets/music")
         curr_music.set(music_files[0])
         select_bell = ctk.CTkOptionMenu(
             music_frame, values=music_files, variable=curr_music, font=("helvitica", 16)
@@ -581,6 +580,7 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
     weeks()
     music()
     btn(f, framelist)
+    card.pack(padx=1005, pady=1005, ipadx=30)
 
 
 def mode():

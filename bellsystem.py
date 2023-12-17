@@ -319,106 +319,112 @@ class BellSystemApp:
         dark_image = Image.open("Assets/Images/dark_mode_bell2.png")
         light_image = Image.open("Assets/Images/light_mode_bell2.png")
 
-        button1 = ctk.CTkButton(
+        self.button1 = ctk.CTkButton(
             self.left_frame,
             text=self.button_names["1"],
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="orange",
             font=("Arial", 17),
+            anchor="w",
             image=CTkImage(dark_image=dark_image, light_image=light_image),
-            command=lambda: self.open_frame(self.frame1),
+            command=lambda: self.open_frame(self.button1, self.frame1),
         )
-        button1.pack()
-        button1.bind(
+        self.button1.pack(fill="x", padx=10, ipady=5, pady=1)
+        self.button1.bind(
             "<Double-Button-1>",
-            lambda event, btn=button1, idx=1, label=self.label1: self.rename_button(
+            lambda event, btn=self.button1, idx=1, label=self.label1: self.rename_button(
                 btn, idx, label
             ),
         ),
 
-        button2 = ctk.CTkButton(
+        self.button2 = ctk.CTkButton(
             self.left_frame,
             text=self.button_names["2"],
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="magenta",
             font=("Arial", 17),
+            anchor="w",
             image=CTkImage(dark_image=dark_image, light_image=light_image),
-            command=lambda: self.open_frame(self.frame2),
+            command=lambda: self.open_frame(self.button2, self.frame2),
         )
-        button2.pack()
-        button2.bind(
+        self.button2.pack(fill="x", padx=10, ipady=5, pady=1)
+        self.button2.bind(
             "<Double-Button-1>",
-            lambda event, btn=button2, idx=2, label=self.label2: self.rename_button(
+            lambda event, btn=self.button2, idx=2, label=self.label2: self.rename_button(
                 btn, idx, label
             ),
         ),
-        button3 = ctk.CTkButton(
+        self.button3 = ctk.CTkButton(
             self.left_frame,
             text=self.button_names["3"],
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="royalblue",
+            anchor="w",
             font=("Arial", 17),
             image=CTkImage(dark_image=dark_image, light_image=light_image),
-            command=lambda: self.open_frame(self.frame3),
+            command=lambda: self.open_frame(self.button3, self.frame3),
         )
-        button3.pack()
-        button3.bind(
+        self.button3.pack(fill="x", padx=10, ipady=5, pady=1)
+        self.button3.bind(
             "<Double-Button-1>",
-            lambda event, btn=button3, idx=3, label=self.label3: self.rename_button(
+            lambda event, btn=self.button3, idx=3, label=self.label3: self.rename_button(
                 btn, idx, label
             ),
         ),
-        button4 = ctk.CTkButton(
+        self.button4 = ctk.CTkButton(
             self.left_frame,
             text=self.button_names["4"],
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="teal",
+            anchor="w",
             font=("Arial", 17),
             image=CTkImage(dark_image=dark_image, light_image=light_image),
-            command=lambda: self.open_frame(self.frame4),
+            command=lambda: self.open_frame(self.button4, self.frame4),
         )
-        button4.pack()
-        button4.bind(
+        self.button4.pack(fill="x", padx=10, ipady=5, pady=1)
+        self.button4.bind(
             "<Double-Button-1>",
-            lambda event, btn=button4, idx=4, label=self.label4: self.rename_button(
+            lambda event, btn=self.button4, idx=4, label=self.label4: self.rename_button(
                 btn, idx, label
             ),
         ),
-        button5 = ctk.CTkButton(
+        self.button5 = ctk.CTkButton(
             self.left_frame,
             text=self.button_names["5"],
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="crimson",
+            anchor="w",
             font=("Arial", 17),
             image=CTkImage(dark_image=dark_image, light_image=light_image),
-            command=lambda: self.open_frame(self.frame5),
+            command=lambda: self.open_frame(self.button5, self.frame5),
         )
-        button5.pack()
-        button5.bind(
+        self.button5.pack(fill="x", padx=10, ipady=5, pady=1)
+        self.button5.bind(
             "<Double-Button-1>",
-            lambda event, btn=button5, idx=5, label=self.label5: self.rename_button(
+            lambda event, btn=self.button5, idx=5, label=self.label5: self.rename_button(
                 btn, idx, label
             ),
         ),
-        button6 = ctk.CTkButton(
+        self.button6 = ctk.CTkButton(
             self.left_frame,
             text=self.button_names["6"],
             text_color=("black", "white"),
             fg_color="transparent",
             hover_color="teal",
+            anchor="w",
             font=("Arial", 17),
             image=CTkImage(dark_image=dark_image, light_image=light_image),
-            command=lambda: self.open_frame(self.frame6),
+            command=lambda: self.open_frame(self.button6, self.frame6),
         )
-        button6.pack()
-        button6.bind(
+        self.button6.pack(fill="x", padx=10, ipady=5, pady=1)
+        self.button6.bind(
             "<Double-Button-1>",
-            lambda event, btn=button6, idx=6, label=self.label6: self.rename_button(
+            lambda event, btn=self.button6, idx=6, label=self.label6: self.rename_button(
                 btn, idx, label
             ),
         ),
@@ -949,10 +955,13 @@ class BellSystemApp:
         edit_alarm_window.destroy()
         self.display_alarms(scrol_frame, alarm, data)
 
-    def open_frame(self, frame):
-        # Unpack all frames in the right frame
-        # for child in self.right_frame.winfo_children():
-        #     child.pack_forget()
+    def open_frame(self, button, frame):
+        self.button1.configure(fg_color="transparent")
+        self.button2.configure(fg_color="transparent")
+        self.button3.configure(fg_color="transparent")
+        self.button4.configure(fg_color="transparent")
+        self.button5.configure(fg_color="transparent")
+        self.button6.configure(fg_color="transparent")
         self.frame1.forget()
         self.frame2.forget()
         self.frame3.forget()
@@ -961,6 +970,7 @@ class BellSystemApp:
         self.frame6.forget()
         # print(i)
         frame.pack(expand=True, fill="both")
+        button.configure(fg_color="blue")
 
     def save_button_names(self):
         # Save the button names to a JSON file
