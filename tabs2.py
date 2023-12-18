@@ -205,7 +205,13 @@ class BellSystemApp:
         #     ),
         # )
         # self.settings_frame.update_idletasks()
-        self.setting_label = ctk.CTkLabel(self.settings_frame, text="Settings")
+        self.setting_label = ctk.CTkLabel(
+            self.settings_scrl_frame, text="Settings", font=("arial", 40, "bold")
+        )
+
+        mode = ctk.CTkFrame(self.settings_scrl_frame)
+        ctk.CTkCheckBox(mode)
+        mode.pack()
 
         self.display_alarms(self.scrol_frame1, self.alarms1, self.data1)
         self.display_alarms(self.scrol_frame2, self.alarms2, self.data2)
@@ -240,7 +246,7 @@ class BellSystemApp:
             self.frame5.forget()
             self.frame6.forget()
             self.frame1.pack(expand=True, fill="both")
-            self.setting_label.pack()
+            self.setting_label.pack(side="left", padx=20)
             self.settings_scrl_frame.pack(expand=True, fill="both")
             # self.settings_frame.pack(expand=True, fill="both")
 
