@@ -139,7 +139,7 @@ class BellSystemApp:
                 event, self.scrol_frame2, self.alarms2, self.data2
             ),
         )
-        self.frame1.update_idletasks()
+        self.frame2.update_idletasks()
         self.label2 = ctk.CTkLabel(self.frame2, text=self.button_names["2"])
 
         self.frame3 = ctk.CTkFrame(right_frame, fg_color="royalblue")
@@ -152,7 +152,7 @@ class BellSystemApp:
                 event, self.scrol_frame3, self.alarms3, self.data3
             ),
         )
-        self.frame1.update_idletasks()
+        self.frame3.update_idletasks()
         self.label3 = ctk.CTkLabel(self.frame3, text=self.button_names["3"])
 
         self.frame4 = ctk.CTkFrame(right_frame, fg_color="purple")
@@ -165,7 +165,7 @@ class BellSystemApp:
                 event, self.scrol_frame4, self.alarms4, self.data4
             ),
         )
-        self.frame1.update_idletasks()
+        self.frame4.update_idletasks()
         self.label4 = ctk.CTkLabel(self.frame4, text=self.button_names["4"])
 
         self.frame5 = ctk.CTkFrame(right_frame, fg_color="crimson")
@@ -178,7 +178,7 @@ class BellSystemApp:
                 event, self.scrol_frame5, self.alarms5, self.data5
             ),
         )
-        self.frame1.update_idletasks()
+        self.frame5.update_idletasks()
         self.label5 = ctk.CTkLabel(self.frame5, text=self.button_names["5"])
 
         self.frame6 = ctk.CTkFrame(right_frame, fg_color="teal")
@@ -191,8 +191,21 @@ class BellSystemApp:
                 event, self.scrol_frame6, self.alarms6, self.data6
             ),
         )
-        self.frame1.update_idletasks()
+        self.frame6.update_idletasks()
         self.label6 = ctk.CTkLabel(self.frame6, text=self.button_names["6"])
+
+        self.settings_frame = ctk.CTkFrame(right_frame, fg_color="teal")
+        self.settings_scrl_frame = ctk.CTkScrollableFrame(
+            self.settings_frame, corner_radius=0
+        )  # giving frame a resize function
+        # self.settings_frame.bind(
+        #     "<Configure>",
+        #     lambda event: self.resize(
+        #         event, self.settings_scrl_frame, self.alarms6, self.data6
+        #     ),
+        # )
+        # self.settings_frame.update_idletasks()
+        self.setting_label = ctk.CTkLabel(self.settings_frame, text="Settings")
 
         self.display_alarms(self.scrol_frame1, self.alarms1, self.data1)
         self.display_alarms(self.scrol_frame2, self.alarms2, self.data2)
@@ -227,6 +240,9 @@ class BellSystemApp:
             self.frame5.forget()
             self.frame6.forget()
             self.frame1.pack(expand=True, fill="both")
+            self.setting_label.pack()
+            self.settings_scrl_frame.pack(expand=True, fill="both")
+            # self.settings_frame.pack(expand=True, fill="both")
 
         pack()
         self.create_buttons_for_right_frame_frames()
@@ -318,8 +334,10 @@ class BellSystemApp:
         btn.pack(ipadx=5, ipady=5)
 
     def create_buttons_for_left_frame(self, left_frame):
-        dark_image = Image.open("Assets/Images/dark_mode_bell2.png")
-        light_image = Image.open("Assets/Images/light_mode_bell2.png")
+        dark_bell_image = Image.open("Assets/Images/dark_mode_bell2.png")
+        light_bell_image = Image.open("Assets/Images/light_mode_bell2.png")
+        dark_setting_image = Image.open("Assets/Images/dark_mode_setting.png")
+        light_setting_image = Image.open("Assets/Images/light_mode_setting.png")
 
         self.button1 = ctk.CTkButton(
             self.left_frame,
@@ -329,7 +347,7 @@ class BellSystemApp:
             hover_color="orange",
             font=("Arial", 17),
             anchor="w",
-            image=CTkImage(dark_image=dark_image, light_image=light_image),
+            image=CTkImage(dark_image=dark_bell_image, light_image=light_bell_image),
             command=lambda: self.open_frame(self.button1, self.frame1),
         )
         self.button1.pack(fill="x", padx=10, ipady=5, pady=1)
@@ -348,7 +366,7 @@ class BellSystemApp:
             hover_color="magenta",
             font=("Arial", 17),
             anchor="w",
-            image=CTkImage(dark_image=dark_image, light_image=light_image),
+            image=CTkImage(dark_image=dark_bell_image, light_image=light_bell_image),
             command=lambda: self.open_frame(self.button2, self.frame2),
         )
         self.button2.pack(fill="x", padx=10, ipady=5, pady=1)
@@ -366,7 +384,7 @@ class BellSystemApp:
             hover_color="royalblue",
             anchor="w",
             font=("Arial", 17),
-            image=CTkImage(dark_image=dark_image, light_image=light_image),
+            image=CTkImage(dark_image=dark_bell_image, light_image=light_bell_image),
             command=lambda: self.open_frame(self.button3, self.frame3),
         )
         self.button3.pack(fill="x", padx=10, ipady=5, pady=1)
@@ -384,7 +402,7 @@ class BellSystemApp:
             hover_color="teal",
             anchor="w",
             font=("Arial", 17),
-            image=CTkImage(dark_image=dark_image, light_image=light_image),
+            image=CTkImage(dark_image=dark_bell_image, light_image=light_bell_image),
             command=lambda: self.open_frame(self.button4, self.frame4),
         )
         self.button4.pack(fill="x", padx=10, ipady=5, pady=1)
@@ -402,7 +420,7 @@ class BellSystemApp:
             hover_color="crimson",
             anchor="w",
             font=("Arial", 17),
-            image=CTkImage(dark_image=dark_image, light_image=light_image),
+            image=CTkImage(dark_image=dark_bell_image, light_image=light_bell_image),
             command=lambda: self.open_frame(self.button5, self.frame5),
         )
         self.button5.pack(fill="x", padx=10, ipady=5, pady=1)
@@ -417,10 +435,10 @@ class BellSystemApp:
             text=self.button_names["6"],
             text_color=("black", "white"),
             fg_color="transparent",
-            hover_color="teal",
+            hover_color="royalblue",
             anchor="w",
             font=("Arial", 17),
-            image=CTkImage(dark_image=dark_image, light_image=light_image),
+            image=CTkImage(dark_image=dark_bell_image, light_image=light_bell_image),
             command=lambda: self.open_frame(self.button6, self.frame6),
         )
         self.button6.pack(fill="x", padx=10, ipady=5, pady=1)
@@ -431,8 +449,20 @@ class BellSystemApp:
             ),
         ),
 
-        mode = ctk.CTkButton(self.left_frame, text="Change Theme", command=self.mode)
-        mode.pack(side="bottom")
+        # Settings Button
+        self.settings_button = ctk.CTkButton(
+            self.left_frame,
+            text="Settings",
+            text_color=("black", "white"),
+            font=("Arial", 17),
+            fg_color="transparent",
+            hover_color="#8B8B8B",
+            image=CTkImage(
+                dark_image=dark_setting_image, light_image=light_setting_image
+            ),
+            command=lambda: self.open_frame(self.settings_button, self.settings_frame),
+        )
+        self.settings_button.pack(side="bottom", fill="x", padx=10, ipady=5, pady=1)
 
     def open_add_alarm_window(self, scrol_frame, alarm, data):
         # Sub-window for adding alarm
@@ -807,7 +837,7 @@ class BellSystemApp:
                 alarm_frame,
                 text=f" {alar['time']}",
                 font=("arial", 60, "bold"),
-                text_color="#B9B4C7",
+                text_color=("black", "white"),
             ).grid(row=0, column=0, sticky="w")
             ctk.CTkLabel(alarm_frame, text=f"Text: {alar['text']}").grid(
                 row=1, column=0, sticky="w", padx=10
@@ -1004,12 +1034,14 @@ class BellSystemApp:
         self.button4.configure(fg_color="transparent")
         self.button5.configure(fg_color="transparent")
         self.button6.configure(fg_color="transparent")
+        self.settings_button.configure(fg_color="transparent")
         self.frame1.forget()
         self.frame2.forget()
         self.frame3.forget()
         self.frame4.forget()
         self.frame5.forget()
         self.frame6.forget()
+        self.settings_frame.forget()
         # print(i)
         frame.pack(expand=True, fill="both")
         button.configure(fg_color="royalblue")
