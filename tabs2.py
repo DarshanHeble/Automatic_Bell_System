@@ -539,9 +539,7 @@ class BellSystemApp:
             number = f"{', '.join(missing_values)}"
             return number
         else:
-            # print(n + 1)
-            number = n + 1
-            return number
+            return n + 1
 
     def open_add_alarm_window(self, scrol_frame, alarm, data):
         add_alarm_window = ctk.CTkFrame(root, fg_color=("#c4c4c4", "#303030"))
@@ -608,11 +606,10 @@ class BellSystemApp:
         text_label = ctk.CTkLabel(name_frame, text="Text:", font=("arial", 25))
         text_label.grid(row=0, column=0, pady=5)
 
-        name = str(self.get_entry_value(alarm))
+        value = self.get_entry_value(alarm)
+        name = ctk.StringVar(value=f"period({value})")
 
-        text_entry = ctk.CTkEntry(
-            name_frame, font=("arial", 25), textvariable=f"period({name})"
-        )
+        text_entry = ctk.CTkEntry(name_frame, font=("arial", 25), textvariable=name)
         text_entry.grid(row=0, column=1, pady=5)
         # =============================Name field===============================
         # =============================days field===============================
