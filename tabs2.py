@@ -8,6 +8,7 @@ import time
 import json
 from PIL import Image
 import pygame
+import re
 
 
 class BellSystemApp:
@@ -27,11 +28,11 @@ class BellSystemApp:
         )
         self.dark_setting_image = Image.open("Assets/Images/dark_mode_setting.png")
         self.light_setting_image = Image.open("Assets/Images/light_mode_setting.png")
-        self.save_icon = Image.open("Assets/Images/save_icon.png")
         self.light_mode_edit = Image.open("Assets/Images/light_mode_edit.png")
         self.dark_mode_edit = Image.open("Assets/Images/dark_mode_edit.png")
         self.light_mode_delete = Image.open("Assets/Images/light_mode_delete.png")
         self.dark_mode_delete = Image.open("Assets/Images/dark_mode_delete.png")
+        self.save_icon = Image.open("Assets/Images/save_icon.png")
 
         # set the initial column length to 0
         self.column_length = 0
@@ -66,6 +67,9 @@ class BellSystemApp:
 
         # create all widgets
         self.create_widgets()
+
+    def get_entry_value(self):
+        pass
 
     def resize(self, event, scrol_frame, alarm, data):
         # get the current width of the frame
@@ -518,6 +522,27 @@ class BellSystemApp:
         self.settings_button.pack(side="bottom", fill="x", padx=10, ipady=5, pady=1)
         # ==========================Settings Buttons===============================
 
+    def get_entry_value(self, alarm):
+        # Extracting numerical part from the "text" values using re for the "period()" format
+        extracted_numbers = [
+            int(match.group(1))
+            for item in alarm
+            if (match := re.match(r"period\((\d+)\)", item["text"]))
+        ]
+
+        # Find missing values in the sequence
+        n = max(extracted_numbers)
+        missing_values = [str(i) for i in range(1, n + 1) if i not in extracted_numbers]
+
+        # Displaying the result
+        if missing_values:
+            number = f"{', '.join(missing_values)}"
+            return number
+        else:
+            # print(n + 1)
+            number = n + 1
+            return number
+
     def open_add_alarm_window(self, scrol_frame, alarm, data):
         add_alarm_window = ctk.CTkFrame(root, fg_color=("#c4c4c4", "#303030"))
         card = ctk.CTkFrame(add_alarm_window)
@@ -528,7 +553,6 @@ class BellSystemApp:
             text="Add New Bell",
             font=("helvitica", 30, "bold"),
         ).pack(pady=20)
-
         # ctk.CTkLabel(card, text="Add Alarm").grid(row=0, column=0, columnspan=2)
 
         option_frame = ctk.CTkFrame(card, fg_color="transparent")
@@ -583,7 +607,12 @@ class BellSystemApp:
 
         text_label = ctk.CTkLabel(name_frame, text="Text:", font=("arial", 25))
         text_label.grid(row=0, column=0, pady=5)
-        text_entry = ctk.CTkEntry(name_frame, font=("arial", 25))
+
+        name = str(self.get_entry_value(alarm))
+
+        text_entry = ctk.CTkEntry(
+            name_frame, font=("arial", 25), textvariable=f"period({name})"
+        )
         text_entry.grid(row=0, column=1, pady=5)
         # =============================Name field===============================
         # =============================days field===============================
@@ -617,6 +646,7 @@ class BellSystemApp:
         save_button = ctk.CTkButton(
             btn_frame,
             text="Save",
+            image=CTkImage(dark_image=self.save_icon),
             command=lambda: self.save_alarm(
                 hour_var.get(),
                 minute_var.get(),
@@ -894,6 +924,11 @@ class BellSystemApp:
             ctk.CTkLabel(alarm_frame, text=f"Text: {alar['text']}").pack(
                 anchor="w", padx=10
             )
+
+            # set and save entry name
+            # self.text_entry_var.set("Period(2)")
+            # self.save_entry_name(self.text_entry_var.get())
+
             # grid(row=1, column=0, sticky="w", padx=10)
             ctk.CTkLabel(alarm_frame, text=f"Days: {', '.join(alar['days'])}").pack(
                 anchor="w", padx=10
