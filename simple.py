@@ -13,7 +13,8 @@ import pygame
 class BellSystemApp:
     def __init__(self, master):
         self.master = master
-        self.master.geometry("500x500")
+        # self.master.geometry("500x500")
+        self.master.minsize(400, 400)
         self.master.title("Bell System")
 
         self.load_data()

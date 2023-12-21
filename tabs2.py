@@ -14,7 +14,8 @@ import re
 class BellSystemApp:
     def __init__(self, master):
         self.master = master
-        self.master.geometry("800x600")
+        # self.master.geometry("800x600")
+        self.master.minsize(550, 600)
         self.master.title("Bell System")
         # set_default_color_theme("trojanblue.json")
 
@@ -579,6 +580,20 @@ class BellSystemApp:
         ).pack(pady=20)
         # ctk.CTkLabel(card, text="Add Alarm").grid(row=0, column=0, columnspan=2)
 
+        # =============================Name field===============================
+        name_frame = ctk.CTkFrame(card, fg_color="transparent")
+        name_frame.pack(pady=(0, 30))
+
+        text_label = ctk.CTkLabel(name_frame, text="Label", font=("arial", 25))
+        text_label.grid(row=0, column=0, pady=5)
+
+        value = self.get_entry_value(alarm)
+        name = ctk.StringVar(value=f"period({value})")
+
+        text_entry = ctk.CTkEntry(name_frame, font=("arial", 25), textvariable=name)
+        text_entry.grid(row=0, column=1, pady=5)
+        # =============================Name field===============================
+
         option_frame = ctk.CTkFrame(card, fg_color="transparent")
         option_frame.pack(pady=(0, 30))
         # =============================hours===============================
@@ -625,19 +640,7 @@ class BellSystemApp:
         )
         am_pm_entry.grid(row=0, column=2, pady=5)
         # =============================ampm===============================
-        # =============================Name field===============================
-        name_frame = ctk.CTkFrame(card, fg_color="transparent")
-        name_frame.pack(pady=(0, 30))
 
-        text_label = ctk.CTkLabel(name_frame, text="Text:", font=("arial", 25))
-        text_label.grid(row=0, column=0, pady=5)
-
-        value = self.get_entry_value(alarm)
-        name = ctk.StringVar(value=f"period({value})")
-
-        text_entry = ctk.CTkEntry(name_frame, font=("arial", 25), textvariable=name)
-        text_entry.grid(row=0, column=1, pady=5)
-        # =============================Name field===============================
         # =============================days field===============================
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
         weekd_days_frame.pack(pady=(0, 30))

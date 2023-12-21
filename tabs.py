@@ -233,7 +233,7 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
         name_label.pack(padx=5, side="left")
         global name
         name_entry = ctk.CTkEntry(
-            name_frame, font=("helvitica", 25), width=200, textvariable=name 
+            name_frame, font=("helvitica", 25), width=200, textvariable=name
         )
         name_entry.pack(padx=5)
 
