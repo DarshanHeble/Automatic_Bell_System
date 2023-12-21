@@ -931,52 +931,78 @@ class BellSystemApp:
             if col == self.column_length:
                 col = 0
                 row += 1
-
+            # main alarm card frame
             alarm_frame = ctk.CTkFrame(scrol_frame, fg_color=("white", "#222327"))
             alarm_frame.grid(
                 row=row, column=col, pady=15, padx=15, ipadx=5, ipady=5, sticky="snew"
             )
 
+            # inner_alarm_frame = ctk.CTkFrame(alarm_frame)
+            # inner_alarm_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+            time_name_and_btn_frame = ctk.CTkFrame(alarm_frame, fg_color="transparent")
+            time_name_and_btn_frame.pack(expand=True, fill="both")
+
+            # configure columns
+            time_name_and_btn_frame.columnconfigure(0, weight=1)
+            # time_name_and_btn_frame.columnconfigure(1, weight=1)
+            # time_name_and_btn_frame.columnconfigure(2, weight=1)
+            # time_name_and_btn_frame.columnconfigure(3, weight=1)
+            # time_name_and_btn_frame.columnconfigure(4, weight=1)
+            # time_name_and_btn_frame.columnconfigure(5, weight=1)
+
+            # time and name frame
+            time_and_name_frame = ctk.CTkFrame(
+                time_name_and_btn_frame, fg_color="transparent"
+            )
+            # time_and_name_frame.grid(row=0, column=0, sticky="nw", columnspan=3)
+            time_and_name_frame.pack(side=LEFT, expand=True, fill="both")
+
+            # time and name frame widgets
             times = ctk.CTkLabel(
-                alarm_frame,
+                time_and_name_frame,
                 text=f" {alar['time']}",
-                font=("arial", 60, "bold"),
+                font=("arial", 50, "bold"),
                 text_color=("black", "white"),
             )
-            times.pack(anchor="w", padx=10)
+            times.pack(anchor="w")
             # .grid(row=0, column=0, sticky="w")
 
             text = ctk.CTkLabel(
-                alarm_frame,
+                time_and_name_frame,
                 text=f"Text: {alar['text']}",
+                font=("arial", 20, "bold"),
                 text_color=("black", "white"),
             )
             text.pack(anchor="w", padx=10)
 
-            # grid(row=1, column=0, sticky="w", padx=10)
-            ctk.CTkLabel(alarm_frame, text=f"Days: {', '.join(alar['days'])}").pack(
-                anchor="w", padx=10
-            )
-            # .grid(row=2, column=0, sticky="w", padx=10)
+            # btn frame for switch edit and delete
+            btn_frame = ctk.CTkFrame(time_name_and_btn_frame, fg_color="transparent")
+            # btn_frame.grid(row=0, column=1, sticky="nswe")
+            btn_frame.pack(side=RIGHT, expand=True, fill="both")
 
             switch_var = ctk.BooleanVar(value=alar["switch_state"])
             # store variable in list
             switch_vars.append(switch_var)
 
             switch_widget = ctk.CTkSwitch(
-                alarm_frame,
+                btn_frame,
                 text="",
+                # bg_color="blue",
+                switch_height=20,
+                switch_width=40,
+                width=4,
                 corner_radius=50,
                 variable=switch_var,
                 command=lambda alar=alar, sv=switch_var, alarm=alarm, data=data, text=text, times=times: self.toggle_switch(
                     alar, sv, alarm, data, text, times
                 ),
             )
-            switch_widget.pack(anchor="w", padx=10)
+            switch_widget.pack(anchor="e", padx=10)
             # grid(row=0, column=1, rowspan=3, padx=10)
 
             delete_button = ctk.CTkButton(
-                alarm_frame,
+                btn_frame,
                 text="",
                 width=10,
                 fg_color="transparent",
@@ -987,11 +1013,11 @@ class BellSystemApp:
                     a, scrol_frame, alarm, data
                 ),
             )
-            delete_button.pack(anchor="w", padx=10)
+            delete_button.pack(anchor="e", padx=10)
             # grid(row=3, column=0, pady=5)
 
             edit_button = ctk.CTkButton(
-                alarm_frame,
+                btn_frame,
                 text="",
                 width=10,
                 fg_color="transparent",
@@ -1002,9 +1028,19 @@ class BellSystemApp:
                     a, scrol_frame, alarm, data
                 ),
             )
-            edit_button.pack(anchor="w", padx=10)
+            edit_button.pack(anchor="e", padx=10)
             # grid(row=3, column=1, pady=5)
             # update the column size
+
+            # days frame for days
+            day_frame = ctk.CTkFrame(alarm_frame, fg_color="transparent")
+            day_frame.pack(expand=True, fill="both")
+
+            # grid(row=1, column=0, sticky="w", padx=10)
+            ctk.CTkLabel(day_frame, text=f"Days: {', '.join(alar['days'])}").pack(
+                anchor="w", padx=10
+            )
+            # .grid(row=2, column=0, sticky="w", padx=10)
             col += 1
 
         for c in range(self.column_length):
@@ -1027,11 +1063,11 @@ class BellSystemApp:
     def toggle_switch(self, alar, switch_var, alarm, data, text, times):
         alar["switch_state"] = switch_var.get()
         if alar["switch_state"]:
-            text.configure(text_color=("grey", "grey"))
-            times.configure(text_color=("grey", "grey"))
-        else:
             text.configure(text_color=("black", "white"))
             times.configure(text_color=("black", "white"))
+        else:
+            text.configure(text_color=("grey", "grey"))
+            times.configure(text_color=("grey", "grey"))
         self.save_data(alarm, data)
 
     def delete_alarm(self, alar, scrol_frame, alarm, data):
