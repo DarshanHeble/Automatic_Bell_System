@@ -15,9 +15,9 @@ class BellSystemApp:
     def __init__(self, master):
         self.master = master
         # self.master.geometry("800x600")
-        self.master.minsize(550, 600)
+        self.master.minsize(600, 600)
         self.master.title("Bell System")
-        # set_default_color_theme("trojanblue.json")
+        set_default_color_theme("Assets/Themes/blue.json")
 
         # get all images
         self.dark_bell_image = Image.open("Assets/Images/dark_mode_bell2.png")
@@ -34,6 +34,10 @@ class BellSystemApp:
         self.dark_mode_edit = Image.open("Assets/Images/dark_mode_edit.png")
         self.light_mode_delete = Image.open("Assets/Images/light_mode_delete.png")
         self.dark_mode_delete = Image.open("Assets/Images/dark_mode_delete.png")
+        self.dark_mode_cross = Image.open("Assets/Images/dark_mode_cross.png")
+        self.light_mode_cross = Image.open("Assets/Images/light_mode_cross.png")
+        self.dark_mode_label = Image.open("Assets/Images/dark_mode_label.png")
+        self.light_mode_label = Image.open("Assets/Images/light_mode_label.png")
         self.save_icon = Image.open("Assets/Images/save_icon.png")
 
         # set the initial column length to 0
@@ -69,9 +73,6 @@ class BellSystemApp:
 
         # create all widgets
         self.create_widgets()
-
-    def get_entry_value(self):
-        pass
 
     def resize(self, event, scrol_frame, alarm, data):
         # get the current width of the frame
@@ -493,7 +494,7 @@ class BellSystemApp:
                 self.announcement_button1, self.announcement_frame
             ),
         )
-        self.announcement_button1.pack(fill="x", padx=10, ipady=5, pady=1)
+        # self.announcement_button1.pack(fill="x", padx=10, ipady=5, pady=1)
         # ==========================Announcement Buttons===============================
         # ==========================Settings Buttons===============================
         self.settings_button = ctk.CTkButton(
@@ -538,7 +539,7 @@ class BellSystemApp:
             text="Change Theme",
             border_width=1,
             border_color="blue",
-            fg_color="transparent",
+            # fg_color="transparent",
             command=self.mode,
         )
         change_theme.pack()
@@ -570,7 +571,7 @@ class BellSystemApp:
 
     def open_add_alarm_window(self, scrol_frame, alarm, data):
         add_alarm_window = ctk.CTkFrame(root, fg_color=("#c4c4c4", "#303030"))
-        card = ctk.CTkFrame(add_alarm_window)
+        card = ctk.CTkFrame(add_alarm_window, fg_color=("White", "#252525"))
 
         # Widgets in the sub-window
         ctk.CTkLabel(
@@ -584,13 +585,24 @@ class BellSystemApp:
         name_frame = ctk.CTkFrame(card, fg_color="transparent")
         name_frame.pack(pady=(0, 30))
 
-        text_label = ctk.CTkLabel(name_frame, text="Label", font=("arial", 25))
+        text_label = ctk.CTkLabel(
+            name_frame,
+            text="    ",
+            font=("arial", 25),
+            image=CTkImage(
+                dark_image=self.dark_mode_label,
+                light_image=self.light_mode_label,
+                size=(25, 25),
+            ),
+        )
         text_label.grid(row=0, column=0, pady=5)
 
         value = self.get_entry_value(alarm)
         name = ctk.StringVar(value=f"period({value})")
 
-        text_entry = ctk.CTkEntry(name_frame, font=("arial", 25), textvariable=name)
+        text_entry = ctk.CTkEntry(
+            name_frame, font=("arial", 20), width=200, textvariable=name
+        )
         text_entry.grid(row=0, column=1, pady=5)
         # =============================Name field===============================
 
@@ -624,7 +636,7 @@ class BellSystemApp:
             variable=minute_var,
             values=[str(i).zfill(2) for i in range(60)],
         )
-        minute_entry.grid(row=0, column=1, pady=5)
+        minute_entry.grid(row=0, column=1, padx=10)
         # =============================minute===============================
         # =============================ampm===============================
         am_pm_var = ctk.StringVar(option_frame)
@@ -638,7 +650,7 @@ class BellSystemApp:
             font=("arial", 25),
             values=["AM", "PM"],
         )
-        am_pm_entry.grid(row=0, column=2, pady=5)
+        am_pm_entry.grid(row=0, column=2, padx=10)
         # =============================ampm===============================
 
         # =============================days field===============================
@@ -652,26 +664,35 @@ class BellSystemApp:
                 weekd_days_frame,
                 text=day,
                 border_width=2,
+                corner_radius=50,
                 width=20,
                 checkbox_height=30,
                 checkbox_width=30,
                 variable=days_var[day],
-            ).grid(row=0, column=i + 1, pady=10, sticky="w")
+            ).grid(row=0, column=i + 1, pady=10, sticky="w", padx=5)
         # =============================days field===============================
         # =============================cancel button===============================
         btn_frame = ctk.CTkFrame(card, fg_color="transparent")
         btn_frame.pack(pady=(0, 30))
 
         cancel_button = ctk.CTkButton(
-            btn_frame, text="Cancel", command=add_alarm_window.destroy
+            btn_frame,
+            text="Cancel",
+            fg_color="#383838",
+            hover_color="#424242",
+            image=CTkImage(
+                dark_image=self.dark_mode_cross, light_image=self.light_mode_cross
+            ),
+            command=add_alarm_window.destroy,
         )
-        cancel_button.grid(row=0, column=0, pady=10)
+        cancel_button.grid(row=0, column=0, pady=10, padx=10)
         # =============================cancel button===============================
         # =============================save button===============================
 
         save_button = ctk.CTkButton(
             btn_frame,
             text="Save",
+            # fg_color="#4cc2ff",
             image=CTkImage(dark_image=self.save_icon),
             command=lambda: self.save_alarm(
                 hour_var.get(),
@@ -685,11 +706,145 @@ class BellSystemApp:
                 data,
             ),
         )
-        save_button.grid(row=0, column=1, pady=10)
+        save_button.grid(row=0, column=1, pady=10, padx=10)
         # =============================save button===============================
 
         card.pack(padx=1005, pady=1005, ipadx=30)
         add_alarm_window.place(relx=0.5, rely=0.5, anchor="center")
+
+    def edit_alarm(self, alar, scrol_frame, alarm, data):
+        edit_alarm_window = ctk.CTkFrame(root, fg_color=("#c4c4c4", "#303030"))
+        card = ctk.CTkFrame(edit_alarm_window, fg_color=("White", "#252525"))
+
+        # Widgets in the sub-window
+        ctk.CTkLabel(
+            card,
+            text="Edit Bell",
+            font=("helvitica", 30, "bold"),
+        ).pack(pady=20)
+        # =============================Name field===============================
+        name_frame = ctk.CTkFrame(card, fg_color="transparent")
+        name_frame.pack(pady=(0, 30))
+
+        text_label = ctk.CTkLabel(
+            name_frame,
+            text="    ",
+            font=("arial", 25),
+            image=CTkImage(
+                dark_image=self.dark_mode_label,
+                light_image=self.light_mode_label,
+                size=(25, 25),
+            ),
+        )
+        text_label.grid(row=0, column=0, pady=10)
+
+        text_var = ctk.StringVar(name_frame)
+        text_var.set(alar["text"])
+        text_entry = ctk.CTkEntry(name_frame, textvariable=text_var)
+        text_entry.grid(row=0, column=1, pady=5)
+
+        # =============================Name field===============================
+        option_frame = ctk.CTkFrame(card, fg_color="transparent")
+        option_frame.pack(pady=(0, 30))
+
+        # =============================hours===============================
+        hour_var = ctk.StringVar(option_frame)
+        hour_var.set(alar["time"].split(":")[0])
+        hour_entry = ctk.CTkOptionMenu(
+            option_frame,
+            variable=hour_var,
+            width=100,
+            height=50,
+            font=("arial", 17),
+            values=[str(i).zfill(2) for i in range(1, 13)],
+        )
+        hour_entry.grid(row=0, column=0, padx=10)
+        # =============================hours===============================
+        #  =============================minute===============================
+        minute_var = ctk.StringVar(edit_alarm_window)
+        minute_var.set(alar["time"].split(":")[1].split()[0])
+        minute_entry = ctk.CTkOptionMenu(
+            option_frame,
+            variable=minute_var,
+            width=100,
+            height=50,
+            font=("arial", 17),
+            values=[str(i).zfill(2) for i in range(60)],
+        )
+        minute_entry.grid(row=0, column=1, padx=10)
+
+        # =============================minute===============================
+        # =============================ampm===============================
+        am_pm_var = ctk.StringVar(card)
+        am_pm_var.set(alar["time"].split()[1])
+        am_pm_entry = ctk.CTkOptionMenu(
+            option_frame,
+            variable=am_pm_var,
+            width=100,
+            height=50,
+            font=("arial", 25),
+            values=["AM", "PM"],
+        )
+        am_pm_entry.grid(row=0, column=2, padx=10)
+        # =============================ampm===============================
+        # =============================days field===============================
+
+        weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
+        weekd_days_frame.pack(pady=(0, 30))
+        days_var = {}
+        for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
+            days_var[day] = tk.BooleanVar(card, value=(day in alar["days"]))
+            ctk.CTkCheckBox(
+                weekd_days_frame,
+                text=day,
+                border_width=2,
+                corner_radius=50,
+                width=20,
+                checkbox_height=30,
+                checkbox_width=30,
+                variable=days_var[day],
+            ).grid(row=0, column=i + 1, pady=10, sticky="w", padx=5)
+        # =============================days field===============================
+        btn_frame = ctk.CTkFrame(card, fg_color="transparent")
+        btn_frame.pack(pady=(0, 30))
+        # =============================cancel button===============================
+        cancel_button = ctk.CTkButton(
+            btn_frame,
+            text="Cancel",
+            fg_color="#383838",
+            hover_color="#424242",
+            image=CTkImage(
+                dark_image=self.dark_mode_cross, light_image=self.light_mode_cross
+            ),
+            command=edit_alarm_window.destroy,
+        )
+        cancel_button.grid(row=0, column=0, pady=10, padx=10)
+        # =============================cancel button===============================
+        # =============================save button===============================
+
+        save_button = ctk.CTkButton(
+            btn_frame,
+            text="Save",
+            # fg_color="#4cc2ff",
+            image=CTkImage(dark_image=self.save_icon),
+            command=lambda: self.save_edited_alarm(
+                hour_var.get(),
+                minute_var.get(),
+                am_pm_var.get(),
+                text_var.get(),
+                days_var,
+                alar,
+                scrol_frame,
+                alarm,
+                data,
+                edit_alarm_window,
+            ),
+        )
+        save_button.grid(row=0, column=1, pady=10, padx=10)
+
+        card.pack(padx=1005, pady=1005, ipadx=30)
+        edit_alarm_window.place(relx=0.5, rely=0.5, anchor="center")
+        # =============================save button===============================
 
     def save_alarm(
         self,
@@ -772,24 +927,25 @@ class BellSystemApp:
                     and not music_played
                 ):
                     sound.play()
-                    music_played = True
+                    # music_played = True
                     time.sleep(60)
-                    current_time = time.strftime("%I:%M %p")
-                    current_day = time.strftime("%a")
-
-            current_time = time.strftime("%I:%M %p")
-            current_day = time.strftime("%a")
-
-            # Reset the flag when the alarm condition is no longer met
-            if music_played and all(
-                alarm["time"] != current_time
-                or current_day not in alarm["days"]
-                or not alarm["switch_state"]
-                for alarm in self.alarms
-            ):
-                music_played = False
-
+                    # current_time = time.strftime("%I:%M %p")
+                    # current_day = time.strftime("%a")
             time.sleep(1)
+
+            # current_time = time.strftime("%I:%M %p")
+            # current_day = time.strftime("%a")
+
+            # # Reset the flag when the alarm condition is no longer met
+            # if music_played and all(
+            #     alarm["time"] != current_time
+            #     or current_day not in alarm["days"]
+            #     or not alarm["switch_state"]
+            #     for alarm in self.alarms
+            # ):
+            #     music_played = False
+
+            # time.sleep(1)
 
     def check_alarm2(self):
         current_time = time.strftime("%I:%M %p")
@@ -948,11 +1104,6 @@ class BellSystemApp:
 
             # configure columns
             time_name_and_btn_frame.columnconfigure(0, weight=1)
-            # time_name_and_btn_frame.columnconfigure(1, weight=1)
-            # time_name_and_btn_frame.columnconfigure(2, weight=1)
-            # time_name_and_btn_frame.columnconfigure(3, weight=1)
-            # time_name_and_btn_frame.columnconfigure(4, weight=1)
-            # time_name_and_btn_frame.columnconfigure(5, weight=1)
 
             # time and name frame
             time_and_name_frame = ctk.CTkFrame(
@@ -964,16 +1115,17 @@ class BellSystemApp:
             # time and name frame widgets
             times = ctk.CTkLabel(
                 time_and_name_frame,
-                text=f" {alar['time']}",
-                font=("arial", 50, "bold"),
+                text=f"{alar['time']}",
+                font=("arial", 60, "bold"),
                 text_color=("black", "white"),
+                # bg_color="red",
             )
             times.pack(anchor="w")
             # .grid(row=0, column=0, sticky="w")
 
             text = ctk.CTkLabel(
                 time_and_name_frame,
-                text=f"Text: {alar['text']}",
+                text=f"{alar['text']}",
                 font=("arial", 20, "bold"),
                 text_color=("black", "white"),
             )
@@ -1040,9 +1192,9 @@ class BellSystemApp:
             day_frame.pack(expand=True, fill="both")
 
             # grid(row=1, column=0, sticky="w", padx=10)
-            ctk.CTkLabel(day_frame, text=f"Days: {', '.join(alar['days'])}").pack(
-                anchor="w", padx=10
-            )
+            ctk.CTkLabel(
+                day_frame, text=f"{'    '.join(alar['days'])}", text_color="grey"
+            ).pack(anchor="w", padx=10)
             # .grid(row=2, column=0, sticky="w", padx=10)
             col += 1
 
@@ -1077,92 +1229,6 @@ class BellSystemApp:
         alarm.remove(alar)
         self.save_data(alarm, data)
         self.display_alarms(scrol_frame, alarm, data)
-
-    def edit_alarm(self, alar, scrol_frame, alarm, data):
-        edit_alarm_window = ctk.CTkToplevel(self.master)
-        edit_alarm_window.title("Edit Alarm")
-
-        # Widgets in the sub-window
-        ctk.CTkLabel(edit_alarm_window, text="Edit Alarm").grid(
-            row=0, column=0, columnspan=2
-        )
-
-        hour_label = ctk.CTkLabel(edit_alarm_window, text="Hour:")
-        hour_label.grid(row=1, column=0, pady=5)
-        hour_var = ctk.StringVar(edit_alarm_window)
-        hour_var.set(alar["time"].split(":")[0])
-        hour_entry = ttk.Combobox(
-            edit_alarm_window,
-            textvariable=hour_var,
-            font=("arial", 17),
-            values=[str(i).zfill(2) for i in range(1, 13)],
-        )
-        hour_entry.grid(row=1, column=1, pady=5)
-
-        minute_label = ctk.CTkLabel(edit_alarm_window, text="Minute:")
-        minute_label.grid(row=2, column=0, pady=5)
-        minute_var = ctk.StringVar(edit_alarm_window)
-        minute_var.set(alar["time"].split(":")[1].split()[0])
-        minute_entry = ttk.Combobox(
-            edit_alarm_window,
-            textvariable=minute_var,
-            font=("arial", 17),
-            values=[str(i).zfill(2) for i in range(60)],
-        )
-        minute_entry.grid(row=2, column=1, pady=5)
-
-        am_pm_label = ctk.CTkLabel(edit_alarm_window, text="AM/PM:")
-        am_pm_label.grid(row=3, column=0, pady=5)
-        am_pm_var = ctk.StringVar(edit_alarm_window)
-        am_pm_var.set(alar["time"].split()[1])
-        am_pm_entry = ttk.Combobox(
-            edit_alarm_window,
-            textvariable=am_pm_var,
-            font=("arial", 17),
-            values=["AM", "PM"],
-        )
-        am_pm_entry.grid(row=3, column=1, pady=5)
-
-        text_label = ctk.CTkLabel(edit_alarm_window, text="Text:")
-        text_label.grid(row=4, column=0, pady=5)
-        text_var = ctk.StringVar(edit_alarm_window)
-        text_var.set(alar["text"])
-        text_entry = ctk.CTkEntry(edit_alarm_window, textvariable=text_var)
-        text_entry.grid(row=4, column=1, pady=5)
-
-        days_label = ctk.CTkLabel(edit_alarm_window, text="Days:")
-        days_label.grid(row=5, column=0, pady=5)
-        days_var = {}
-        for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
-            days_var[day] = tk.BooleanVar(
-                edit_alarm_window, value=(day in alar["days"])
-            )
-            ctk.CTkCheckBox(edit_alarm_window, text=day, variable=days_var[day]).grid(
-                row=5, column=i + 1, pady=5
-            )
-
-        cancel_button = ctk.CTkButton(
-            edit_alarm_window, text="Cancel", command=edit_alarm_window.destroy
-        )
-        cancel_button.grid(row=6, column=0, columnspan=2, pady=10)
-
-        save_button = ctk.CTkButton(
-            edit_alarm_window,
-            text="Save",
-            command=lambda: self.save_edited_alarm(
-                hour_var.get(),
-                minute_var.get(),
-                am_pm_var.get(),
-                text_var.get(),
-                days_var,
-                alar,
-                scrol_frame,
-                alarm,
-                data,
-                edit_alarm_window,
-            ),
-        )
-        save_button.grid(row=6, column=0, columnspan=2, pady=10)
 
     def save_edited_alarm(
         self,
