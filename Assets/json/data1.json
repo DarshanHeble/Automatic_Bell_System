@@ -5,6 +5,22 @@
     "days": [
       "Thu"
     ],
+    "switch_state": false
+  },
+  {
+    "time": "10:46 PM",
+    "text": "period(2)",
+    "days": [
+      "Thu"
+    ],
+    "switch_state": true
+  },
+  {
+    "time": "10:46 PM",
+    "text": "period(3)",
+    "days": [
+      "Fri"
+    ],
     "switch_state": true
   }
 ]

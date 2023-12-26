@@ -9,6 +9,7 @@ import json
 from PIL import Image
 import pygame
 import re
+import pyttsx3
 
 
 class BellSystemApp:
@@ -113,18 +114,19 @@ class BellSystemApp:
         self.main_frame.pack(fill="both", expand=True)
 
         self.main_frame.rowconfigure(0, weight=1)
-        self.main_frame.columnconfigure(0, weight=0)
+        self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.columnconfigure(1, weight=1)
         self.main_frame.columnconfigure(2, weight=1)
-        self.main_frame.columnconfigure(3, weight=0)
-        self.main_frame.columnconfigure(4, weight=0)
+        self.main_frame.columnconfigure(3, weight=1)
+        self.main_frame.columnconfigure(4, weight=1)
+        self.main_frame.columnconfigure(5, weight=0)
 
         # Left Frame
-        self.left_frame = ctk.CTkFrame(
-            self.main_frame, fg_color="transparent", width=600
-        )
+        self.left_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         # self.left_frame.pack(side=LEFT, fill="both")
-        self.left_frame.grid(row=0, column=0, sticky="swne", padx=10, pady=10)
+        self.left_frame.grid(
+            row=0, column=0, columnspan=2, sticky="swne", padx=10, pady=10
+        )
 
         # Right Frame
         self.right_frame = ctk.CTkFrame(self.main_frame)
@@ -218,22 +220,8 @@ class BellSystemApp:
         self.frame6.update_idletasks()
         self.label6 = ctk.CTkLabel(self.frame6, text=self.button_names["6"])
 
-        self.announcement_frame = ctk.CTkFrame(right_frame)
-        self.scrol_announcement_frame = ctk.CTkScrollableFrame(
-            self.frame6, corner_radius=0
-        )  # giving frame a resize function
-        # self.frame6.bind(
-        #     "<Configure>",
-        #     lambda event: self.resize(
-        #         event, self.scrol_frame6, self.alarms6, self.data6
-        #     ),
-        # )
-        self.announcement_frame.update_idletasks()
-        self.announcement_label = ctk.CTkLabel(
-            self.announcement_frame, text="AnnounceMent"
-        )
-
         self.create_setting_page_widgets()
+        self.create_Announcement_page_widgets()
 
         self.display_alarms(self.scrol_frame1, self.alarms1, self.data1)
         self.display_alarms(self.scrol_frame2, self.alarms2, self.data2)
@@ -269,11 +257,36 @@ class BellSystemApp:
             self.frame6.forget()
             self.frame1.pack(expand=True, fill="both")
 
-            self.settings_scrl_frame.pack(expand=True, fill="both")
             # self.settings_frame.pack(expand=True, fill="both")
 
         pack()
         self.create_buttons_for_right_frame_frames()
+
+    def open_frame(self, button, frame):
+        self.button1.configure(fg_color="transparent")
+        self.button2.configure(fg_color="transparent")
+        self.button3.configure(fg_color="transparent")
+        self.button4.configure(fg_color="transparent")
+        self.button5.configure(fg_color="transparent")
+        self.button6.configure(fg_color="transparent")
+
+        self.settings_button.configure(fg_color="transparent")
+
+        self.announcement_button1.configure(fg_color="transparent")
+
+        self.frame1.forget()
+        self.frame2.forget()
+        self.frame3.forget()
+        self.frame4.forget()
+        self.frame5.forget()
+        self.frame6.forget()
+
+        self.settings_frame.forget()
+
+        self.announcement_frame.forget()
+
+        frame.pack(expand=True, fill="both")
+        button.configure(fg_color="royalblue")
 
     def create_buttons_for_right_frame_frames(self):
         buttonframe = ctk.CTkFrame(self.frame1, corner_radius=0)
@@ -484,8 +497,9 @@ class BellSystemApp:
             text="Announcement",
             text_color=("black", "white"),
             font=("Arial", 17),
-            fg_color="transparent",
+            anchor="w",
             # hover_color="#8B8B8B",
+            fg_color="transparent",
             image=CTkImage(
                 dark_image=self.dark_announce_image,
                 light_image=self.light_announce_image,
@@ -494,15 +508,16 @@ class BellSystemApp:
                 self.announcement_button1, self.announcement_frame
             ),
         )
-        # self.announcement_button1.pack(fill="x", padx=10, ipady=5, pady=1)
+        self.announcement_button1.pack(fill="x", padx=10, ipady=5, pady=1)
         # ==========================Announcement Buttons===============================
         # ==========================Settings Buttons===============================
         self.settings_button = ctk.CTkButton(
             self.left_frame,
             text="Settings",
-            text_color=("black", "white"),
             font=("Arial", 17),
+            anchor="w",
             fg_color="transparent",
+            text_color=("black", "white"),
             # hover_color="#8B8B8B",
             image=CTkImage(
                 dark_image=self.dark_setting_image, light_image=self.light_setting_image
@@ -511,6 +526,71 @@ class BellSystemApp:
         )
         self.settings_button.pack(side="bottom", fill="x", padx=10, ipady=5, pady=1)
         # ==========================Settings Buttons===============================
+
+    def create_Announcement_page_widgets(self):
+        self.announcement_frame = ctk.CTkFrame(self.right_frame)
+        self.scrol_announcement_frame = ctk.CTkScrollableFrame(
+            self.announcement_frame, corner_radius=0
+        )
+        self.announcement_frame.update_idletasks()
+        # label
+        self.announcement_label = ctk.CTkLabel(
+            self.scrol_announcement_frame,
+            text="Announcement",
+            font=("arial", 40, "bold"),
+        )
+        self.announcement_label.pack(anchor="w", padx=20, pady=20)
+        # -----------------------------------------------------------------
+
+        # btn and textbox frame
+        btn_and_textbox_frame = ctk.CTkFrame(
+            self.scrol_announcement_frame, fg_color="transparent"
+        )
+        btn_and_textbox_frame.pack(expand=True, fill="both")
+
+        btn_frame = ctk.CTkFrame(btn_and_textbox_frame, fg_color="transparent")
+        btn_frame.pack(expand=True, fill="both")
+
+        male_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
+        female_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
+        play = ctk.CTkButton(
+            btn_frame,
+            text="Play",
+            fg_color="transparent",
+            corner_radius=60,
+            width=50,
+            font=("arial", 20),
+            border_width=2,
+            border_color="#1F6AA5",
+            command=lambda: self.Play(textbox, male_voice),
+        )
+        play.pack(ipadx=5, ipady=5)
+
+        # automatic bg color change for play btn
+        def printer(textbox, play_btn):
+            text_content = textbox.get("0.0", "end")
+            if any(c.isalpha() for c in text_content):
+                play_btn.configure(fg_color="royalblue")
+            else:
+                play_btn.configure(fg_color="transparent")
+
+        textbox = ctk.CTkTextbox(btn_and_textbox_frame, font=("arial", 20))
+        textbox.pack(expand=True, fill="both", padx=20, pady=20)
+        textbox.bind("<KeyRelease>", lambda event: printer(textbox, play))
+
+        # -----------------------------------------------------------------
+        self.scrol_announcement_frame.pack(expand=True, fill="both")
+
+    def Play(self, textbox, male_voice):
+        engine = pyttsx3.init()
+        text_content = textbox.get("0.0", "end")
+        engine.setProperty(
+            "voice",
+            male_voice,
+        )
+        engine.setProperty("rate", 140)
+        engine.say(text_content)
+        engine.runAndWait()
 
     def create_setting_page_widgets(self):
         self.settings_frame = ctk.CTkFrame(self.right_frame)
@@ -531,6 +611,7 @@ class BellSystemApp:
             self.settings_scrl_frame, text="Settings", font=("arial", 40, "bold")
         )
         self.setting_label.pack(anchor="w", padx=20, pady=20)
+        self.settings_scrl_frame.pack(expand=True, fill="both")
         # ===========================dark mode===========================
         mode = ctk.CTkFrame(self.settings_scrl_frame)
         # ctk.CTkCheckBox(mode)
@@ -907,6 +988,9 @@ class BellSystemApp:
         self.check_alarm_thread6.start()
 
     def check_alarm1(self):
+        current_time = time.strftime("%I:%M %p")
+        current_day = time.strftime("%a")
+
         # Initialize pygame outside the loop (call it once)
         pygame.mixer.init()
 
@@ -961,6 +1045,8 @@ class BellSystemApp:
 
         while not self.stop_thread:
             for alarm in self.alarms2:
+                current_time = time.strftime("%I:%M %p")
+                current_day = time.strftime("%a")
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
@@ -985,6 +1071,8 @@ class BellSystemApp:
 
         while not self.stop_thread:
             for alarm in self.alarms3:
+                current_time = time.strftime("%I:%M %p")
+                current_day = time.strftime("%a")
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
@@ -1009,6 +1097,8 @@ class BellSystemApp:
 
         while not self.stop_thread:
             for alarm in self.alarms4:
+                current_time = time.strftime("%I:%M %p")
+                current_day = time.strftime("%a")
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
@@ -1033,6 +1123,8 @@ class BellSystemApp:
 
         while not self.stop_thread:
             for alarm in self.alarms5:
+                current_time = time.strftime("%I:%M %p")
+                current_day = time.strftime("%a")
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
@@ -1057,6 +1149,8 @@ class BellSystemApp:
 
         while not self.stop_thread:
             for alarm in self.alarms6:
+                current_time = time.strftime("%I:%M %p")
+                current_day = time.strftime("%a")
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
@@ -1116,7 +1210,7 @@ class BellSystemApp:
             times = ctk.CTkLabel(
                 time_and_name_frame,
                 text=f"{alar['time']}",
-                font=("arial", 60, "bold"),
+                font=("arial", 50, "bold"),
                 text_color=("black", "white"),
                 # bg_color="red",
             )
@@ -1139,6 +1233,11 @@ class BellSystemApp:
             switch_var = ctk.BooleanVar(value=alar["switch_state"])
             # store variable in list
             switch_vars.append(switch_var)
+
+            # make colors dull if switch is off
+            if not alar["switch_state"]:
+                text.configure(text_color=("grey", "grey"))
+                times.configure(text_color=("grey", "grey"))
 
             switch_widget = ctk.CTkSwitch(
                 btn_frame,
@@ -1264,27 +1363,6 @@ class BellSystemApp:
 
         edit_alarm_window.destroy()
         self.display_alarms(scrol_frame, alarm, data)
-
-    def open_frame(self, button, frame):
-        self.button1.configure(fg_color="transparent")
-        self.button2.configure(fg_color="transparent")
-        self.button3.configure(fg_color="transparent")
-        self.button4.configure(fg_color="transparent")
-        self.button5.configure(fg_color="transparent")
-        self.button6.configure(fg_color="transparent")
-        self.settings_button.configure(fg_color="transparent")
-        self.announcement_button1.configure(fg_color="transparent")
-        self.frame1.forget()
-        self.frame2.forget()
-        self.frame3.forget()
-        self.frame4.forget()
-        self.frame5.forget()
-        self.frame6.forget()
-        self.settings_frame.forget()
-        self.announcement_frame.forget()
-        # print(i)
-        frame.pack(expand=True, fill="both")
-        button.configure(fg_color="royalblue")
 
     def save_button_names(self):
         # Save the button names to a JSON file
