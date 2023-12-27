@@ -16,7 +16,7 @@ class BellSystemApp:
     def __init__(self, master):
         self.master = master
         # self.master.geometry("800x600")
-        self.master.minsize(600, 600)
+        self.master.minsize(400, 600)
         self.master.title("Bell System")
         set_default_color_theme("Assets/Themes/blue.json")
 
@@ -41,6 +41,8 @@ class BellSystemApp:
         self.light_mode_label = Image.open("Assets/Images/light_mode_label.png")
         self.save_icon = Image.open("Assets/Images/save_icon.png")
 
+        self.play_icon = Image.open("Assets/Images/play_icon_1.png")
+
         # set the initial column length to 0
         self.column_length = 0
 
@@ -49,6 +51,12 @@ class BellSystemApp:
 
         # Load button names from JSON file
         self.button_names = self.load_button_names()
+
+        # Load mode theme from JSON file
+        self.theme_mode = self.load_mode()
+
+        # Load window size from JSON file
+        self.window_size = self.load_window_size()
 
         # Taking all files names to a variable
         self.data1 = "Assets/json/data1.json"
@@ -80,25 +88,28 @@ class BellSystemApp:
         current_width = event.width
 
         # check the width of the frame
-        if 0 <= current_width < 600 and not self.first_breakpoint:
-            # print("1")
+        if 0 <= current_width < 500 and not self.first_breakpoint:
             self.first_breakpoint = True
             self.second_breakpoint = self.third_breakpoint = False
             self.column_length = 1
             self.display_alarms(scrol_frame, alarm, data)
 
-        elif 600 <= current_width < 1200 and not self.second_breakpoint:
-            # print("2")
+        elif 500 <= current_width < 1000 and not self.second_breakpoint:
             self.second_breakpoint = True
             self.first_breakpoint = self.third_breakpoint = False
             self.column_length = 2
             self.display_alarms(scrol_frame, alarm, data)
 
-        elif 1200 <= current_width < 1800 and not self.third_breakpoint:
-            # print("2")
+        elif 1000 <= current_width < 1500 and not self.third_breakpoint:
             self.third_breakpoint = True
             self.first_breakpoint = self.second_breakpoint = False
             self.column_length = 3
+            self.display_alarms(scrol_frame, alarm, data)
+
+        elif 1500 <= current_width < 2000 and not self.third_breakpoint:
+            self.third_breakpoint = True
+            self.first_breakpoint = self.second_breakpoint = False
+            self.column_length = 4
             self.display_alarms(scrol_frame, alarm, data)
 
     def mode(self):
@@ -555,13 +566,14 @@ class BellSystemApp:
         female_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
         play = ctk.CTkButton(
             btn_frame,
-            text="Play",
+            text="",
             fg_color="transparent",
             corner_radius=60,
             width=50,
             font=("arial", 20),
             border_width=2,
             border_color="#1F6AA5",
+            image=CTkImage(light_image=self.play_icon),
             command=lambda: self.Play(textbox, male_voice),
         )
         play.pack(ipadx=5, ipady=5)
@@ -1387,6 +1399,16 @@ class BellSystemApp:
     def save_data(self, alarm, data):
         with open(data, "w") as file:
             json.dump(alarm, file, indent=2)
+
+    def load_mode(self):
+        try:
+            with open("Assets/json/theme_mode.json", "r") as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
+    def load_window_size(self):
+        pass
 
 
 if __name__ == "__main__":
