@@ -576,6 +576,7 @@ class BellSystemApp:
 
         male_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
         female_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
+
         play = ctk.CTkButton(
             btn_frame,
             text="",
@@ -586,7 +587,7 @@ class BellSystemApp:
             border_width=2,
             border_color="#1F6AA5",
             image=CTkImage(light_image=self.play_icon, dark_image=self.play_icon),
-            command=lambda: self.Play(textbox, male_voice),
+            command=lambda: self.start_Play(textbox, male_voice, play),
         )
         play.pack(ipadx=5, ipady=5)
 
@@ -605,16 +606,28 @@ class BellSystemApp:
         # -----------------------------------------------------------------
         self.scrol_announcement_frame.pack(expand=True, fill="both")
 
-    def Play(self, textbox, male_voice):
-        engine = pyttsx3.init()
-        text_content = textbox.get("0.0", "end")
-        engine.setProperty(
-            "voice",
-            male_voice,
-        )
-        engine.setProperty("rate", 120)
-        engine.say(text_content)
-        engine.runAndWait()
+    def start_Play(self, textbox, male_voice, play_btn):
+        play_btn.configure(state="disabled")
+
+        def speak():
+            engine = pyttsx3.init()
+            text_content = textbox.get("0.0", "end")
+            engine.setProperty(
+                "voice",
+                male_voice,
+            )
+            engine.setProperty("rate", 120)
+            engine.say(text_content)
+            try:
+                engine.runAndWait()
+            except RuntimeError:
+                CTkMessagebox(
+                    message="Don't Announce when one is already playing", icon="cancel"
+                )
+            engine.stop()
+
+        play = threading.Thread(target=speak).start()
+        play_btn.configure(state="normal")
 
     def create_setting_page_widgets(self):
         self.settings_frame = ctk.CTkFrame(self.right_frame)
@@ -637,6 +650,16 @@ class BellSystemApp:
         self.setting_label.pack(anchor="w", padx=20, pady=20)
         self.settings_scrl_frame.pack(expand=True, fill="both")
         # ===========================dark mode===========================
+        mode_frame = ctk.CTkFrame(self.settings_scrl_frame)
+        mode_frame.pack(expand=True, fill="both")
+        CTkButton(
+            mode_frame,
+            text="Choose Your Mode",
+            image=CTkImage(dark_image=self.dark_mode_label),
+        ).pack()
+        
+        CTkButton()
+
         mode = ctk.CTkFrame(self.settings_scrl_frame)
         # ctk.CTkCheckBox(mode)
         change_theme = ctk.CTkButton(
