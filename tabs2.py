@@ -90,6 +90,13 @@ class BellSystemApp:
 
         self.play_icon = Image.open("Assets/Images/play_icon_1.png")
 
+        self.dark_mode_arrow_up = Image.open("Assets/Images/dark_mode_arrow_up.png")
+        self.light_mode_arrow_up = Image.open("Assets/Images/light_mode_arrow_up.png")
+        self.dark_mode_arrow_down = Image.open("Assets/Images/dark_mode_arrow_down.png")
+        self.light_mode_arrow_down = Image.open(
+            "Assets/Images/light_mode_arrow_down.png"
+        )
+
     def resize(self, event, scrol_frame, alarm, data):
         # get the current width of the frame
         current_width = event.width
@@ -649,16 +656,44 @@ class BellSystemApp:
         )
         self.setting_label.pack(anchor="w", padx=20, pady=20)
         self.settings_scrl_frame.pack(expand=True, fill="both")
+
         # ===========================dark mode===========================
-        mode_frame = ctk.CTkFrame(self.settings_scrl_frame)
-        mode_frame.pack(expand=True, fill="both")
+        def on_enter(event):
+            mode_frame.configure(fg_color="grey")
+
+        def on_leave(event):
+            mode_frame.configure(fg_color="transparent")
+
+        mode_frame = ctk.CTkFrame(
+            self.settings_scrl_frame,
+        )
+        mode_frame.pack(expand=True, fill="both", padx=20, pady=20)
+        mode_frame.bind("<Enter>", on_enter)
+        mode_frame.bind("<Leave>", on_leave)
+
+        icon_and_text_frame = ctk.CTkFrame(
+            mode_frame,
+        )
+        icon_and_text_frame.pack(expand=True, fill="both", side="left")
+
+        CTkLabel(
+            icon_and_text_frame,
+            text="Choose your mode",
+            image=CTkImage(
+                light_image=self.light_setting_image, dark_image=self.dark_setting_image
+            ),
+        ).pack(anchor="w")
+
         CTkButton(
             mode_frame,
-            text="Choose Your Mode",
-            image=CTkImage(dark_image=self.dark_mode_label),
-        ).pack()
-        
-        CTkButton()
+            text="",
+            fg_color="transparent",
+            hover_color="grey",
+            image=CTkImage(
+                light_image=self.light_mode_arrow_down,
+                dark_image=self.dark_mode_arrow_down,
+            ),
+        ).pack(expand=True, fill="both", anchor="e")
 
         mode = ctk.CTkFrame(self.settings_scrl_frame)
         # ctk.CTkCheckBox(mode)
