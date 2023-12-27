@@ -15,33 +15,12 @@ import pyttsx3
 class BellSystemApp:
     def __init__(self, master):
         self.master = master
-        # self.master.geometry("800x600")
+        self.master.geometry("800x600")
         self.master.minsize(400, 600)
         self.master.title("Bell System")
         set_default_color_theme("Assets/Themes/blue.json")
 
-        # get all images
-        self.dark_bell_image = Image.open("Assets/Images/dark_mode_bell2.png")
-        self.light_bell_image = Image.open("Assets/Images/light_mode_bell2.png")
-        self.dark_announce_image = Image.open(
-            "Assets/Images/dark_mode_announcement.png"
-        )
-        self.light_announce_image = Image.open(
-            "Assets/Images/light_mode_announcement.png"
-        )
-        self.dark_setting_image = Image.open("Assets/Images/dark_mode_setting.png")
-        self.light_setting_image = Image.open("Assets/Images/light_mode_setting.png")
-        self.light_mode_edit = Image.open("Assets/Images/light_mode_edit.png")
-        self.dark_mode_edit = Image.open("Assets/Images/dark_mode_edit.png")
-        self.light_mode_delete = Image.open("Assets/Images/light_mode_delete.png")
-        self.dark_mode_delete = Image.open("Assets/Images/dark_mode_delete.png")
-        self.dark_mode_cross = Image.open("Assets/Images/dark_mode_cross.png")
-        self.light_mode_cross = Image.open("Assets/Images/light_mode_cross.png")
-        self.dark_mode_label = Image.open("Assets/Images/dark_mode_label.png")
-        self.light_mode_label = Image.open("Assets/Images/light_mode_label.png")
-        self.save_icon = Image.open("Assets/Images/save_icon.png")
-
-        self.play_icon = Image.open("Assets/Images/play_icon_1.png")
+        self.get_images()
 
         # set the initial column length to 0
         self.column_length = 0
@@ -54,6 +33,10 @@ class BellSystemApp:
 
         # Load mode theme from JSON file
         self.theme_mode = self.load_mode()
+        if self.theme_mode == "Dark":
+            set_appearance_mode("Dark")
+        else:
+            set_appearance_mode("light")
 
         # Load window size from JSON file
         self.window_size = self.load_window_size()
@@ -82,6 +65,30 @@ class BellSystemApp:
 
         # create all widgets
         self.create_widgets()
+
+    def get_images(self):
+        # get all images
+        self.dark_bell_image = Image.open("Assets/Images/dark_mode_bell2.png")
+        self.light_bell_image = Image.open("Assets/Images/light_mode_bell2.png")
+        self.dark_announce_image = Image.open(
+            "Assets/Images/dark_mode_announcement.png"
+        )
+        self.light_announce_image = Image.open(
+            "Assets/Images/light_mode_announcement.png"
+        )
+        self.dark_setting_image = Image.open("Assets/Images/dark_mode_setting.png")
+        self.light_setting_image = Image.open("Assets/Images/light_mode_setting.png")
+        self.light_mode_edit = Image.open("Assets/Images/light_mode_edit.png")
+        self.dark_mode_edit = Image.open("Assets/Images/dark_mode_edit.png")
+        self.light_mode_delete = Image.open("Assets/Images/light_mode_delete.png")
+        self.dark_mode_delete = Image.open("Assets/Images/dark_mode_delete.png")
+        self.dark_mode_cross = Image.open("Assets/Images/dark_mode_cross.png")
+        self.light_mode_cross = Image.open("Assets/Images/light_mode_cross.png")
+        self.dark_mode_label = Image.open("Assets/Images/dark_mode_label.png")
+        self.light_mode_label = Image.open("Assets/Images/light_mode_label.png")
+        self.save_icon = Image.open("Assets/Images/save_icon.png")
+
+        self.play_icon = Image.open("Assets/Images/play_icon_1.png")
 
     def resize(self, event, scrol_frame, alarm, data):
         # get the current width of the frame
@@ -114,10 +121,15 @@ class BellSystemApp:
 
     def mode(self):
         appearence = ctk.get_appearance_mode()
+
         if appearence == "Dark":
             ctk.set_appearance_mode("light")
+            self.theme_mode = "light"
         else:
             ctk.set_appearance_mode("Dark")
+            self.theme_mode = "Dark"
+
+        self.save_mode()
 
     def create_widgets(self):
         # Main Frame
@@ -573,7 +585,7 @@ class BellSystemApp:
             font=("arial", 20),
             border_width=2,
             border_color="#1F6AA5",
-            image=CTkImage(light_image=self.play_icon),
+            image=CTkImage(light_image=self.play_icon, dark_image=self.play_icon),
             command=lambda: self.Play(textbox, male_voice),
         )
         play.pack(ipadx=5, ipady=5)
@@ -600,7 +612,7 @@ class BellSystemApp:
             "voice",
             male_voice,
         )
-        engine.setProperty("rate", 140)
+        engine.setProperty("rate", 120)
         engine.say(text_content)
         engine.runAndWait()
 
@@ -1405,7 +1417,11 @@ class BellSystemApp:
             with open("Assets/json/theme_mode.json", "r") as file:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
-            return {}
+            return ""
+
+    def save_mode(self):
+        with open("Assets/json/theme_mode.json", "w") as file:
+            json.dump(self.theme_mode, file)
 
     def load_window_size(self):
         pass
