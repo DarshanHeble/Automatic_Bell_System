@@ -11,7 +11,10 @@ import winreg
 class BellSystemApp:
     def __init__(self, master):
         self.master = master
-        self.master.geometry("500x500")
+
+        w = 1500
+        h = 500
+        self.master.geometry(f"{w}x{h}")
         self.master.title("Bell System")
         set_appearance_mode("light")
         set_appearance_mode("dark")
@@ -45,11 +48,15 @@ class BellSystemApp:
         else:
             print("Unable to retrieve the accent color.")
 
-        self.frame = ctk.CTkFrame(self.master, fg_color=hex_color)
-        self.frame.place(relx=0.5, rely=0.5, anchor="center")
+        self.frame = ctk.CTkFrame(self.master)
+        self.frame.pack(fill="both", expand=True)
 
-        self.btn = ctk.CTkButton(self.master)
-        self.btn.pack()
+        self.leftframe = ctk.CTkFrame(self.frame, fg_color="grey", width=300)
+        self.leftframe.pack(fill="y", side="left")
+        CTkButton(self.leftframe, width=300).pack()
+
+        self.rightframe = ctk.CTkFrame(self.frame)
+        self.rightframe.pack(fill="both", side="right", expand=True)
 
     def resize(self, event, str):
         print(event.width, str)

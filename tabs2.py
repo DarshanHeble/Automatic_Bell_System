@@ -1,12 +1,11 @@
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
-import tkinter as tk
-from tkinter import ttk
+from CTkToolTip import *
 from customtkinter import *
+from PIL import Image
 import threading
 import time
 import json
-from PIL import Image
 import pygame
 import re
 import pyttsx3
@@ -15,11 +14,16 @@ import pyttsx3
 class BellSystemApp:
     def __init__(self, master):
         self.master = master
-        self.master.geometry("800x600")
         self.master.minsize(400, 600)
+        self.master.geometry("600x600")
+
+        # Load other data from JSON file
+        self.other_data = self.load_other_data()
+        # self.set_window_size()
+
         self.master.title("Bell System")
         self.master.attributes("-transparentcolor", "magenta")
-        self.master.attributes("-alpha", 1)
+        self.master.attributes("-alpha", 0.99)
         ctk.set_default_color_theme("Assets/Themes/blue.json")
 
         self.get_images()
@@ -33,12 +37,8 @@ class BellSystemApp:
         # Load button names from JSON file
         self.button_names = self.load_button_names()
 
-        # Load mode theme from JSON file
-        self.theme_mode = self.load_mode()
+        # set theme
         self.set_theme_mode()
-
-        # Load window size from JSON file
-        self.window_size = self.load_window_size()
 
         # Taking all files names to a variable
         self.data1 = "Assets/json/data1.json"
@@ -125,15 +125,33 @@ class BellSystemApp:
             self.column_length = 4
             self.display_alarms(scrol_frame, alarm, data)
 
-    def set_theme_mode(self):
-        if self.theme_mode["theme"] == 0:
-            ctk.set_appearance_mode("light")
-        elif self.theme_mode["theme"] == 1:
-            ctk.set_appearance_mode("dark")
-        elif self.theme_mode["theme"] == 2:
-            ctk.set_appearance_mode("system")
+    def set_window_size(self):
+        print(self.other_data)
+        try:
+            self.width = self.other_data["width"]
+        except KeyError:
+            self.width = 500
 
-        self.save_mode()
+        try:
+            self.height = self.other_data["height"]
+        except KeyError:
+            self.height = 500
+
+        print(self.other_data)
+        self.master.geometry(f"{self.width}x{self.height}")
+
+    def set_theme_mode(self):
+        try:
+            if self.other_data["theme"] == 0:
+                ctk.set_appearance_mode("light")
+            elif self.other_data["theme"] == 1:
+                ctk.set_appearance_mode("dark")
+            elif self.other_data["theme"] == 2:
+                ctk.set_appearance_mode("system")
+        except KeyError:
+            self.other_data["theme"] = 2
+
+        self.save_other_data()
 
     def create_widgets(self):
         # Main Frame
@@ -149,16 +167,18 @@ class BellSystemApp:
         self.main_frame.columnconfigure(5, weight=0)
 
         # Left Frame
-        self.left_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
-        # self.left_frame.pack(side=LEFT, fill="both")
-        self.left_frame.grid(
-            row=0, column=0, columnspan=2, sticky="swne", padx=10, pady=10
+        self.left_frame = ctk.CTkFrame(
+            self.main_frame, fg_color="transparent", width=600
         )
+        self.left_frame.pack(side="left", fill="y")
+        # self.left_frame.grid(
+        #     row=0, column=0, columnspan=2, sticky="swne", padx=10, pady=10
+        # )
 
         # Right Frame
         self.right_frame = ctk.CTkFrame(self.main_frame)
-        # self.right_frame.pack(side=RIGHT, fill="both", expand=True)
-        self.right_frame.grid(row=0, column=1, columnspan=5, sticky="swen")
+        self.right_frame.pack(side="right", fill="both", expand=True)
+        # self.right_frame.grid(row=0, column=1, columnspan=5, sticky="swen")
 
         # Initial frame in the right frame
         # self.default_frame = ctk.CTkFrame(self.right_frame)
@@ -182,7 +202,6 @@ class BellSystemApp:
             ),
         )
         self.frame1.update_idletasks()
-        self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
         self.frame2 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame2 = ctk.CTkScrollableFrame(
@@ -195,7 +214,6 @@ class BellSystemApp:
             ),
         )
         self.frame2.update_idletasks()
-        self.label2 = ctk.CTkLabel(self.frame2, text=self.button_names["2"])
 
         self.frame3 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame3 = ctk.CTkScrollableFrame(
@@ -208,7 +226,6 @@ class BellSystemApp:
             ),
         )
         self.frame3.update_idletasks()
-        self.label3 = ctk.CTkLabel(self.frame3, text=self.button_names["3"])
 
         self.frame4 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame4 = ctk.CTkScrollableFrame(
@@ -221,7 +238,6 @@ class BellSystemApp:
             ),
         )
         self.frame4.update_idletasks()
-        self.label4 = ctk.CTkLabel(self.frame4, text=self.button_names["4"])
 
         self.frame5 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame5 = ctk.CTkScrollableFrame(
@@ -234,7 +250,6 @@ class BellSystemApp:
             ),
         )
         self.frame5.update_idletasks()
-        self.label5 = ctk.CTkLabel(self.frame5, text=self.button_names["5"])
 
         self.frame6 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame6 = ctk.CTkScrollableFrame(
@@ -247,7 +262,6 @@ class BellSystemApp:
             ),
         )
         self.frame6.update_idletasks()
-        self.label6 = ctk.CTkLabel(self.frame6, text=self.button_names["6"])
 
         self.create_setting_page_widgets()
         self.create_Announcement_page_widgets()
@@ -260,33 +274,13 @@ class BellSystemApp:
         self.display_alarms(self.scrol_frame6, self.alarms6, self.data6)
 
         def pack():
-            self.frame1.pack()
-            self.frame2.pack()
-            self.frame3.pack()
-            self.frame4.pack()
-            self.frame5.pack()
-            self.frame6.pack()
-            self.label1.pack()
-            self.label2.pack()
-            self.label3.pack()
-            self.label4.pack()
-            self.label5.pack()
-            self.label6.pack()
             self.scrol_frame1.pack(expand=True, fill="both")
             self.scrol_frame2.pack(expand=True, fill="both")
             self.scrol_frame3.pack(expand=True, fill="both")
             self.scrol_frame4.pack(expand=True, fill="both")
             self.scrol_frame5.pack(expand=True, fill="both")
             self.scrol_frame6.pack(expand=True, fill="both")
-            self.frame1.forget()
-            self.frame2.forget()
-            self.frame3.forget()
-            self.frame4.forget()
-            self.frame5.forget()
-            self.frame6.forget()
             self.frame1.pack(expand=True, fill="both")
-
-            # self.settings_frame.pack(expand=True, fill="both")
 
         pack()
         self.create_buttons_for_right_frame_frames()
@@ -410,6 +404,7 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="royalblue",
             font=("Arial", 17),
+            width=300,
             anchor="w",
             image=CTkImage(
                 dark_image=self.dark_bell_image, light_image=self.light_bell_image
@@ -419,8 +414,9 @@ class BellSystemApp:
         self.button1.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button1.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button1, idx=1, label=self.label1: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button1, idx=1: self.rename_button(
+                btn,
+                idx,
             ),
         ),
 
@@ -439,8 +435,9 @@ class BellSystemApp:
         self.button2.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button2.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button2, idx=2, label=self.label2: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button2, idx=2: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         self.button3 = ctk.CTkButton(
@@ -458,8 +455,9 @@ class BellSystemApp:
         self.button3.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button3.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button3, idx=3, label=self.label3: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button3, idx=3: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         self.button4 = ctk.CTkButton(
@@ -477,8 +475,9 @@ class BellSystemApp:
         self.button4.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button4.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button4, idx=4, label=self.label4: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button4, idx=4: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         self.button5 = ctk.CTkButton(
@@ -496,8 +495,9 @@ class BellSystemApp:
         self.button5.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button5.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button5, idx=5, label=self.label5: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button5, idx=5: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         self.button6 = ctk.CTkButton(
@@ -515,8 +515,9 @@ class BellSystemApp:
         self.button6.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button6.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button6, idx=6, label=self.label6: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button6, idx=6: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         # ==========================Bell Buttons===============================
@@ -647,13 +648,14 @@ class BellSystemApp:
 
         # ===========================dark mode===========================
         def on_enter(event):
-            inner_mode_frame1.configure(fg_color="#3f3f4e")
+            # inner_mode_frame1.configure(cursor="hand2")
+            inner_mode_frame1.configure(fg_color=("#B6B6B6", "#3f3f4e"), cursor="hand2")
 
         def on_leave(event):
             inner_mode_frame1.configure(fg_color=("#C8C8C8", "#333333"))
 
         def on_click(event):
-            inner_mode_frame1.configure(fg_color="#4A4A4A")
+            inner_mode_frame1.configure(fg_color="#333333")
 
             if self.inner_mode_frame2_open:
                 self.inner_mode_frame2_open = False
@@ -680,7 +682,7 @@ class BellSystemApp:
         # ============================================frame 1
         self.inner_mode_frame2_open = False
         inner_mode_frame1 = ctk.CTkFrame(mode_frame, fg_color=("#C8C8C8", "#333333"))
-        inner_mode_frame1.pack(expand=True, fill="x", ipadx=10, ipady=10, pady=10)
+        inner_mode_frame1.pack(fill="x", ipadx=10, ipady=10, pady=10)
         inner_mode_frame1.bind("<Enter>", on_enter)
         inner_mode_frame1.bind("<Leave>", on_leave)
         inner_mode_frame1.bind("<Button-1>", lambda event: on_click(event))
@@ -716,6 +718,7 @@ class BellSystemApp:
         )
         text.bind("<Enter>", on_enter)
         text.bind("<Leave>", on_leave)
+        text.bind("<Button-1>", lambda event: on_click(event))
 
         # icon
         icon2 = ctk.CTkLabel(
@@ -741,18 +744,18 @@ class BellSystemApp:
 
         def radiobutton_event():
             if self.radio_var.get() == 0:
-                self.theme_mode["theme"] = 0
+                self.other_data["theme"] = 0
 
             elif self.radio_var.get() == 1:
-                self.theme_mode["theme"] = 1
+                self.other_data["theme"] = 1
 
             elif self.radio_var.get() == 2:
-                self.theme_mode["theme"] = 2
+                self.other_data["theme"] = 2
 
-            self.save_mode()
+            self.save_other_data()
             self.set_theme_mode()
 
-        self.radio_var = ctk.IntVar(value=0)
+        self.radio_var = ctk.IntVar(value=self.other_data["theme"])
         for i in range(3):
             theme_name = ["Light", "Dark", "Use System Setting"]
             CTkRadioButton(
@@ -1307,6 +1310,15 @@ class BellSystemApp:
         self.stop_thread = True
         # Stop the Pygame mixer
         pygame.mixer.quit()
+
+        self.width = self.master.winfo_width()
+        self.height = self.master.winfo_height()
+        self.other_data["width"] = self.width
+        self.other_data["height"] = self.height
+
+        self.save_other_data()
+
+        print(self.width, self.height)
         # Close the application
         self.master.destroy()
 
@@ -1446,14 +1458,13 @@ class BellSystemApp:
             scrol_frame.columnconfigure(c, weight=1)
 
     def rename_button(self, button, button_index, label):
-        current_text = button.cget("text")
+        # current_text = button.cget("text")
 
         new_name = ctk.CTkInputDialog(
             title="Rename Button", text="Enter new name:"
         ).get_input()
         if new_name:
             button.configure(text=new_name)
-            label.configure(text=new_name)
             # Update the button name in the loaded data
             self.button_names[str(button_index)] = new_name
             # Save the updated data to the JSON file
@@ -1533,19 +1544,16 @@ class BellSystemApp:
         with open(data, "w") as file:
             json.dump(alarm, file, indent=2)
 
-    def load_mode(self):
+    def load_other_data(self):
         try:
             with open("Assets/json/other_data.json", "r") as file:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
-            return {}
+            return {"theme": 2, "width": 600, "height": 600}
 
-    def save_mode(self):
+    def save_other_data(self):
         with open("Assets/json/other_data.json", "w") as file:
-            json.dump(self.theme_mode, file, indent=2)
-
-    def load_window_size(self):
-        pass
+            json.dump(self.other_data, file, indent=2)
 
 
 if __name__ == "__main__":
