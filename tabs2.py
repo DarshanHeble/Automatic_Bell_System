@@ -606,7 +606,9 @@ class BellSystemApp:
             else:
                 play_btn.configure(fg_color="transparent")
 
-        textbox = ctk.CTkTextbox(btn_and_textbox_frame, font=("arial", 20))
+        textbox = ctk.CTkTextbox(
+            btn_and_textbox_frame, font=("arial", 20), height=500, undo=True
+        )
         textbox.pack(expand=True, fill="both", padx=20, pady=20)
         textbox.bind("<KeyRelease>", lambda event: printer(textbox, play))
 
