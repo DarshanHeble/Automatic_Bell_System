@@ -90,6 +90,13 @@ class BellSystemApp:
 
         self.play_icon = Image.open("Assets/Images/play_icon_1.png")
 
+        self.dark_mode_arrow_up = Image.open("Assets/Images/dark_mode_arrow_up.png")
+        self.light_mode_arrow_up = Image.open("Assets/Images/light_mode_arrow_up.png")
+        self.dark_mode_arrow_down = Image.open("Assets/Images/dark_mode_arrow_down.png")
+        self.light_mode_arrow_down = Image.open(
+            "Assets/Images/light_mode_arrow_down.png"
+        )
+
     def resize(self, event, scrol_frame, alarm, data):
         # get the current width of the frame
         current_width = event.width
@@ -576,6 +583,7 @@ class BellSystemApp:
 
         male_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
         female_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
+
         play = ctk.CTkButton(
             btn_frame,
             text="",
@@ -586,7 +594,7 @@ class BellSystemApp:
             border_width=2,
             border_color="#1F6AA5",
             image=CTkImage(light_image=self.play_icon, dark_image=self.play_icon),
-            command=lambda: self.Play(textbox, male_voice),
+            command=lambda: self.start_Play(textbox, male_voice, play),
         )
         play.pack(ipadx=5, ipady=5)
 
@@ -605,16 +613,28 @@ class BellSystemApp:
         # -----------------------------------------------------------------
         self.scrol_announcement_frame.pack(expand=True, fill="both")
 
-    def Play(self, textbox, male_voice):
-        engine = pyttsx3.init()
-        text_content = textbox.get("0.0", "end")
-        engine.setProperty(
-            "voice",
-            male_voice,
-        )
-        engine.setProperty("rate", 120)
-        engine.say(text_content)
-        engine.runAndWait()
+    def start_Play(self, textbox, male_voice, play_btn):
+        play_btn.configure(state="disabled")
+
+        def speak():
+            engine = pyttsx3.init()
+            text_content = textbox.get("0.0", "end")
+            engine.setProperty(
+                "voice",
+                male_voice,
+            )
+            engine.setProperty("rate", 120)
+            engine.say(text_content)
+            try:
+                engine.runAndWait()
+            except RuntimeError:
+                CTkMessagebox(
+                    message="Don't Announce when one is already playing", icon="cancel"
+                )
+            engine.stop()
+
+        play = threading.Thread(target=speak).start()
+        play_btn.configure(state="normal")
 
     def create_setting_page_widgets(self):
         self.settings_frame = ctk.CTkFrame(self.right_frame)
@@ -636,19 +656,121 @@ class BellSystemApp:
         )
         self.setting_label.pack(anchor="w", padx=20, pady=20)
         self.settings_scrl_frame.pack(expand=True, fill="both")
+
         # ===========================dark mode===========================
-        mode = ctk.CTkFrame(self.settings_scrl_frame)
-        # ctk.CTkCheckBox(mode)
-        change_theme = ctk.CTkButton(
-            self.settings_scrl_frame,
-            text="Change Theme",
-            border_width=1,
-            border_color="blue",
-            # fg_color="transparent",
-            command=self.mode,
+        def on_enter(event):
+            inner_mode_frame1.configure(fg_color="#3f3f4e")
+
+        def on_leave(event):
+            inner_mode_frame1.configure(fg_color="#333333")
+
+        def on_click(event):
+            inner_mode_frame1.configure(fg_color="#4A4A4A")
+
+            if self.inner_mode_frame2_open:
+                self.inner_mode_frame2_open = False
+                icon2.configure(
+                    image=CTkImage(
+                        light_image=self.light_mode_arrow_down,
+                        dark_image=self.dark_mode_arrow_down,
+                    )
+                )
+                inner_mode_frame2.forget()
+            else:
+                self.inner_mode_frame2_open = True
+                icon2.configure(
+                    image=CTkImage(
+                        light_image=self.light_mode_arrow_up,
+                        dark_image=self.dark_mode_arrow_up,
+                    )
+                )
+                inner_mode_frame2.pack(expand=True, fill="both", ipadx=20, ipady=10)
+
+        mode_frame = ctk.CTkFrame(self.settings_scrl_frame, fg_color="transparent")
+        mode_frame.pack(expand=True, fill="both", padx=20, pady=20, ipadx=5, ipady=5)
+
+        # ============================================frame 1
+        self.inner_mode_frame2_open = False
+        inner_mode_frame1 = ctk.CTkFrame(mode_frame, fg_color="#333333", height=100)
+        inner_mode_frame1.pack(expand=True, fill="x", ipadx=10, ipady=10, pady=10)
+        inner_mode_frame1.bind("<Enter>", on_enter)
+        inner_mode_frame1.bind("<Leave>", on_leave)
+        inner_mode_frame1.bind("<Button-1>", lambda event: on_click(event))
+
+        # icon
+        icon1 = ctk.CTkLabel(
+            inner_mode_frame1,
+            text="",
+            font=("Arial", 17),
+            image=CTkImage(
+                light_image=self.light_setting_image, dark_image=self.dark_setting_image
+            ),
         )
-        change_theme.pack()
-        mode.pack()
+        icon1.pack(
+            anchor="w",
+            side="left",
+            padx=10,
+        )
+        icon1.bind("<Enter>", on_enter)
+        icon1.bind("<Leave>", on_leave)
+
+        # text
+        text = ctk.CTkLabel(
+            inner_mode_frame1,
+            font=("Arial", 17),
+            text="Choose your mode",
+        )
+        text.pack(
+            anchor="w",
+            side="left",
+            padx=10,
+        )
+        text.bind("<Enter>", on_enter)
+        text.bind("<Leave>", on_leave)
+
+        # icon
+        icon2 = ctk.CTkLabel(
+            inner_mode_frame1,
+            text="",
+            image=CTkImage(
+                light_image=self.light_mode_arrow_down,
+                dark_image=self.dark_mode_arrow_down,
+            ),
+        )
+        icon2.pack(
+            anchor="e",
+            side="right",
+            padx=10,
+        )
+        icon2.bind("<Enter>", on_enter)
+        icon2.bind("<Leave>", on_leave)
+
+        # ============================================frame 2
+        inner_mode_frame2 = ctk.CTkFrame(mode_frame)
+        # inner_mode_frame2.pack(expand=True, fill="both")
+
+        def radiobutton_event():
+            if radio_var.get() == 1:
+                set_appearance_mode("light")
+            elif radio_var.get() == 2:
+                set_appearance_mode("dark")
+            elif radio_var.get() == 3:
+                set_appearance_mode("system")
+
+        radio_var = ctk.IntVar(value=0)
+        for i in range(3):
+            theme_name = ["Light", "Dark", "Use System Setting"]
+            CTkRadioButton(
+                inner_mode_frame2,
+                text=theme_name[i],
+                command=radiobutton_event,
+                font=("Arial", 17),
+                border_width_unchecked=2,
+                border_width_checked=5,
+                variable=radio_var,
+                value=i + 1,
+            ).pack(anchor="w", padx=5, pady=5)
+
         # ===========================dark mode===========================
 
     def get_entry_value(self, alarm):

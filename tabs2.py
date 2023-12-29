@@ -659,54 +659,118 @@ class BellSystemApp:
 
         # ===========================dark mode===========================
         def on_enter(event):
-            mode_frame.configure(fg_color="grey")
+            inner_mode_frame1.configure(fg_color="#3f3f4e")
 
         def on_leave(event):
-            mode_frame.configure(fg_color="transparent")
+            inner_mode_frame1.configure(fg_color="#333333")
 
-        mode_frame = ctk.CTkFrame(
-            self.settings_scrl_frame,
-        )
-        mode_frame.pack(expand=True, fill="both", padx=20, pady=20)
-        mode_frame.bind("<Enter>", on_enter)
-        mode_frame.bind("<Leave>", on_leave)
+        def on_click(event):
+            inner_mode_frame1.configure(fg_color="#4A4A4A")
 
-        icon_and_text_frame = ctk.CTkFrame(
-            mode_frame,
-        )
-        icon_and_text_frame.pack(expand=True, fill="both", side="left")
+            if self.inner_mode_frame2_open:
+                self.inner_mode_frame2_open = False
+                icon2.configure(
+                    image=CTkImage(
+                        light_image=self.light_mode_arrow_down,
+                        dark_image=self.dark_mode_arrow_down,
+                    )
+                )
+                inner_mode_frame2.forget()
+            else:
+                self.inner_mode_frame2_open = True
+                icon2.configure(
+                    image=CTkImage(
+                        light_image=self.light_mode_arrow_up,
+                        dark_image=self.dark_mode_arrow_up,
+                    )
+                )
+                inner_mode_frame2.pack(expand=True, fill="both", ipadx=20, ipady=10)
 
-        CTkLabel(
-            icon_and_text_frame,
-            text="Choose your mode",
+        mode_frame = ctk.CTkFrame(self.settings_scrl_frame, fg_color="transparent")
+        mode_frame.pack(expand=True, fill="both", padx=20, pady=20, ipadx=5, ipady=5)
+
+        # ============================================frame 1
+        self.inner_mode_frame2_open = False
+        inner_mode_frame1 = ctk.CTkFrame(mode_frame, fg_color="#333333", height=100)
+        inner_mode_frame1.pack(expand=True, fill="x", ipadx=10, ipady=10, pady=10)
+        inner_mode_frame1.bind("<Enter>", on_enter)
+        inner_mode_frame1.bind("<Leave>", on_leave)
+        inner_mode_frame1.bind("<Button-1>", lambda event: on_click(event))
+
+        # icon
+        icon1 = ctk.CTkLabel(
+            inner_mode_frame1,
+            text="",
+            font=("Arial", 17),
             image=CTkImage(
                 light_image=self.light_setting_image, dark_image=self.dark_setting_image
             ),
-        ).pack(anchor="w")
+        )
+        icon1.pack(
+            anchor="w",
+            side="left",
+            padx=10,
+        )
+        icon1.bind("<Enter>", on_enter)
+        icon1.bind("<Leave>", on_leave)
 
-        CTkButton(
-            mode_frame,
+        # text
+        text = ctk.CTkLabel(
+            inner_mode_frame1,
+            font=("Arial", 17),
+            text="Choose your mode",
+        )
+        text.pack(
+            anchor="w",
+            side="left",
+            padx=10,
+        )
+        text.bind("<Enter>", on_enter)
+        text.bind("<Leave>", on_leave)
+
+        # icon
+        icon2 = ctk.CTkLabel(
+            inner_mode_frame1,
             text="",
-            fg_color="transparent",
-            hover_color="grey",
             image=CTkImage(
                 light_image=self.light_mode_arrow_down,
                 dark_image=self.dark_mode_arrow_down,
             ),
-        ).pack(expand=True, fill="both", anchor="e")
-
-        mode = ctk.CTkFrame(self.settings_scrl_frame)
-        # ctk.CTkCheckBox(mode)
-        change_theme = ctk.CTkButton(
-            self.settings_scrl_frame,
-            text="Change Theme",
-            border_width=1,
-            border_color="blue",
-            # fg_color="transparent",
-            command=self.mode,
         )
-        change_theme.pack()
-        mode.pack()
+        icon2.pack(
+            anchor="e",
+            side="right",
+            padx=10,
+        )
+        icon2.bind("<Enter>", on_enter)
+        icon2.bind("<Leave>", on_leave)
+
+        # ============================================frame 2
+        inner_mode_frame2 = ctk.CTkFrame(mode_frame)
+        # inner_mode_frame2.pack(expand=True, fill="both")
+
+        def radiobutton_event():
+            if radio_var.get() == 1:
+                set_appearance_mode("light")
+            elif radio_var.get() == 2:
+                set_appearance_mode("dark")
+            elif radio_var.get() == 3:
+                set_appearance_mode("system")
+
+        radio_var = ctk.IntVar(value=0)
+        for i in range(3):
+            theme_name = ["Light", "Dark", "Use System Setting"]
+            CTkRadioButton(
+                inner_mode_frame2,
+                text=theme_name[i],
+                command=radiobutton_event,
+                font=("Arial", 17),
+                border_width_unchecked=2,
+                border_width_checked=5,
+                variable=radio_var,
+                value=i + 1,
+            ).pack(anchor="w", padx=5, pady=5)
+
         # ===========================dark mode===========================
 
     def get_entry_value(self, alarm):
