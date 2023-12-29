@@ -18,7 +18,9 @@ class BellSystemApp:
         self.master.geometry("800x600")
         self.master.minsize(400, 600)
         self.master.title("Bell System")
-        set_default_color_theme("Assets/Themes/blue.json")
+        self.master.attributes("-transparentcolor", "magenta")
+        self.master.attributes("-alpha", 1)
+        ctk.set_default_color_theme("Assets/Themes/blue.json")
 
         self.get_images()
 
@@ -33,10 +35,7 @@ class BellSystemApp:
 
         # Load mode theme from JSON file
         self.theme_mode = self.load_mode()
-        if self.theme_mode == "Dark":
-            set_appearance_mode("Dark")
-        else:
-            set_appearance_mode("light")
+        self.set_theme_mode()
 
         # Load window size from JSON file
         self.window_size = self.load_window_size()
@@ -126,15 +125,13 @@ class BellSystemApp:
             self.column_length = 4
             self.display_alarms(scrol_frame, alarm, data)
 
-    def mode(self):
-        appearence = ctk.get_appearance_mode()
-
-        if appearence == "Dark":
+    def set_theme_mode(self):
+        if self.theme_mode["theme"] == 0:
             ctk.set_appearance_mode("light")
-            self.theme_mode = "light"
-        else:
-            ctk.set_appearance_mode("Dark")
-            self.theme_mode = "Dark"
+        elif self.theme_mode["theme"] == 1:
+            ctk.set_appearance_mode("dark")
+        elif self.theme_mode["theme"] == 2:
+            ctk.set_appearance_mode("system")
 
         self.save_mode()
 
@@ -173,8 +170,10 @@ class BellSystemApp:
         self.create_buttons_for_left_frame(self.left_frame)
 
     def create_frames_for_right_frame(self, right_frame):
-        self.frame1 = ctk.CTkFrame(right_frame)
-        self.scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
+        self.frame1 = ctk.CTkFrame(right_frame, fg_color="transparent")
+        self.scrol_frame1 = ctk.CTkScrollableFrame(
+            self.frame1, corner_radius=0, fg_color="transparent"
+        )
         # giving frame a resize function
         self.frame1.bind(
             "<Configure>",
@@ -185,9 +184,9 @@ class BellSystemApp:
         self.frame1.update_idletasks()
         self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
-        self.frame2 = ctk.CTkFrame(right_frame)
+        self.frame2 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame2 = ctk.CTkScrollableFrame(
-            self.frame2, corner_radius=0
+            self.frame2, corner_radius=0, fg_color="transparent"
         )  # giving frame a resize function
         self.frame2.bind(
             "<Configure>",
@@ -198,9 +197,9 @@ class BellSystemApp:
         self.frame2.update_idletasks()
         self.label2 = ctk.CTkLabel(self.frame2, text=self.button_names["2"])
 
-        self.frame3 = ctk.CTkFrame(right_frame)
+        self.frame3 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame3 = ctk.CTkScrollableFrame(
-            self.frame3, corner_radius=0
+            self.frame3, corner_radius=0, fg_color="transparent"
         )  # giving frame a resize function
         self.frame3.bind(
             "<Configure>",
@@ -211,9 +210,9 @@ class BellSystemApp:
         self.frame3.update_idletasks()
         self.label3 = ctk.CTkLabel(self.frame3, text=self.button_names["3"])
 
-        self.frame4 = ctk.CTkFrame(right_frame)
+        self.frame4 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame4 = ctk.CTkScrollableFrame(
-            self.frame4, corner_radius=0
+            self.frame4, corner_radius=0, fg_color="transparent"
         )  # giving frame a resize function
         self.frame4.bind(
             "<Configure>",
@@ -224,9 +223,9 @@ class BellSystemApp:
         self.frame4.update_idletasks()
         self.label4 = ctk.CTkLabel(self.frame4, text=self.button_names["4"])
 
-        self.frame5 = ctk.CTkFrame(right_frame)
+        self.frame5 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame5 = ctk.CTkScrollableFrame(
-            self.frame5, corner_radius=0
+            self.frame5, corner_radius=0, fg_color="transparent"
         )  # giving frame a resize function
         self.frame5.bind(
             "<Configure>",
@@ -237,9 +236,9 @@ class BellSystemApp:
         self.frame5.update_idletasks()
         self.label5 = ctk.CTkLabel(self.frame5, text=self.button_names["5"])
 
-        self.frame6 = ctk.CTkFrame(right_frame)
+        self.frame6 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame6 = ctk.CTkScrollableFrame(
-            self.frame6, corner_radius=0
+            self.frame6, corner_radius=0, fg_color="transparent"
         )  # giving frame a resize function
         self.frame6.bind(
             "<Configure>",
@@ -638,18 +637,7 @@ class BellSystemApp:
 
     def create_setting_page_widgets(self):
         self.settings_frame = ctk.CTkFrame(self.right_frame)
-        self.settings_scrl_frame = ctk.CTkScrollableFrame(
-            self.settings_frame, corner_radius=0
-        )
-
-        # giving frame a resize function
-        # self.settings_frame.bind(
-        #     "<Configure>",
-        #     lambda event: self.resize(
-        #         event, self.settings_scrl_frame, self.alarms6, self.data6
-        #     ),
-        # )
-        # self.settings_frame.update_idletasks()
+        self.settings_scrl_frame = ctk.CTkScrollableFrame(self.settings_frame)
 
         self.setting_label = ctk.CTkLabel(
             self.settings_scrl_frame, text="Settings", font=("arial", 40, "bold")
@@ -662,7 +650,7 @@ class BellSystemApp:
             inner_mode_frame1.configure(fg_color="#3f3f4e")
 
         def on_leave(event):
-            inner_mode_frame1.configure(fg_color="#333333")
+            inner_mode_frame1.configure(fg_color=("#C8C8C8", "#333333"))
 
         def on_click(event):
             inner_mode_frame1.configure(fg_color="#4A4A4A")
@@ -691,7 +679,7 @@ class BellSystemApp:
 
         # ============================================frame 1
         self.inner_mode_frame2_open = False
-        inner_mode_frame1 = ctk.CTkFrame(mode_frame, fg_color="#333333", height=100)
+        inner_mode_frame1 = ctk.CTkFrame(mode_frame, fg_color=("#C8C8C8", "#333333"))
         inner_mode_frame1.pack(expand=True, fill="x", ipadx=10, ipady=10, pady=10)
         inner_mode_frame1.bind("<Enter>", on_enter)
         inner_mode_frame1.bind("<Leave>", on_leave)
@@ -713,6 +701,7 @@ class BellSystemApp:
         )
         icon1.bind("<Enter>", on_enter)
         icon1.bind("<Leave>", on_leave)
+        icon1.bind("<Button-1>", lambda event: on_click(event))
 
         # text
         text = ctk.CTkLabel(
@@ -744,20 +733,26 @@ class BellSystemApp:
         )
         icon2.bind("<Enter>", on_enter)
         icon2.bind("<Leave>", on_leave)
+        icon2.bind("<Button-1>", lambda event: on_click(event))
 
         # ============================================frame 2
         inner_mode_frame2 = ctk.CTkFrame(mode_frame)
         # inner_mode_frame2.pack(expand=True, fill="both")
 
         def radiobutton_event():
-            if radio_var.get() == 1:
-                set_appearance_mode("light")
-            elif radio_var.get() == 2:
-                set_appearance_mode("dark")
-            elif radio_var.get() == 3:
-                set_appearance_mode("system")
+            if self.radio_var.get() == 0:
+                self.theme_mode["theme"] = 0
 
-        radio_var = ctk.IntVar(value=0)
+            elif self.radio_var.get() == 1:
+                self.theme_mode["theme"] = 1
+
+            elif self.radio_var.get() == 2:
+                self.theme_mode["theme"] = 2
+
+            self.save_mode()
+            self.set_theme_mode()
+
+        self.radio_var = ctk.IntVar(value=0)
         for i in range(3):
             theme_name = ["Light", "Dark", "Use System Setting"]
             CTkRadioButton(
@@ -767,8 +762,8 @@ class BellSystemApp:
                 font=("Arial", 17),
                 border_width_unchecked=2,
                 border_width_checked=5,
-                variable=radio_var,
-                value=i + 1,
+                variable=self.radio_var,
+                value=i,
             ).pack(anchor="w", padx=5, pady=5)
 
         # ===========================dark mode===========================
@@ -1333,14 +1328,18 @@ class BellSystemApp:
             # main alarm card frame
             alarm_frame = ctk.CTkFrame(scrol_frame, fg_color=("white", "#222327"))
             alarm_frame.grid(
-                row=row, column=col, pady=15, padx=15, ipadx=5, ipady=5, sticky="snew"
+                row=row, column=col, pady=15, padx=15, ipadx=15, ipady=15, sticky="snew"
             )
 
             # inner_alarm_frame = ctk.CTkFrame(alarm_frame)
             # inner_alarm_frame.place(relx=0.5, rely=0.5, anchor="center")
 
             time_name_and_btn_frame = ctk.CTkFrame(alarm_frame, fg_color="transparent")
-            time_name_and_btn_frame.pack(expand=True, fill="both")
+            time_name_and_btn_frame.pack(
+                expand=True,
+                fill="both",
+                padx=5,
+            )
 
             # configure columns
             time_name_and_btn_frame.columnconfigure(0, weight=1)
@@ -1374,7 +1373,7 @@ class BellSystemApp:
             # btn frame for switch edit and delete
             btn_frame = ctk.CTkFrame(time_name_and_btn_frame, fg_color="transparent")
             # btn_frame.grid(row=0, column=1, sticky="nswe")
-            btn_frame.pack(side=RIGHT, expand=True, fill="both")
+            btn_frame.pack(side=RIGHT, expand=True, fill="both", pady=(5, 0))
 
             switch_var = ctk.BooleanVar(value=alar["switch_state"])
             # store variable in list
@@ -1398,7 +1397,7 @@ class BellSystemApp:
                     alar, sv, alarm, data, text, times
                 ),
             )
-            switch_widget.pack(anchor="e", padx=10)
+            switch_widget.pack(anchor="e", padx=5)
             # grid(row=0, column=1, rowspan=3, padx=10)
 
             delete_button = ctk.CTkButton(
@@ -1413,7 +1412,7 @@ class BellSystemApp:
                     a, scrol_frame, alarm, data
                 ),
             )
-            delete_button.pack(anchor="e", padx=10)
+            delete_button.pack(anchor="e", padx=5)
             # grid(row=3, column=0, pady=5)
 
             edit_button = ctk.CTkButton(
@@ -1428,7 +1427,7 @@ class BellSystemApp:
                     a, scrol_frame, alarm, data
                 ),
             )
-            edit_button.pack(anchor="e", padx=10)
+            edit_button.pack(anchor="e", padx=5)
             # grid(row=3, column=1, pady=5)
             # update the column size
 
@@ -1536,14 +1535,14 @@ class BellSystemApp:
 
     def load_mode(self):
         try:
-            with open("Assets/json/theme_mode.json", "r") as file:
+            with open("Assets/json/other_data.json", "r") as file:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
-            return ""
+            return {}
 
     def save_mode(self):
-        with open("Assets/json/theme_mode.json", "w") as file:
-            json.dump(self.theme_mode, file)
+        with open("Assets/json/other_data.json", "w") as file:
+            json.dump(self.theme_mode, file, indent=2)
 
     def load_window_size(self):
         pass
