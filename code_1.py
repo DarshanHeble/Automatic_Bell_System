@@ -1,61 +1,72 @@
-import pyttsx3
+# test_example.py
 
-engine = pyttsx3.init()
+import pywinstyles
+import customtkinter
+from tkinter.colorchooser import askcolor
 
-tts = "hello, iam darshan"
-male = (
-    "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
+
+def change_style(e):
+    if e == "Choose Style":
+        return
+    toplevel = customtkinter.CTkToplevel(root)
+    toplevel.title("")
+    toplevel.geometry("500x500+50+50")
+
+    pywinstyles.apply_style(toplevel, e)
+
+
+def change_header():
+    color = askcolor(title="Choose color")
+    if color[1]:
+        print(color[1])
+        pywinstyles.change_header_color(root, color=color[1])
+
+
+def change_title():
+    color = askcolor(title="Choose color")
+    if color[1]:
+        print(color[1])
+        pywinstyles.change_title_color(root, color=color[1])
+
+
+def change_border():
+    color = askcolor(title="Choose color")
+    if color[1]:
+        print(color[1])
+        pywinstyles.change_border_color(root, color=color[1])
+
+
+root = customtkinter.CTk()
+root.geometry("500x200")
+root.title("Test")
+
+styles = [
+    "Choose Style",
+    "dark",
+    "mica",
+    "aero",
+    "transparent",
+    "acrylic",
+    "win7",
+    "inverse",
+    "popup",
+    "native",
+    "optimised",
+    "light",
+]
+
+customtkinter.CTkLabel(root, text="pywinstyles test example").pack(pady=5)
+customtkinter.CTkOptionMenu(root, values=styles, command=change_style).pack(
+    padx=10, pady=10, fill="x"
 )
-femail = (
-    "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
+customtkinter.CTkButton(root, text="Change Header Color", command=change_header).pack(
+    padx=10, pady=0, fill="x"
 )
-voices = engine.getProperty("voices")
-for voice in voices:
-    print(
-        voice.id,
-        "\n",
-        voice.name,
-    )
-
-engine.setProperty(
-    "voice",
-    male,
+customtkinter.CTkButton(root, text="Change Title Color", command=change_title).pack(
+    padx=10, pady=10, fill="x"
 )
-engine.setProperty("rate", 140)
+customtkinter.CTkButton(root, text="Change Border Color", command=change_border).pack(
+    padx=10, pady=0, fill="x"
+)
 
-
-engine.say(tts)
-engine.runAndWait()
-
-# ==============================================================================/
-
-# import re
-
-# data_list = [
-#     {"time": "07:56 PM", "text": "period(1)", "days": ["Wed"], "switch_state": True},
-#     {"time": "07:56 PM", "text": "period(2)", "days": ["Wed"], "switch_state": True},
-#     {"time": "07:56 PM", "text": "period(4)", "days": ["Wed"], "switch_state": True},
-#     {
-#         "time": "07:56 PM",
-#         "text": "other_period(3)",
-#         "days": ["Wed"],
-#         "switch_state": True,
-#     },
-# ]
-
-# # Extracting numerical part from the "text" values using re for the "period()" format
-# extracted_numbers = [
-#     int(match.group(1))
-#     for item in data_list
-#     if (match := re.match(r"period\((\d+)\)", item["text"]))
-# ]
-
-# # Find missing values in the sequence
-# n = max(extracted_numbers)
-# missing_values = [str(i) for i in range(1, n + 1) if i not in extracted_numbers]
-
-# # Displaying the result
-# if missing_values:
-#     print(f"Missing values: {', '.join(missing_values)}")
-# else:
-#     print(n + 1)
+root.mainloop()

@@ -6,6 +6,7 @@ from customtkinter import *
 import win32gui
 import ctypes
 import winreg
+import pywinstyles
 
 
 class BellSystemApp:
@@ -14,10 +15,13 @@ class BellSystemApp:
 
         w = 1500
         h = 500
-        self.master.geometry(f"{w}x{h}")
+        self.master.geometry(f"500x600")
         self.master.title("Bell System")
         set_appearance_mode("light")
         set_appearance_mode("dark")
+        pywinstyles.apply_style(self.master, "transparent")
+
+        self.master.bind("")
 
         def get_accent_color():
             # Open the registry key containing the accent color information
@@ -48,12 +52,14 @@ class BellSystemApp:
         else:
             print("Unable to retrieve the accent color.")
 
-        self.frame = ctk.CTkFrame(self.master)
+        default_color = pywinstyles.get_accent_color()  # returns hex color string
+
+        self.frame = ctk.CTkFrame(self.master, fg_color="transparent")
         self.frame.pack(fill="both", expand=True)
 
-        self.leftframe = ctk.CTkFrame(self.frame, fg_color="grey", width=300)
+        self.leftframe = ctk.CTkFrame(self.frame,  fg_color="transparent", width=300)
         self.leftframe.pack(fill="y", side="left")
-        CTkButton(self.leftframe, width=300).pack()
+        CTkButton(self.leftframe, width=300, fg_color=default_color).pack()
 
         self.rightframe = ctk.CTkFrame(self.frame)
         self.rightframe.pack(fill="both", side="right", expand=True)

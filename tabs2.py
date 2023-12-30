@@ -19,7 +19,7 @@ class BellSystemApp:
 
         # Load other data from JSON file
         self.other_data = self.load_other_data()
-        # self.set_window_size()
+        self.set_window_size()
 
         self.master.title("Bell System")
         self.master.attributes("-transparentcolor", "magenta")
@@ -105,37 +105,54 @@ class BellSystemApp:
             self.first_breakpoint = True
             self.second_breakpoint = self.third_breakpoint = False
             self.column_length = 1
-            self.display_alarms(scrol_frame, alarm, data)
+            self.arrange_elements(scrol_frame)
+            self.button1.configure(width=200)
 
         elif 500 <= current_width < 1000 and not self.second_breakpoint:
             self.second_breakpoint = True
             self.first_breakpoint = self.third_breakpoint = False
             self.column_length = 2
-            self.display_alarms(scrol_frame, alarm, data)
+            self.arrange_elements(scrol_frame)
+            self.button1.configure(width=250)
 
         elif 1000 <= current_width < 1500 and not self.third_breakpoint:
             self.third_breakpoint = True
             self.first_breakpoint = self.second_breakpoint = False
             self.column_length = 3
-            self.display_alarms(scrol_frame, alarm, data)
+            self.arrange_elements(scrol_frame)
+            # self.button1.configure(width=300)
 
         elif 1500 <= current_width < 2000 and not self.third_breakpoint:
             self.third_breakpoint = True
             self.first_breakpoint = self.second_breakpoint = False
             self.column_length = 4
-            self.display_alarms(scrol_frame, alarm, data)
+            self.arrange_elements(scrol_frame)
+
+    def arrange_elements(self, scrol_frame):
+        row = col = 0
+        for widget in scrol_frame.winfo_children():
+            if col == self.column_length:
+                col = 0
+                row += 1
+
+            widget.grid(row=row, column=col)
+
+            col += 1
+
+        for c in range(self.column_length):
+            scrol_frame.columnconfigure(c, weight=1)
 
     def set_window_size(self):
         print(self.other_data)
         try:
             self.width = self.other_data["width"]
         except KeyError:
-            self.width = 500
+            self.width = 800
 
         try:
             self.height = self.other_data["height"]
         except KeyError:
-            self.height = 500
+            self.height = 600
 
         print(self.other_data)
         self.master.geometry(f"{self.width}x{self.height}")
@@ -594,7 +611,7 @@ class BellSystemApp:
             border_width=2,
             border_color="#1F6AA5",
             image=CTkImage(light_image=self.play_icon, dark_image=self.play_icon),
-            command=lambda: self.start_Play(textbox, male_voice, play),
+            command=lambda: self.start_Play(textbox, female_voice, play),
         )
         play.pack(ipadx=5, ipady=5)
 
@@ -615,7 +632,7 @@ class BellSystemApp:
         # -----------------------------------------------------------------
         self.scrol_announcement_frame.pack(expand=True, fill="both")
 
-    def start_Play(self, textbox, male_voice, play_btn):
+    def start_Play(self, textbox, voice, play_btn):
         play_btn.configure(state="disabled")
 
         def speak():
@@ -623,7 +640,7 @@ class BellSystemApp:
             text_content = textbox.get("0.0", "end")
             engine.setProperty(
                 "voice",
-                male_voice,
+                voice,
             )
             engine.setProperty("rate", 120)
             engine.say(text_content)
@@ -651,7 +668,7 @@ class BellSystemApp:
         # ===========================dark mode===========================
         def on_enter(event):
             # inner_mode_frame1.configure(cursor="hand2")
-            inner_mode_frame1.configure(fg_color=("#B6B6B6", "#3f3f4e"), cursor="hand2")
+            inner_mode_frame1.configure(fg_color=("#B6B6B6", "#3f3f4e"))
 
         def on_leave(event):
             inner_mode_frame1.configure(fg_color=("#C8C8C8", "#333333"))
@@ -683,7 +700,9 @@ class BellSystemApp:
 
         # ============================================frame 1
         self.inner_mode_frame2_open = False
-        inner_mode_frame1 = ctk.CTkFrame(mode_frame, fg_color=("#C8C8C8", "#333333"))
+        inner_mode_frame1 = ctk.CTkFrame(
+            mode_frame, fg_color=("#C8C8C8", "#333333"), cursor="hand2"
+        )
         inner_mode_frame1.pack(fill="x", ipadx=10, ipady=10, pady=10)
         inner_mode_frame1.bind("<Enter>", on_enter)
         inner_mode_frame1.bind("<Leave>", on_leave)
@@ -1020,7 +1039,7 @@ class BellSystemApp:
         weekd_days_frame.pack(pady=(0, 30))
         days_var = {}
         for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
-            days_var[day] = tk.BooleanVar(card, value=(day in alar["days"]))
+            days_var[day] = ctk.BooleanVar(card, value=(day in alar["days"]))
             ctk.CTkCheckBox(
                 weekd_days_frame,
                 text=day,
@@ -1315,8 +1334,8 @@ class BellSystemApp:
 
         self.width = self.master.winfo_width()
         self.height = self.master.winfo_height()
-        self.other_data["width"] = self.width
-        self.other_data["height"] = self.height
+        self.other_data["width"] = self.width - 290
+        self.other_data["height"] = self.height - 188
 
         self.save_other_data()
 
@@ -1412,7 +1431,6 @@ class BellSystemApp:
                 ),
             )
             switch_widget.pack(anchor="e", padx=5)
-            # grid(row=0, column=1, rowspan=3, padx=10)
 
             delete_button = ctk.CTkButton(
                 btn_frame,
@@ -1428,6 +1446,14 @@ class BellSystemApp:
             )
             delete_button.pack(anchor="e", padx=5)
             # grid(row=3, column=0, pady=5)
+            self.switch_tooltip = CTkToolTip(
+                delete_button,
+                message="Delete",
+                font=("arial", 15),
+                delay=0.5,
+                padx=5,
+                pady=5,
+            )
 
             edit_button = ctk.CTkButton(
                 btn_frame,
@@ -1442,8 +1468,14 @@ class BellSystemApp:
                 ),
             )
             edit_button.pack(anchor="e", padx=5)
-            # grid(row=3, column=1, pady=5)
-            # update the column size
+            CTkToolTip(
+                edit_button,
+                message="Edit",
+                font=("arial", 15),
+                delay=0.5,
+                padx=5,
+                pady=5,
+            )
 
             # days frame for days
             day_frame = ctk.CTkFrame(alarm_frame, fg_color="transparent")
@@ -1475,9 +1507,11 @@ class BellSystemApp:
     def toggle_switch(self, alar, switch_var, alarm, data, text, times):
         alar["switch_state"] = switch_var.get()
         if alar["switch_state"]:
+            # switch_tooltip.configure(message="True")
             text.configure(text_color=("black", "white"))
             times.configure(text_color=("black", "white"))
         else:
+            # switch_tooltip.configure(message="False")
             text.configure(text_color=("grey", "grey"))
             times.configure(text_color=("grey", "grey"))
         self.save_data(alarm, data)

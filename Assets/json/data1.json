@@ -1,20 +1,26 @@
 [
   {
-    "time": "02:16 AM",
-    "text": "period(1)",
-    "days": ["Thu"],
-    "switch_state": true
-  },
-  {
     "time": "10:46 PM",
     "text": "period(2)",
-    "days": ["Thu"],
+    "days": [
+      "Thu"
+    ],
     "switch_state": true
   },
   {
     "time": "10:46 PM",
     "text": "period(3)",
-    "days": ["Fri"],
+    "days": [
+      "Fri"
+    ],
+    "switch_state": true
+  },
+  {
+    "time": "01:02 AM",
+    "text": "period(1)",
+    "days": [
+      "Thu"
+    ],
     "switch_state": true
   }
 ]
