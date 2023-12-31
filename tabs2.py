@@ -14,12 +14,12 @@ import pyttsx3
 class BellSystemApp:
     def __init__(self, master):
         self.master = master
-        self.master.minsize(400, 600)
+        self.master.minsize(600, 600)
         self.master.geometry("600x600")
 
         # Load other data from JSON file
         self.other_data = self.load_other_data()
-        self.set_window_size()
+        # self.set_window_size()
 
         self.master.title("Bell System")
         self.master.attributes("-transparentcolor", "magenta")
@@ -96,7 +96,7 @@ class BellSystemApp:
             "Assets/Images/light_mode_arrow_down.png"
         )
 
-    def resize(self, event, scrol_frame, alarm, data):
+    def frame_resize(self, event, scrol_frame, alarm, data):
         # get the current width of the frame
         current_width = event.width
 
@@ -106,14 +106,14 @@ class BellSystemApp:
             self.second_breakpoint = self.third_breakpoint = False
             self.column_length = 1
             self.arrange_elements(scrol_frame)
-            self.button1.configure(width=200)
+            # self.button1.configure(width=200)
 
         elif 500 <= current_width < 1000 and not self.second_breakpoint:
             self.second_breakpoint = True
             self.first_breakpoint = self.third_breakpoint = False
             self.column_length = 2
             self.arrange_elements(scrol_frame)
-            self.button1.configure(width=250)
+            self.button1.configure(width=200)
 
         elif 1000 <= current_width < 1500 and not self.third_breakpoint:
             self.third_breakpoint = True
@@ -127,6 +127,7 @@ class BellSystemApp:
             self.first_breakpoint = self.second_breakpoint = False
             self.column_length = 4
             self.arrange_elements(scrol_frame)
+            # self.button1.configure(width=300)
 
     def arrange_elements(self, scrol_frame):
         row = col = 0
@@ -211,10 +212,10 @@ class BellSystemApp:
         self.scrol_frame1 = ctk.CTkScrollableFrame(
             self.frame1, corner_radius=0, fg_color="transparent"
         )
-        # giving frame a resize function
+        # giving frame a frame_resize function
         self.frame1.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame1, self.alarms1, self.data1
             ),
         )
@@ -223,10 +224,10 @@ class BellSystemApp:
         self.frame2 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame2 = ctk.CTkScrollableFrame(
             self.frame2, corner_radius=0, fg_color="transparent"
-        )  # giving frame a resize function
+        )  # giving frame a frame_resize function
         self.frame2.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame2, self.alarms2, self.data2
             ),
         )
@@ -235,10 +236,10 @@ class BellSystemApp:
         self.frame3 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame3 = ctk.CTkScrollableFrame(
             self.frame3, corner_radius=0, fg_color="transparent"
-        )  # giving frame a resize function
+        )  # giving frame a frame_resize function
         self.frame3.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame3, self.alarms3, self.data3
             ),
         )
@@ -247,10 +248,10 @@ class BellSystemApp:
         self.frame4 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame4 = ctk.CTkScrollableFrame(
             self.frame4, corner_radius=0, fg_color="transparent"
-        )  # giving frame a resize function
+        )  # giving frame a frame_resize function
         self.frame4.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame4, self.alarms4, self.data4
             ),
         )
@@ -259,10 +260,10 @@ class BellSystemApp:
         self.frame5 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame5 = ctk.CTkScrollableFrame(
             self.frame5, corner_radius=0, fg_color="transparent"
-        )  # giving frame a resize function
+        )  # giving frame a frame_resize function
         self.frame5.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame5, self.alarms5, self.data5
             ),
         )
@@ -271,10 +272,10 @@ class BellSystemApp:
         self.frame6 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame6 = ctk.CTkScrollableFrame(
             self.frame6, corner_radius=0, fg_color="transparent"
-        )  # giving frame a resize function
+        )  # giving frame a frame_resize function
         self.frame6.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame6, self.alarms6, self.data6
             ),
         )
