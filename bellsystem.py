@@ -1,12 +1,11 @@
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
-import tkinter as tk
-from tkinter import ttk
+from CTkToolTip import *
 from customtkinter import *
+from PIL import Image
 import threading
 import time
 import json
-from PIL import Image
 import pygame
 import re
 import pyttsx3
@@ -15,10 +14,17 @@ import pyttsx3
 class BellSystemApp:
     def __init__(self, master):
         self.master = master
-        self.master.geometry("800x600")
-        self.master.minsize(400, 600)
+        self.master.minsize(600, 600)
+        self.master.geometry("600x600")
+
+        # Load other data from JSON file
+        self.other_data = self.load_other_data()
+        # self.set_window_size()
+
         self.master.title("Bell System")
-        set_default_color_theme("Assets/Themes/blue.json")
+        self.master.attributes("-transparentcolor", "magenta")
+        self.master.attributes("-alpha", 1)
+        ctk.set_default_color_theme("Assets/Themes/blue.json")
 
         self.get_images()
 
@@ -31,15 +37,8 @@ class BellSystemApp:
         # Load button names from JSON file
         self.button_names = self.load_button_names()
 
-        # Load mode theme from JSON file
-        self.theme_mode = self.load_mode()
-        if self.theme_mode == "Dark":
-            set_appearance_mode("Dark")
-        else:
-            set_appearance_mode("light")
-
-        # Load window size from JSON file
-        self.window_size = self.load_window_size()
+        # set theme
+        self.set_theme_mode()
 
         # Taking all files names to a variable
         self.data1 = "Assets/json/data1.json"
@@ -97,7 +96,7 @@ class BellSystemApp:
             "Assets/Images/light_mode_arrow_down.png"
         )
 
-    def resize(self, event, scrol_frame, alarm, data):
+    def frame_resize(self, event, scrol_frame, alarm, data):
         # get the current width of the frame
         current_width = event.width
 
@@ -106,149 +105,163 @@ class BellSystemApp:
             self.first_breakpoint = True
             self.second_breakpoint = self.third_breakpoint = False
             self.column_length = 1
-            self.display_alarms(scrol_frame, alarm, data)
+            self.arrange_elements(scrol_frame)
+            # self.button1.configure(width=200)
 
         elif 500 <= current_width < 1000 and not self.second_breakpoint:
             self.second_breakpoint = True
             self.first_breakpoint = self.third_breakpoint = False
             self.column_length = 2
-            self.display_alarms(scrol_frame, alarm, data)
+            self.arrange_elements(scrol_frame)
+            self.button1.configure(width=200)
 
         elif 1000 <= current_width < 1500 and not self.third_breakpoint:
             self.third_breakpoint = True
             self.first_breakpoint = self.second_breakpoint = False
             self.column_length = 3
-            self.display_alarms(scrol_frame, alarm, data)
+            self.arrange_elements(scrol_frame)
+            # self.button1.configure(width=300)
 
         elif 1500 <= current_width < 2000 and not self.third_breakpoint:
             self.third_breakpoint = True
             self.first_breakpoint = self.second_breakpoint = False
             self.column_length = 4
-            self.display_alarms(scrol_frame, alarm, data)
+            self.arrange_elements(scrol_frame)
+            # self.button1.configure(width=300)
 
-    def mode(self):
-        appearence = ctk.get_appearance_mode()
+    def arrange_elements(self, scrol_frame):
+        row = col = 0
+        for widget in scrol_frame.winfo_children():
+            if col == self.column_length:
+                col = 0
+                row += 1
 
-        if appearence == "Dark":
-            ctk.set_appearance_mode("light")
-            self.theme_mode = "light"
-        else:
-            ctk.set_appearance_mode("Dark")
-            self.theme_mode = "Dark"
+            widget.grid(row=row, column=col)
 
-        self.save_mode()
+            col += 1
+
+        for c in range(self.column_length):
+            scrol_frame.columnconfigure(c, weight=1)
+
+    def set_window_size(self):
+        print(self.other_data)
+        try:
+            self.width = self.other_data["width"]
+        except KeyError:
+            self.width = 800
+
+        try:
+            self.height = self.other_data["height"]
+        except KeyError:
+            self.height = 600
+
+        print(self.other_data)
+        self.master.geometry(f"{self.width}x{self.height}")
+
+    def set_theme_mode(self):
+        try:
+            if self.other_data["theme"] == 0:
+                ctk.set_appearance_mode("light")
+            elif self.other_data["theme"] == 1:
+                ctk.set_appearance_mode("dark")
+            elif self.other_data["theme"] == 2:
+                ctk.set_appearance_mode("system")
+        except KeyError:
+            self.other_data["theme"] = 2
+
+        self.save_other_data()
 
     def create_widgets(self):
         # Main Frame
         self.main_frame = ctk.CTkFrame(self.master, fg_color="transparent")
-        self.main_frame.pack(fill="both", expand=True)
-
-        self.main_frame.rowconfigure(0, weight=1)
-        self.main_frame.columnconfigure(0, weight=1)
-        self.main_frame.columnconfigure(1, weight=1)
-        self.main_frame.columnconfigure(2, weight=1)
-        self.main_frame.columnconfigure(3, weight=1)
-        self.main_frame.columnconfigure(4, weight=1)
-        self.main_frame.columnconfigure(5, weight=0)
 
         # Left Frame
-        self.left_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
-        # self.left_frame.pack(side=LEFT, fill="both")
-        self.left_frame.grid(
-            row=0, column=0, columnspan=2, sticky="swne", padx=10, pady=10
+        self.left_frame = ctk.CTkFrame(
+            self.main_frame, fg_color="transparent", width=600
         )
+        self.create_buttons_for_left_frame(self.left_frame)
+        self.left_frame.pack(side="left", fill="y")
 
         # Right Frame
         self.right_frame = ctk.CTkFrame(self.main_frame)
-        # self.right_frame.pack(side=RIGHT, fill="both", expand=True)
-        self.right_frame.grid(row=0, column=1, columnspan=5, sticky="swen")
-
-        # Initial frame in the right frame
-        # self.default_frame = ctk.CTkFrame(self.right_frame)
-        # self.default_frame.pack(fill="both", expand=True)
-        # label = ctk.CTkLabel(self.default_frame, text="Default Frame")
-        # label.pack(pady=10)
-
         self.create_frames_for_right_frame(self.right_frame)
-        self.create_buttons_for_left_frame(self.left_frame)
+        self.right_frame.pack(side="right", fill="both", expand=True)
+
+        self.main_frame.pack(fill="both", expand=True)
 
     def create_frames_for_right_frame(self, right_frame):
-        self.frame1 = ctk.CTkFrame(right_frame)
-        self.scrol_frame1 = ctk.CTkScrollableFrame(self.frame1, corner_radius=0)
-        # giving frame a resize function
+        self.frame1 = ctk.CTkFrame(right_frame, fg_color="transparent")
+        self.scrol_frame1 = ctk.CTkScrollableFrame(
+            self.frame1, corner_radius=0, fg_color="transparent"
+        )
+        # giving frame a frame_resize function
         self.frame1.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame1, self.alarms1, self.data1
             ),
         )
         self.frame1.update_idletasks()
-        self.label1 = ctk.CTkLabel(self.frame1, text=self.button_names["1"])
 
-        self.frame2 = ctk.CTkFrame(right_frame)
+        self.frame2 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame2 = ctk.CTkScrollableFrame(
-            self.frame2, corner_radius=0
-        )  # giving frame a resize function
+            self.frame2, corner_radius=0, fg_color="transparent"
+        )  # giving frame a frame_resize function
         self.frame2.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame2, self.alarms2, self.data2
             ),
         )
         self.frame2.update_idletasks()
-        self.label2 = ctk.CTkLabel(self.frame2, text=self.button_names["2"])
 
-        self.frame3 = ctk.CTkFrame(right_frame)
+        self.frame3 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame3 = ctk.CTkScrollableFrame(
-            self.frame3, corner_radius=0
-        )  # giving frame a resize function
+            self.frame3, corner_radius=0, fg_color="transparent"
+        )  # giving frame a frame_resize function
         self.frame3.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame3, self.alarms3, self.data3
             ),
         )
         self.frame3.update_idletasks()
-        self.label3 = ctk.CTkLabel(self.frame3, text=self.button_names["3"])
 
-        self.frame4 = ctk.CTkFrame(right_frame)
+        self.frame4 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame4 = ctk.CTkScrollableFrame(
-            self.frame4, corner_radius=0
-        )  # giving frame a resize function
+            self.frame4, corner_radius=0, fg_color="transparent"
+        )  # giving frame a frame_resize function
         self.frame4.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame4, self.alarms4, self.data4
             ),
         )
         self.frame4.update_idletasks()
-        self.label4 = ctk.CTkLabel(self.frame4, text=self.button_names["4"])
 
-        self.frame5 = ctk.CTkFrame(right_frame)
+        self.frame5 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame5 = ctk.CTkScrollableFrame(
-            self.frame5, corner_radius=0
-        )  # giving frame a resize function
+            self.frame5, corner_radius=0, fg_color="transparent"
+        )  # giving frame a frame_resize function
         self.frame5.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame5, self.alarms5, self.data5
             ),
         )
         self.frame5.update_idletasks()
-        self.label5 = ctk.CTkLabel(self.frame5, text=self.button_names["5"])
 
-        self.frame6 = ctk.CTkFrame(right_frame)
+        self.frame6 = ctk.CTkFrame(right_frame, fg_color="transparent")
         self.scrol_frame6 = ctk.CTkScrollableFrame(
-            self.frame6, corner_radius=0
-        )  # giving frame a resize function
+            self.frame6, corner_radius=0, fg_color="transparent"
+        )  # giving frame a frame_resize function
         self.frame6.bind(
             "<Configure>",
-            lambda event: self.resize(
+            lambda event: self.frame_resize(
                 event, self.scrol_frame6, self.alarms6, self.data6
             ),
         )
         self.frame6.update_idletasks()
-        self.label6 = ctk.CTkLabel(self.frame6, text=self.button_names["6"])
 
         self.create_setting_page_widgets()
         self.create_Announcement_page_widgets()
@@ -261,33 +274,13 @@ class BellSystemApp:
         self.display_alarms(self.scrol_frame6, self.alarms6, self.data6)
 
         def pack():
-            self.frame1.pack()
-            self.frame2.pack()
-            self.frame3.pack()
-            self.frame4.pack()
-            self.frame5.pack()
-            self.frame6.pack()
-            self.label1.pack()
-            self.label2.pack()
-            self.label3.pack()
-            self.label4.pack()
-            self.label5.pack()
-            self.label6.pack()
             self.scrol_frame1.pack(expand=True, fill="both")
             self.scrol_frame2.pack(expand=True, fill="both")
             self.scrol_frame3.pack(expand=True, fill="both")
             self.scrol_frame4.pack(expand=True, fill="both")
             self.scrol_frame5.pack(expand=True, fill="both")
             self.scrol_frame6.pack(expand=True, fill="both")
-            self.frame1.forget()
-            self.frame2.forget()
-            self.frame3.forget()
-            self.frame4.forget()
-            self.frame5.forget()
-            self.frame6.forget()
             self.frame1.pack(expand=True, fill="both")
-
-            # self.settings_frame.pack(expand=True, fill="both")
 
         pack()
         self.create_buttons_for_right_frame_frames()
@@ -411,6 +404,7 @@ class BellSystemApp:
             text_color=("black", "white"),
             fg_color="royalblue",
             font=("Arial", 17),
+            width=300,
             anchor="w",
             image=CTkImage(
                 dark_image=self.dark_bell_image, light_image=self.light_bell_image
@@ -420,8 +414,9 @@ class BellSystemApp:
         self.button1.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button1.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button1, idx=1, label=self.label1: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button1, idx=1: self.rename_button(
+                btn,
+                idx,
             ),
         ),
 
@@ -440,8 +435,9 @@ class BellSystemApp:
         self.button2.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button2.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button2, idx=2, label=self.label2: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button2, idx=2: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         self.button3 = ctk.CTkButton(
@@ -459,8 +455,9 @@ class BellSystemApp:
         self.button3.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button3.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button3, idx=3, label=self.label3: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button3, idx=3: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         self.button4 = ctk.CTkButton(
@@ -478,8 +475,9 @@ class BellSystemApp:
         self.button4.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button4.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button4, idx=4, label=self.label4: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button4, idx=4: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         self.button5 = ctk.CTkButton(
@@ -497,8 +495,9 @@ class BellSystemApp:
         self.button5.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button5.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button5, idx=5, label=self.label5: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button5, idx=5: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         self.button6 = ctk.CTkButton(
@@ -516,8 +515,9 @@ class BellSystemApp:
         self.button6.pack(fill="x", padx=10, ipady=5, pady=1)
         self.button6.bind(
             "<Double-Button-1>",
-            lambda event, btn=self.button6, idx=6, label=self.label6: self.rename_button(
-                btn, idx, label
+            lambda event, btn=self.button6, idx=6: self.rename_button(
+                btn,
+                idx,
             ),
         ),
         # ==========================Bell Buttons===============================
@@ -594,7 +594,7 @@ class BellSystemApp:
             border_width=2,
             border_color="#1F6AA5",
             image=CTkImage(light_image=self.play_icon, dark_image=self.play_icon),
-            command=lambda: self.start_Play(textbox, male_voice, play),
+            command=lambda: self.start_Play(textbox, female_voice, play),
         )
         play.pack(ipadx=5, ipady=5)
 
@@ -606,14 +606,16 @@ class BellSystemApp:
             else:
                 play_btn.configure(fg_color="transparent")
 
-        textbox = ctk.CTkTextbox(btn_and_textbox_frame, font=("arial", 20))
+        textbox = ctk.CTkTextbox(
+            btn_and_textbox_frame, font=("arial", 20), height=500, undo=True
+        )
         textbox.pack(expand=True, fill="both", padx=20, pady=20)
         textbox.bind("<KeyRelease>", lambda event: printer(textbox, play))
 
         # -----------------------------------------------------------------
         self.scrol_announcement_frame.pack(expand=True, fill="both")
 
-    def start_Play(self, textbox, male_voice, play_btn):
+    def start_Play(self, textbox, voice, play_btn):
         play_btn.configure(state="disabled")
 
         def speak():
@@ -621,7 +623,7 @@ class BellSystemApp:
             text_content = textbox.get("0.0", "end")
             engine.setProperty(
                 "voice",
-                male_voice,
+                voice,
             )
             engine.setProperty("rate", 120)
             engine.say(text_content)
@@ -638,18 +640,7 @@ class BellSystemApp:
 
     def create_setting_page_widgets(self):
         self.settings_frame = ctk.CTkFrame(self.right_frame)
-        self.settings_scrl_frame = ctk.CTkScrollableFrame(
-            self.settings_frame, corner_radius=0
-        )
-
-        # giving frame a resize function
-        # self.settings_frame.bind(
-        #     "<Configure>",
-        #     lambda event: self.resize(
-        #         event, self.settings_scrl_frame, self.alarms6, self.data6
-        #     ),
-        # )
-        # self.settings_frame.update_idletasks()
+        self.settings_scrl_frame = ctk.CTkScrollableFrame(self.settings_frame)
 
         self.setting_label = ctk.CTkLabel(
             self.settings_scrl_frame, text="Settings", font=("arial", 40, "bold")
@@ -659,13 +650,14 @@ class BellSystemApp:
 
         # ===========================dark mode===========================
         def on_enter(event):
-            inner_mode_frame1.configure(fg_color="#3f3f4e")
+            # inner_mode_frame1.configure(cursor="hand2")
+            inner_mode_frame1.configure(fg_color=("#B6B6B6", "#3f3f4e"))
 
         def on_leave(event):
-            inner_mode_frame1.configure(fg_color="#333333")
+            inner_mode_frame1.configure(fg_color=("#C8C8C8", "#333333"))
 
         def on_click(event):
-            inner_mode_frame1.configure(fg_color="#4A4A4A")
+            inner_mode_frame1.configure(fg_color="#333333")
 
             if self.inner_mode_frame2_open:
                 self.inner_mode_frame2_open = False
@@ -691,8 +683,10 @@ class BellSystemApp:
 
         # ============================================frame 1
         self.inner_mode_frame2_open = False
-        inner_mode_frame1 = ctk.CTkFrame(mode_frame, fg_color="#333333", height=100)
-        inner_mode_frame1.pack(expand=True, fill="x", ipadx=10, ipady=10, pady=10)
+        inner_mode_frame1 = ctk.CTkFrame(
+            mode_frame, fg_color=("#C8C8C8", "#333333"), cursor="hand2"
+        )
+        inner_mode_frame1.pack(fill="x", ipadx=10, ipady=10, pady=10)
         inner_mode_frame1.bind("<Enter>", on_enter)
         inner_mode_frame1.bind("<Leave>", on_leave)
         inner_mode_frame1.bind("<Button-1>", lambda event: on_click(event))
@@ -713,6 +707,7 @@ class BellSystemApp:
         )
         icon1.bind("<Enter>", on_enter)
         icon1.bind("<Leave>", on_leave)
+        icon1.bind("<Button-1>", lambda event: on_click(event))
 
         # text
         text = ctk.CTkLabel(
@@ -727,6 +722,7 @@ class BellSystemApp:
         )
         text.bind("<Enter>", on_enter)
         text.bind("<Leave>", on_leave)
+        text.bind("<Button-1>", lambda event: on_click(event))
 
         # icon
         icon2 = ctk.CTkLabel(
@@ -744,20 +740,26 @@ class BellSystemApp:
         )
         icon2.bind("<Enter>", on_enter)
         icon2.bind("<Leave>", on_leave)
+        icon2.bind("<Button-1>", lambda event: on_click(event))
 
         # ============================================frame 2
         inner_mode_frame2 = ctk.CTkFrame(mode_frame)
         # inner_mode_frame2.pack(expand=True, fill="both")
 
         def radiobutton_event():
-            if radio_var.get() == 1:
-                set_appearance_mode("light")
-            elif radio_var.get() == 2:
-                set_appearance_mode("dark")
-            elif radio_var.get() == 3:
-                set_appearance_mode("system")
+            if self.radio_var.get() == 0:
+                self.other_data["theme"] = 0
 
-        radio_var = ctk.IntVar(value=0)
+            elif self.radio_var.get() == 1:
+                self.other_data["theme"] = 1
+
+            elif self.radio_var.get() == 2:
+                self.other_data["theme"] = 2
+
+            self.save_other_data()
+            self.set_theme_mode()
+
+        self.radio_var = ctk.IntVar(value=self.other_data["theme"])
         for i in range(3):
             theme_name = ["Light", "Dark", "Use System Setting"]
             CTkRadioButton(
@@ -767,8 +769,8 @@ class BellSystemApp:
                 font=("Arial", 17),
                 border_width_unchecked=2,
                 border_width_checked=5,
-                variable=radio_var,
-                value=i + 1,
+                variable=self.radio_var,
+                value=i,
             ).pack(anchor="w", padx=5, pady=5)
 
         # ===========================dark mode===========================
@@ -808,10 +810,167 @@ class BellSystemApp:
         ).pack(pady=20)
         # ctk.CTkLabel(card, text="Add Alarm").grid(row=0, column=0, columnspan=2)
 
+        # =============================time===============================
+        main_time_frame = ctk.CTkFrame(card, fg_color="transparent")
+
+        arrowupframe = ctk.CTkFrame(main_time_frame, fg_color="transparent")
+        hr_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            width=20,
+            text="",
+            fg_color="transparent",
+            command=lambda: self.increment(self.hrbtn, "hour"),
+            image=ctk.CTkImage(
+                light_image=self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        hr_Arrow_Up.pack(side="left", padx=(0, 40))
+        hr_Arrow_Up.bind("<MouseWheel>", lambda event: self.scroll_event(event, "hour"))
+        hr_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "hour"))
+
+        min_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            text="",
+            fg_color="transparent",
+            width=20,
+            command=lambda: self.increment(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        min_Arrow_Up.pack(side="left", padx=(45, 0))
+        min_Arrow_Up.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+        min_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "min"))
+
+        ampm_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            text="",
+            fg_color="transparent",
+            width=20,
+            command=lambda: self.increment(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        ampm_Arrow_Up.pack(side="right", padx=(0, 10))
+        ampm_Arrow_Up.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+        ampm_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "ampm"))
+
+        arrowupframe.pack(fill="x", padx=28)
+
+        # =============================hours===============================
+        timeframe = ctk.CTkFrame(
+            main_time_frame, fg_color="transparent", border_width=1
+        )
+
+        self.hrbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%I"),
+            width=55,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.hrbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.hrbtn.bind("<MouseWheel>", lambda event: self.scroll_event(event, "hour"))
+
+        # =============================hours===============================
+        ctk.CTkLabel(timeframe, text=":", font=("arial", 40, "bold")).pack(
+            ipadx=5, ipady=10, side="left"
+        )
+
+        # =============================minute===============================
+
+        self.minbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%M"),
+            width=55,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.minbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.minbtn.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+
+        # =============================minute===============================
+        # =============================ampm===============================
+
+        self.ampmbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%p"),
+            width=75,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.ampmbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.ampmbtn.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+
+        timeframe.pack(ipadx=0, ipady=5)
+        # =============================ampm===============================
+
+        arrowdownframe = ctk.CTkFrame(
+            main_time_frame,
+            fg_color="transparent",
+        )
+        hr_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.hrbtn, "hour"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        hr_Arrow_down.pack(side="left", padx=(0, 40))
+        hr_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "hour")
+        )
+
+        min_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        min_Arrow_down.pack(side="left", padx=(45, 0))
+        min_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+
+        ampm_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        ampm_Arrow_down.pack(side="right", padx=(0, 10))
+        ampm_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+
+        arrowdownframe.pack(fill="x", padx=28)
+        main_time_frame.pack(padx=20, pady=20)
+        # =============================time====================================
         # =============================Name field===============================
         name_frame = ctk.CTkFrame(card, fg_color="transparent")
-        name_frame.pack(pady=(0, 30))
-
         text_label = ctk.CTkLabel(
             name_frame,
             text="    ",
@@ -831,55 +990,8 @@ class BellSystemApp:
             name_frame, font=("arial", 20), width=200, textvariable=name
         )
         text_entry.grid(row=0, column=1, pady=5)
+        name_frame.pack(pady=(0, 30))
         # =============================Name field===============================
-
-        option_frame = ctk.CTkFrame(card, fg_color="transparent")
-        option_frame.pack(pady=(0, 30))
-        # =============================hours===============================
-        hour_var = ctk.StringVar(option_frame)
-        hr = time.strftime("%I")
-        hour_var.set(hr)
-        hour_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=hour_var,
-            width=100,
-            height=50,
-            font=("arial", 25),
-            dropdown_font=("helvitica", 20),
-            values=[str(i).zfill(2) for i in range(1, 13)],
-        )
-        hour_entry.grid(row=0, column=0, padx=10)
-        # =============================hours===============================
-        # =============================minute===============================
-
-        minute_var = ctk.StringVar(option_frame)
-        min = time.strftime("%M")
-        minute_var.set(min)
-        minute_entry = ctk.CTkOptionMenu(
-            option_frame,
-            width=100,
-            height=50,
-            font=("arial", 25),
-            variable=minute_var,
-            values=[str(i).zfill(2) for i in range(60)],
-        )
-        minute_entry.grid(row=0, column=1, padx=10)
-        # =============================minute===============================
-        # =============================ampm===============================
-        am_pm_var = ctk.StringVar(option_frame)
-        ampm = time.strftime("%p")
-        am_pm_var.set(ampm)
-        am_pm_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=am_pm_var,
-            width=100,
-            height=50,
-            font=("arial", 25),
-            values=["AM", "PM"],
-        )
-        am_pm_entry.grid(row=0, column=2, padx=10)
-        # =============================ampm===============================
-
         # =============================days field===============================
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
         weekd_days_frame.pack(pady=(0, 30))
@@ -897,7 +1009,38 @@ class BellSystemApp:
                 checkbox_width=30,
                 variable=days_var[day],
             ).grid(row=0, column=i + 1, pady=10, sticky="w", padx=5)
+
         # =============================days field===============================
+        # =============================music field===============================
+        def get_music_files(folder_path):
+            music_files = []
+            for file in os.listdir(folder_path):
+                if (
+                    file.endswith(".mp3")
+                    or file.endswith(".wav")
+                    or file.endswith(".ogg")
+                    or file.endswith(".aiff")
+                    or file.endswith(".flac")
+                    or file.endswith(".acc")
+                    or file.endswith(".wma")
+                ):
+                    music_files.append(file)
+            return music_files
+
+        music_frame = ctk.CTkFrame(card, fg_color="transparent")
+        music_frame.pack(pady=(0, 30))
+        music_label = ctk.CTkLabel(
+            music_frame, text="Select Music : ", font=("helvitica", 23)
+        )
+        music_label.pack(side="left", padx=5)
+        music_files = get_music_files("Assets/music")
+        curr_music = ctk.StringVar()
+        curr_music.set(music_files[0])
+        select_bell = ctk.CTkOptionMenu(
+            music_frame, values=music_files, variable=curr_music, font=("helvitica", 16)
+        )
+        select_bell.pack(side="left")
+        # =============================music field===============================
         # =============================cancel button===============================
         btn_frame = ctk.CTkFrame(card, fg_color="transparent")
         btn_frame.pack(pady=(0, 30))
@@ -922,11 +1065,12 @@ class BellSystemApp:
             # fg_color="#4cc2ff",
             image=CTkImage(dark_image=self.save_icon),
             command=lambda: self.save_alarm(
-                hour_var.get(),
-                minute_var.get(),
-                am_pm_var.get(),
+                self.hrbtn.cget("text"),
+                self.minbtn.cget("text"),
+                self.ampmbtn.cget("text"),
                 text_entry.get(),
                 days_var,
+                curr_music.get(),
                 add_alarm_window,
                 scrol_frame,
                 alarm,
@@ -939,6 +1083,49 @@ class BellSystemApp:
         card.pack(padx=1005, pady=1005, ipadx=30)
         add_alarm_window.place(relx=0.5, rely=0.5, anchor="center")
 
+    def scroll_event(self, event, time):
+        if time == "hour":
+            if event.delta > 0:
+                self.increment(self.hrbtn, "hour")
+            else:
+                self.decrement(self.hrbtn, "hour")
+        elif time == "minute":
+            if event.delta > 0:
+                self.increment(self.minbtn, "minute")
+            else:
+                self.decrement(self.minbtn, "minute")
+        else:
+            if event.delta > 0:
+                self.ampmbtn.configure(text="am")
+            else:
+                self.ampmbtn.configure(text="pm")
+
+    def increment(self, btn, time):
+        value = btn.cget("text")
+        if time == "hour":
+            if int(value) == 12:
+                btn.configure(text="01")
+            else:
+                btn.configure(text=f"{int(value)+1 :02}")
+        elif time == "minute":
+            if int(value) == 59:
+                btn.configure(text="00")
+            else:
+                btn.configure(text=f"{int(value)+1:02}")
+
+    def decrement(self, btn, time):
+        value = btn.cget("text")
+        if time == "hour":
+            if int(value) == 1:
+                btn.configure(text="12")
+            else:
+                btn.configure(text=f"{int(value)-1 :02}")
+        elif time == "minute":
+            if int(value) == 0:
+                btn.configure(text="59")
+            else:
+                btn.configure(text=f"{int(value)-1 :02}")
+
     def edit_alarm(self, alar, scrol_frame, alarm, data):
         edit_alarm_window = ctk.CTkFrame(root, fg_color=("#c4c4c4", "#303030"))
         card = ctk.CTkFrame(edit_alarm_window, fg_color=("White", "#252525"))
@@ -949,6 +1136,167 @@ class BellSystemApp:
             text="Edit Bell",
             font=("helvitica", 30, "bold"),
         ).pack(pady=20)
+
+        # =============================time===============================
+        main_time_frame = ctk.CTkFrame(card, fg_color="transparent")
+
+        arrowupframe = ctk.CTkFrame(main_time_frame, fg_color="transparent")
+        hr_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            width=20,
+            text="",
+            fg_color="transparent",
+            command=lambda: self.increment(self.hrbtn, "hour"),
+            image=ctk.CTkImage(
+                light_image=self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        hr_Arrow_Up.pack(side="left", padx=(0, 40))
+        hr_Arrow_Up.bind("<MouseWheel>", lambda event: self.scroll_event(event, "hour"))
+        hr_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "hour"))
+
+        min_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            text="",
+            fg_color="transparent",
+            width=20,
+            command=lambda: self.increment(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        min_Arrow_Up.pack(side="left", padx=(45, 0))
+        min_Arrow_Up.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+        min_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "min"))
+
+        ampm_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            text="",
+            fg_color="transparent",
+            width=20,
+            command=lambda: self.increment(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        ampm_Arrow_Up.pack(side="right", padx=(0, 10))
+        ampm_Arrow_Up.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+        ampm_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "ampm"))
+
+        arrowupframe.pack(fill="x", padx=28)
+
+        # =============================hours===============================
+        timeframe = ctk.CTkFrame(
+            main_time_frame, fg_color="transparent", border_width=1
+        )
+
+        self.hrbtn = ctk.CTkButton(
+            timeframe,
+            text=alar["time"].split(":")[0],
+            width=55,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.hrbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.hrbtn.bind("<MouseWheel>", lambda event: self.scroll_event(event, "hour"))
+
+        # =============================hours===============================
+        ctk.CTkLabel(timeframe, text=":", font=("arial", 40, "bold")).pack(
+            ipadx=5, ipady=10, side="left"
+        )
+
+        # =============================minute===============================
+
+        self.minbtn = ctk.CTkButton(
+            timeframe,
+            text=alar["time"].split(":")[1].split()[0],
+            width=55,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.minbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.minbtn.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+
+        # =============================minute===============================
+        # =============================ampm===============================
+
+        self.ampmbtn = ctk.CTkButton(
+            timeframe,
+            text=alar["time"].split()[1],
+            width=75,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.ampmbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.ampmbtn.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+
+        timeframe.pack(ipadx=0, ipady=5)
+        # =============================ampm===============================
+
+        arrowdownframe = ctk.CTkFrame(
+            main_time_frame,
+            fg_color="transparent",
+        )
+        hr_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.hrbtn, "hour"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        hr_Arrow_down.pack(side="left", padx=(0, 40))
+        hr_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "hour")
+        )
+
+        min_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        min_Arrow_down.pack(side="left", padx=(45, 0))
+        min_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+
+        ampm_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        ampm_Arrow_down.pack(side="right", padx=(0, 10))
+        ampm_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+
+        arrowdownframe.pack(fill="x", padx=28)
+        main_time_frame.pack(padx=20, pady=20)
+
+        # =============================time====================================
         # =============================Name field===============================
         name_frame = ctk.CTkFrame(card, fg_color="transparent")
         name_frame.pack(pady=(0, 30))
@@ -971,56 +1319,43 @@ class BellSystemApp:
         text_entry.grid(row=0, column=1, pady=5)
 
         # =============================Name field===============================
-        option_frame = ctk.CTkFrame(card, fg_color="transparent")
-        option_frame.pack(pady=(0, 30))
+        # =============================music field===============================
+        def get_music_files(folder_path):
+            music_files = []
+            for file in os.listdir(folder_path):
+                if (
+                    file.endswith(".mp3")
+                    or file.endswith(".wav")
+                    or file.endswith(".ogg")
+                    or file.endswith(".aiff")
+                    or file.endswith(".flac")
+                    or file.endswith(".acc")
+                    or file.endswith(".wma")
+                ):
+                    music_files.append(file)
+            return music_files
 
-        # =============================hours===============================
-        hour_var = ctk.StringVar(option_frame)
-        hour_var.set(alar["time"].split(":")[0])
-        hour_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=hour_var,
-            width=100,
-            height=50,
-            font=("arial", 17),
-            values=[str(i).zfill(2) for i in range(1, 13)],
+        music_frame = ctk.CTkFrame(card, fg_color="transparent")
+        music_frame.pack(pady=(0, 30))
+        music_label = ctk.CTkLabel(
+            music_frame, text="Select Music : ", font=("helvitica", 23)
         )
-        hour_entry.grid(row=0, column=0, padx=10)
-        # =============================hours===============================
-        #  =============================minute===============================
-        minute_var = ctk.StringVar(edit_alarm_window)
-        minute_var.set(alar["time"].split(":")[1].split()[0])
-        minute_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=minute_var,
-            width=100,
-            height=50,
-            font=("arial", 17),
-            values=[str(i).zfill(2) for i in range(60)],
+        music_label.pack(side="left", padx=5)
+        music_files = get_music_files("Assets/music")
+        curr_music = ctk.StringVar()
+        curr_music.set(alar["music"])
+        select_bell = ctk.CTkOptionMenu(
+            music_frame, values=music_files, variable=curr_music, font=("helvitica", 16)
         )
-        minute_entry.grid(row=0, column=1, padx=10)
-
-        # =============================minute===============================
-        # =============================ampm===============================
-        am_pm_var = ctk.StringVar(card)
-        am_pm_var.set(alar["time"].split()[1])
-        am_pm_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=am_pm_var,
-            width=100,
-            height=50,
-            font=("arial", 25),
-            values=["AM", "PM"],
-        )
-        am_pm_entry.grid(row=0, column=2, padx=10)
-        # =============================ampm===============================
+        select_bell.pack(side="left")
+        # =============================music field===============================
         # =============================days field===============================
 
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
         weekd_days_frame.pack(pady=(0, 30))
         days_var = {}
         for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
-            days_var[day] = tk.BooleanVar(card, value=(day in alar["days"]))
+            days_var[day] = ctk.BooleanVar(card, value=(day in alar["days"]))
             ctk.CTkCheckBox(
                 weekd_days_frame,
                 text=day,
@@ -1055,11 +1390,12 @@ class BellSystemApp:
             # fg_color="#4cc2ff",
             image=CTkImage(dark_image=self.save_icon),
             command=lambda: self.save_edited_alarm(
-                hour_var.get(),
-                minute_var.get(),
-                am_pm_var.get(),
+                self.hrbtn.cget("text"),
+                self.minbtn.cget("text"),
+                self.ampmbtn.cget("text"),
                 text_var.get(),
                 days_var,
+                curr_music.get(),
                 alar,
                 scrol_frame,
                 alarm,
@@ -1080,12 +1416,14 @@ class BellSystemApp:
         am_pm,
         text,
         days_var,
+        curr_mus,
         add_alarm_window,
         scrol_frame,
         alarm,
         data,
     ):
         alarm_time = f"{hour}:{minute} {am_pm}"
+        music_selected = curr_mus
         days_selected = [day for day, var in days_var.items() if var.get()]
 
         if not days_selected:
@@ -1097,6 +1435,7 @@ class BellSystemApp:
         alarm_data = {
             "time": alarm_time,
             "text": text,
+            "music": music_selected,
             "days": days_selected,
             "switch_state": True,  # default to True
         }
@@ -1150,6 +1489,8 @@ class BellSystemApp:
             for alarm in self.alarms1:
                 current_time = time.strftime("%I:%M %p")
                 current_day = time.strftime("%a")
+                sound1 = pygame.mixer.Sound(f"Assets/music/{alarm['music']}")
+
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
@@ -1157,6 +1498,7 @@ class BellSystemApp:
                     and not music_played
                 ):
                     sound.play()
+                    print(sound1)
                     # music_played = True
                     time.sleep(60)
                     # current_time = time.strftime("%I:%M %p")
@@ -1312,6 +1654,15 @@ class BellSystemApp:
         self.stop_thread = True
         # Stop the Pygame mixer
         pygame.mixer.quit()
+
+        self.width = self.master.winfo_width()
+        self.height = self.master.winfo_height()
+        self.other_data["width"] = self.width - 290
+        self.other_data["height"] = self.height - 188
+
+        self.save_other_data()
+
+        print(self.width, self.height)
         # Close the application
         self.master.destroy()
 
@@ -1333,14 +1684,18 @@ class BellSystemApp:
             # main alarm card frame
             alarm_frame = ctk.CTkFrame(scrol_frame, fg_color=("white", "#222327"))
             alarm_frame.grid(
-                row=row, column=col, pady=15, padx=15, ipadx=5, ipady=5, sticky="snew"
+                row=row, column=col, pady=15, padx=15, ipadx=15, ipady=15, sticky="snew"
             )
 
             # inner_alarm_frame = ctk.CTkFrame(alarm_frame)
             # inner_alarm_frame.place(relx=0.5, rely=0.5, anchor="center")
 
             time_name_and_btn_frame = ctk.CTkFrame(alarm_frame, fg_color="transparent")
-            time_name_and_btn_frame.pack(expand=True, fill="both")
+            time_name_and_btn_frame.pack(
+                expand=True,
+                fill="both",
+                padx=5,
+            )
 
             # configure columns
             time_name_and_btn_frame.columnconfigure(0, weight=1)
@@ -1349,7 +1704,6 @@ class BellSystemApp:
             time_and_name_frame = ctk.CTkFrame(
                 time_name_and_btn_frame, fg_color="transparent"
             )
-            # time_and_name_frame.grid(row=0, column=0, sticky="nw", columnspan=3)
             time_and_name_frame.pack(side=LEFT, expand=True, fill="both")
 
             # time and name frame widgets
@@ -1360,8 +1714,7 @@ class BellSystemApp:
                 text_color=("black", "white"),
                 # bg_color="red",
             )
-            times.pack(anchor="w")
-            # .grid(row=0, column=0, sticky="w")
+            times.pack(anchor="w", padx=(10, 0))
 
             text = ctk.CTkLabel(
                 time_and_name_frame,
@@ -1371,10 +1724,19 @@ class BellSystemApp:
             )
             text.pack(anchor="w", padx=10)
 
+            musics = ctk.CTkLabel(
+                time_and_name_frame,
+                # text=f"{alar['music']}",
+                text=f"{alar['music']}",
+                font=("arial", 15, "bold"),
+                text_color=("black", "white"),
+            )
+            musics.pack(anchor="w", padx=10)
+
             # btn frame for switch edit and delete
             btn_frame = ctk.CTkFrame(time_name_and_btn_frame, fg_color="transparent")
             # btn_frame.grid(row=0, column=1, sticky="nswe")
-            btn_frame.pack(side=RIGHT, expand=True, fill="both")
+            btn_frame.pack(side=RIGHT, expand=True, fill="both", pady=(5, 0))
 
             switch_var = ctk.BooleanVar(value=alar["switch_state"])
             # store variable in list
@@ -1394,12 +1756,11 @@ class BellSystemApp:
                 width=4,
                 corner_radius=50,
                 variable=switch_var,
-                command=lambda alar=alar, sv=switch_var, alarm=alarm, data=data, text=text, times=times: self.toggle_switch(
-                    alar, sv, alarm, data, text, times
+                command=lambda alar=alar, sv=switch_var, alarm=alarm, data=data, text=text, times=times, musics=musics: self.toggle_switch(
+                    alar, sv, alarm, data, text, times, musics
                 ),
             )
-            switch_widget.pack(anchor="e", padx=10)
-            # grid(row=0, column=1, rowspan=3, padx=10)
+            switch_widget.pack(anchor="e", padx=5)
 
             delete_button = ctk.CTkButton(
                 btn_frame,
@@ -1413,8 +1774,16 @@ class BellSystemApp:
                     a, scrol_frame, alarm, data
                 ),
             )
-            delete_button.pack(anchor="e", padx=10)
+            delete_button.pack(anchor="e", padx=5)
             # grid(row=3, column=0, pady=5)
+            self.switch_tooltip = CTkToolTip(
+                delete_button,
+                message="Delete",
+                font=("arial", 15),
+                delay=0.5,
+                padx=5,
+                pady=5,
+            )
 
             edit_button = ctk.CTkButton(
                 btn_frame,
@@ -1428,9 +1797,15 @@ class BellSystemApp:
                     a, scrol_frame, alarm, data
                 ),
             )
-            edit_button.pack(anchor="e", padx=10)
-            # grid(row=3, column=1, pady=5)
-            # update the column size
+            edit_button.pack(anchor="e", padx=5)
+            CTkToolTip(
+                edit_button,
+                message="Edit",
+                font=("arial", 15),
+                delay=0.5,
+                padx=5,
+                pady=5,
+            )
 
             # days frame for days
             day_frame = ctk.CTkFrame(alarm_frame, fg_color="transparent")
@@ -1438,8 +1813,11 @@ class BellSystemApp:
 
             # grid(row=1, column=0, sticky="w", padx=10)
             ctk.CTkLabel(
-                day_frame, text=f"{'    '.join(alar['days'])}", text_color="grey"
-            ).pack(anchor="w", padx=10)
+                day_frame,
+                fg_color="transparent",
+                text=f"{'        '.join(alar['days'])}",
+                text_color="grey",
+            ).pack(anchor="w", padx=15)
             # .grid(row=2, column=0, sticky="w", padx=10)
             col += 1
 
@@ -1447,27 +1825,30 @@ class BellSystemApp:
             scrol_frame.columnconfigure(c, weight=1)
 
     def rename_button(self, button, button_index, label):
-        current_text = button.cget("text")
+        # current_text = button.cget("text")
 
         new_name = ctk.CTkInputDialog(
             title="Rename Button", text="Enter new name:"
         ).get_input()
         if new_name:
             button.configure(text=new_name)
-            label.configure(text=new_name)
             # Update the button name in the loaded data
             self.button_names[str(button_index)] = new_name
             # Save the updated data to the JSON file
             self.save_button_names()
 
-    def toggle_switch(self, alar, switch_var, alarm, data, text, times):
+    def toggle_switch(self, alar, switch_var, alarm, data, text, times, musics):
         alar["switch_state"] = switch_var.get()
         if alar["switch_state"]:
+            # switch_tooltip.configure(message="True")
             text.configure(text_color=("black", "white"))
             times.configure(text_color=("black", "white"))
+            musics.configure(text_color=("black", "white"))
         else:
+            # switch_tooltip.configure(message="False")
             text.configure(text_color=("grey", "grey"))
             times.configure(text_color=("grey", "grey"))
+            musics.configure(text_color=("grey", "grey"))
         self.save_data(alarm, data)
 
     def delete_alarm(self, alar, scrol_frame, alarm, data):
@@ -1482,6 +1863,7 @@ class BellSystemApp:
         am_pm,
         text,
         days_var,
+        music,
         old_alarm,
         scrol_frame,
         alarm,
@@ -1500,6 +1882,7 @@ class BellSystemApp:
         edited_alarm = {
             "time": alarm_time,
             "text": text,
+            "music": music,
             "days": days_selected,
             "switch_state": True,  # default to True
         }
@@ -1534,19 +1917,16 @@ class BellSystemApp:
         with open(data, "w") as file:
             json.dump(alarm, file, indent=2)
 
-    def load_mode(self):
+    def load_other_data(self):
         try:
-            with open("Assets/json/theme_mode.json", "r") as file:
+            with open("Assets/json/other_data.json", "r") as file:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
-            return ""
+            return {"theme": 2, "width": 600, "height": 600}
 
-    def save_mode(self):
-        with open("Assets/json/theme_mode.json", "w") as file:
-            json.dump(self.theme_mode, file)
-
-    def load_window_size(self):
-        pass
+    def save_other_data(self):
+        with open("Assets/json/other_data.json", "w") as file:
+            json.dump(self.other_data, file, indent=2)
 
 
 if __name__ == "__main__":
