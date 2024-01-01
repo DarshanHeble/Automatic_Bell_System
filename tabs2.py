@@ -828,10 +828,170 @@ class BellSystemApp:
         ).pack(pady=20)
         # ctk.CTkLabel(card, text="Add Alarm").grid(row=0, column=0, columnspan=2)
 
+        def scroll_event(event, time):
+            if time == "hour":
+                if event.delta > 0:
+                    self.increment(hrbtn, "hour")
+                else:
+                    self.decrement(hrbtn, "hour")
+            elif time == "minute":
+                if event.delta > 0:
+                    self.increment(minbtn, "minute")
+                else:
+                    self.decrement(minbtn, "minute")
+            else:
+                if event.delta > 0:
+                    ampmbtn.configure(text="am")
+                else:
+                    ampmbtn.configure(text="pm")
+
+        # =============================time===============================
+        main_time_frame = ctk.CTkFrame(card, fg_color="transparent")
+
+        arrowupframe = ctk.CTkFrame(main_time_frame, fg_color="transparent")
+        hr_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            width=20,
+            text="",
+            fg_color="transparent",
+            command=lambda: self.increment(hrbtn, "hour"),
+            image=ctk.CTkImage(
+                light_image=self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        hr_Arrow_Up.pack(side="left", padx=(0, 40))
+        hr_Arrow_Up.bind("<MouseWheel>", lambda event: scroll_event(event, "hour"))
+        hr_Arrow_Up.bind("<Down>", lambda event: self.increment(hrbtn, "hour"))
+
+        min_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            text="",
+            fg_color="transparent",
+            width=20,
+            command=lambda: self.increment(minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        min_Arrow_Up.pack(side="left", padx=(45, 0))
+        min_Arrow_Up.bind("<MouseWheel>", lambda event: scroll_event(event, "minute"))
+        min_Arrow_Up.bind("<Down>", lambda event: self.increment(hrbtn, "min"))
+
+        ampm_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            text="",
+            fg_color="transparent",
+            width=20,
+            command=lambda: self.increment(minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        ampm_Arrow_Up.pack(side="right", padx=(0, 10))
+        ampm_Arrow_Up.bind("<MouseWheel>", lambda event: scroll_event(event, "ampm"))
+        ampm_Arrow_Up.bind("<Down>", lambda event: self.increment(hrbtn, "ampm"))
+
+        arrowupframe.pack(fill="x", padx=28)
+
+        # =============================hours===============================
+        timeframe = ctk.CTkFrame(
+            main_time_frame, fg_color="transparent", border_width=1
+        )
+
+        hrbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%I"),
+            width=55,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        hrbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        hrbtn.bind("<MouseWheel>", lambda event: scroll_event(event, "hour"))
+
+        # =============================hours===============================
+        ctk.CTkLabel(timeframe, text=":", font=("arial", 40, "bold")).pack(
+            ipadx=5, ipady=10, side="left"
+        )
+
+        # =============================minute===============================
+
+        minbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%M"),
+            width=55,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        minbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        minbtn.bind("<MouseWheel>", lambda event: scroll_event(event, "minute"))
+
+        # =============================minute===============================
+        # =============================ampm===============================
+
+        ampmbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%p"),
+            width=75,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        ampmbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        ampmbtn.bind("<MouseWheel>", lambda event: scroll_event(event, "ampm"))
+
+        timeframe.pack(ipadx=0, ipady=5)
+        # =============================ampm===============================
+
+        arrowdownframe = ctk.CTkFrame(
+            main_time_frame,
+            fg_color="transparent",
+        )
+        hr_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(hrbtn, "hour"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        hr_Arrow_down.pack(side="left", padx=(0, 40))
+        hr_Arrow_down.bind("<MouseWheel>", lambda event: scroll_event(event, "hour"))
+
+        min_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        min_Arrow_down.pack(side="left", padx=(45, 0))
+        min_Arrow_down.bind("<MouseWheel>", lambda event: scroll_event(event, "minute"))
+
+        ampm_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        ampm_Arrow_down.pack(side="right", padx=(0, 10))
+        ampm_Arrow_down.bind("<MouseWheel>", lambda event: scroll_event(event, "ampm"))
+
+        arrowdownframe.pack(fill="x", padx=28)
+        main_time_frame.pack(padx=20, pady=20)
+        # =============================time====================================
         # =============================Name field===============================
         name_frame = ctk.CTkFrame(card, fg_color="transparent")
-        name_frame.pack(pady=(0, 30))
-
         text_label = ctk.CTkLabel(
             name_frame,
             text="    ",
@@ -851,55 +1011,8 @@ class BellSystemApp:
             name_frame, font=("arial", 20), width=200, textvariable=name
         )
         text_entry.grid(row=0, column=1, pady=5)
+        name_frame.pack(pady=(0, 30))
         # =============================Name field===============================
-
-        option_frame = ctk.CTkFrame(card, fg_color="transparent")
-        option_frame.pack(pady=(0, 30))
-        # =============================hours===============================
-        hour_var = ctk.StringVar(option_frame)
-        hr = time.strftime("%I")
-        hour_var.set(hr)
-        hour_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=hour_var,
-            width=100,
-            height=50,
-            font=("arial", 25),
-            dropdown_font=("helvitica", 20),
-            values=[str(i).zfill(2) for i in range(1, 13)],
-        )
-        hour_entry.grid(row=0, column=0, padx=10)
-        # =============================hours===============================
-        # =============================minute===============================
-
-        minute_var = ctk.StringVar(option_frame)
-        min = time.strftime("%M")
-        minute_var.set(min)
-        minute_entry = ctk.CTkOptionMenu(
-            option_frame,
-            width=100,
-            height=50,
-            font=("arial", 25),
-            variable=minute_var,
-            values=[str(i).zfill(2) for i in range(60)],
-        )
-        minute_entry.grid(row=0, column=1, padx=10)
-        # =============================minute===============================
-        # =============================ampm===============================
-        am_pm_var = ctk.StringVar(option_frame)
-        ampm = time.strftime("%p")
-        am_pm_var.set(ampm)
-        am_pm_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=am_pm_var,
-            width=100,
-            height=50,
-            font=("arial", 25),
-            values=["AM", "PM"],
-        )
-        am_pm_entry.grid(row=0, column=2, padx=10)
-        # =============================ampm===============================
-
         # =============================days field===============================
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
         weekd_days_frame.pack(pady=(0, 30))
@@ -942,9 +1055,9 @@ class BellSystemApp:
             # fg_color="#4cc2ff",
             image=CTkImage(dark_image=self.save_icon),
             command=lambda: self.save_alarm(
-                hour_var.get(),
-                minute_var.get(),
-                am_pm_var.get(),
+                hrbtn.cget("text"),
+                minbtn.cget("text"),
+                ampmbtn.cget("text"),
                 text_entry.get(),
                 days_var,
                 add_alarm_window,
@@ -958,6 +1071,42 @@ class BellSystemApp:
 
         card.pack(padx=1005, pady=1005, ipadx=30)
         add_alarm_window.place(relx=0.5, rely=0.5, anchor="center")
+
+    def increment(self, btn, time):
+        value = btn.cget("text")
+        if time == "hour":
+            if int(value) == 12:
+                btn.configure(text="01")
+            else:
+                btn.configure(text=f"{int(value)+1 :02}")
+        elif time == "minute":
+            if int(value) == 59:
+                btn.configure(text="00")
+            else:
+                btn.configure(text=f"{int(value)+1:02}")
+        # else:
+        #     if value == "pm":
+        #         btn.configure(text="am")
+        #     else:
+        #         btn.configure(text="pm")
+
+    def decrement(self, btn, time):
+        value = btn.cget("text")
+        if time == "hour":
+            if int(value) == 1:
+                btn.configure(text="12")
+            else:
+                btn.configure(text=f"{int(value)-1 :02}")
+        elif time == "minute":
+            if int(value) == 0:
+                btn.configure(text="59")
+            else:
+                btn.configure(text=f"{int(value)-1 :02}")
+        # else:
+        #     if value == "am":
+        #         btn.configure(text="pm")
+        #     else:
+        #         btn.configure(text="am")
 
     def edit_alarm(self, alar, scrol_frame, alarm, data):
         edit_alarm_window = ctk.CTkFrame(root, fg_color=("#c4c4c4", "#303030"))
