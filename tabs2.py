@@ -828,23 +828,6 @@ class BellSystemApp:
         ).pack(pady=20)
         # ctk.CTkLabel(card, text="Add Alarm").grid(row=0, column=0, columnspan=2)
 
-        def scroll_event(event, time):
-            if time == "hour":
-                if event.delta > 0:
-                    self.increment(hrbtn, "hour")
-                else:
-                    self.decrement(hrbtn, "hour")
-            elif time == "minute":
-                if event.delta > 0:
-                    self.increment(minbtn, "minute")
-                else:
-                    self.decrement(minbtn, "minute")
-            else:
-                if event.delta > 0:
-                    ampmbtn.configure(text="am")
-                else:
-                    ampmbtn.configure(text="pm")
-
         # =============================time===============================
         main_time_frame = ctk.CTkFrame(card, fg_color="transparent")
 
@@ -854,42 +837,46 @@ class BellSystemApp:
             width=20,
             text="",
             fg_color="transparent",
-            command=lambda: self.increment(hrbtn, "hour"),
+            command=lambda: self.increment(self.hrbtn, "hour"),
             image=ctk.CTkImage(
                 light_image=self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
             ),
         )
         hr_Arrow_Up.pack(side="left", padx=(0, 40))
-        hr_Arrow_Up.bind("<MouseWheel>", lambda event: scroll_event(event, "hour"))
-        hr_Arrow_Up.bind("<Down>", lambda event: self.increment(hrbtn, "hour"))
+        hr_Arrow_Up.bind("<MouseWheel>", lambda event: self.scroll_event(event, "hour"))
+        hr_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "hour"))
 
         min_Arrow_Up = ctk.CTkButton(
             arrowupframe,
             text="",
             fg_color="transparent",
             width=20,
-            command=lambda: self.increment(minbtn, "minute"),
+            command=lambda: self.increment(self.minbtn, "minute"),
             image=ctk.CTkImage(
                 self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
             ),
         )
         min_Arrow_Up.pack(side="left", padx=(45, 0))
-        min_Arrow_Up.bind("<MouseWheel>", lambda event: scroll_event(event, "minute"))
-        min_Arrow_Up.bind("<Down>", lambda event: self.increment(hrbtn, "min"))
+        min_Arrow_Up.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+        min_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "min"))
 
         ampm_Arrow_Up = ctk.CTkButton(
             arrowupframe,
             text="",
             fg_color="transparent",
             width=20,
-            command=lambda: self.increment(minbtn, "minute"),
+            command=lambda: self.increment(self.minbtn, "minute"),
             image=ctk.CTkImage(
                 self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
             ),
         )
         ampm_Arrow_Up.pack(side="right", padx=(0, 10))
-        ampm_Arrow_Up.bind("<MouseWheel>", lambda event: scroll_event(event, "ampm"))
-        ampm_Arrow_Up.bind("<Down>", lambda event: self.increment(hrbtn, "ampm"))
+        ampm_Arrow_Up.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+        ampm_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "ampm"))
 
         arrowupframe.pack(fill="x", padx=28)
 
@@ -898,7 +885,7 @@ class BellSystemApp:
             main_time_frame, fg_color="transparent", border_width=1
         )
 
-        hrbtn = ctk.CTkButton(
+        self.hrbtn = ctk.CTkButton(
             timeframe,
             text=time.strftime("%I"),
             width=55,
@@ -906,8 +893,8 @@ class BellSystemApp:
             height=60,
             font=("arial", 40, "bold"),
         )
-        hrbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
-        hrbtn.bind("<MouseWheel>", lambda event: scroll_event(event, "hour"))
+        self.hrbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.hrbtn.bind("<MouseWheel>", lambda event: self.scroll_event(event, "hour"))
 
         # =============================hours===============================
         ctk.CTkLabel(timeframe, text=":", font=("arial", 40, "bold")).pack(
@@ -916,7 +903,7 @@ class BellSystemApp:
 
         # =============================minute===============================
 
-        minbtn = ctk.CTkButton(
+        self.minbtn = ctk.CTkButton(
             timeframe,
             text=time.strftime("%M"),
             width=55,
@@ -924,13 +911,15 @@ class BellSystemApp:
             height=60,
             font=("arial", 40, "bold"),
         )
-        minbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
-        minbtn.bind("<MouseWheel>", lambda event: scroll_event(event, "minute"))
+        self.minbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.minbtn.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
 
         # =============================minute===============================
         # =============================ampm===============================
 
-        ampmbtn = ctk.CTkButton(
+        self.ampmbtn = ctk.CTkButton(
             timeframe,
             text=time.strftime("%p"),
             width=75,
@@ -938,8 +927,10 @@ class BellSystemApp:
             height=60,
             font=("arial", 40, "bold"),
         )
-        ampmbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
-        ampmbtn.bind("<MouseWheel>", lambda event: scroll_event(event, "ampm"))
+        self.ampmbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.ampmbtn.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
 
         timeframe.pack(ipadx=0, ipady=5)
         # =============================ampm===============================
@@ -953,39 +944,45 @@ class BellSystemApp:
             width=20,
             fg_color="transparent",
             text="",
-            command=lambda: self.decrement(hrbtn, "hour"),
+            command=lambda: self.decrement(self.hrbtn, "hour"),
             image=ctk.CTkImage(
                 self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
             ),
         )
         hr_Arrow_down.pack(side="left", padx=(0, 40))
-        hr_Arrow_down.bind("<MouseWheel>", lambda event: scroll_event(event, "hour"))
+        hr_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "hour")
+        )
 
         min_Arrow_down = ctk.CTkButton(
             arrowdownframe,
             width=20,
             fg_color="transparent",
             text="",
-            command=lambda: self.decrement(minbtn, "minute"),
+            command=lambda: self.decrement(self.minbtn, "minute"),
             image=ctk.CTkImage(
                 self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
             ),
         )
         min_Arrow_down.pack(side="left", padx=(45, 0))
-        min_Arrow_down.bind("<MouseWheel>", lambda event: scroll_event(event, "minute"))
+        min_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
 
         ampm_Arrow_down = ctk.CTkButton(
             arrowdownframe,
             width=20,
             fg_color="transparent",
             text="",
-            command=lambda: self.decrement(minbtn, "minute"),
+            command=lambda: self.decrement(self.minbtn, "minute"),
             image=ctk.CTkImage(
                 self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
             ),
         )
         ampm_Arrow_down.pack(side="right", padx=(0, 10))
-        ampm_Arrow_down.bind("<MouseWheel>", lambda event: scroll_event(event, "ampm"))
+        ampm_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
 
         arrowdownframe.pack(fill="x", padx=28)
         main_time_frame.pack(padx=20, pady=20)
@@ -1086,9 +1083,9 @@ class BellSystemApp:
             # fg_color="#4cc2ff",
             image=CTkImage(dark_image=self.save_icon),
             command=lambda: self.save_alarm(
-                hrbtn.cget("text"),
-                minbtn.cget("text"),
-                ampmbtn.cget("text"),
+                self.hrbtn.cget("text"),
+                self.minbtn.cget("text"),
+                self.ampmbtn.cget("text"),
                 text_entry.get(),
                 days_var,
                 curr_music.get(),
@@ -1103,6 +1100,23 @@ class BellSystemApp:
 
         card.pack(padx=1005, pady=1005, ipadx=30)
         add_alarm_window.place(relx=0.5, rely=0.5, anchor="center")
+
+    def scroll_event(self, event, time):
+        if time == "hour":
+            if event.delta > 0:
+                self.increment(self.hrbtn, "hour")
+            else:
+                self.decrement(self.hrbtn, "hour")
+        elif time == "minute":
+            if event.delta > 0:
+                self.increment(self.minbtn, "minute")
+            else:
+                self.decrement(self.minbtn, "minute")
+        else:
+            if event.delta > 0:
+                self.ampmbtn.configure(text="am")
+            else:
+                self.ampmbtn.configure(text="pm")
 
     def increment(self, btn, time):
         value = btn.cget("text")
@@ -1215,6 +1229,166 @@ class BellSystemApp:
         )
         am_pm_entry.grid(row=0, column=2, padx=10)
         # =============================ampm===============================
+
+        # =============================time===============================
+        main_time_frame = ctk.CTkFrame(card, fg_color="transparent")
+
+        arrowupframe = ctk.CTkFrame(main_time_frame, fg_color="transparent")
+        hr_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            width=20,
+            text="",
+            fg_color="transparent",
+            command=lambda: self.increment(self.hrbtn, "hour"),
+            image=ctk.CTkImage(
+                light_image=self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        hr_Arrow_Up.pack(side="left", padx=(0, 40))
+        hr_Arrow_Up.bind("<MouseWheel>", lambda event: self.scroll_event(event, "hour"))
+        hr_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "hour"))
+
+        min_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            text="",
+            fg_color="transparent",
+            width=20,
+            command=lambda: self.increment(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        min_Arrow_Up.pack(side="left", padx=(45, 0))
+        min_Arrow_Up.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+        min_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "min"))
+
+        ampm_Arrow_Up = ctk.CTkButton(
+            arrowupframe,
+            text="",
+            fg_color="transparent",
+            width=20,
+            command=lambda: self.increment(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_up, dark_image=self.dark_mode_arrow_up
+            ),
+        )
+        ampm_Arrow_Up.pack(side="right", padx=(0, 10))
+        ampm_Arrow_Up.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+        ampm_Arrow_Up.bind("<Down>", lambda event: self.increment(self.hrbtn, "ampm"))
+
+        arrowupframe.pack(fill="x", padx=28)
+
+        # =============================hours===============================
+        timeframe = ctk.CTkFrame(
+            main_time_frame, fg_color="transparent", border_width=1
+        )
+
+        self.hrbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%I"),
+            width=55,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.hrbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.hrbtn.bind("<MouseWheel>", lambda event: self.scroll_event(event, "hour"))
+
+        # =============================hours===============================
+        ctk.CTkLabel(timeframe, text=":", font=("arial", 40, "bold")).pack(
+            ipadx=5, ipady=10, side="left"
+        )
+
+        # =============================minute===============================
+
+        self.minbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%M"),
+            width=55,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.minbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.minbtn.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+
+        # =============================minute===============================
+        # =============================ampm===============================
+
+        self.ampmbtn = ctk.CTkButton(
+            timeframe,
+            text=time.strftime("%p"),
+            width=75,
+            fg_color="transparent",
+            height=60,
+            font=("arial", 40, "bold"),
+        )
+        self.ampmbtn.pack(ipadx=10, ipady=10, padx=10, side="left")
+        self.ampmbtn.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+
+        timeframe.pack(ipadx=0, ipady=5)
+        # =============================ampm===============================
+
+        arrowdownframe = ctk.CTkFrame(
+            main_time_frame,
+            fg_color="transparent",
+        )
+        hr_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.hrbtn, "hour"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        hr_Arrow_down.pack(side="left", padx=(0, 40))
+        hr_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "hour")
+        )
+
+        min_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        min_Arrow_down.pack(side="left", padx=(45, 0))
+        min_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "minute")
+        )
+
+        ampm_Arrow_down = ctk.CTkButton(
+            arrowdownframe,
+            width=20,
+            fg_color="transparent",
+            text="",
+            command=lambda: self.decrement(self.minbtn, "minute"),
+            image=ctk.CTkImage(
+                self.light_mode_arrow_down, dark_image=self.dark_mode_arrow_down
+            ),
+        )
+        ampm_Arrow_down.pack(side="right", padx=(0, 10))
+        ampm_Arrow_down.bind(
+            "<MouseWheel>", lambda event: self.scroll_event(event, "ampm")
+        )
+
+        arrowdownframe.pack(fill="x", padx=28)
+        main_time_frame.pack(padx=20, pady=20)
+        # =============================time====================================
         # =============================days field===============================
 
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
