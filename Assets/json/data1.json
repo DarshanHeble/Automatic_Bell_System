@@ -1,24 +1,10 @@
 [
   {
-    "time": "08:57 PM",
+    "time": "10:23 am",
     "text": "period(1)",
+    "music": "School-Period-bell.mp3",
     "days": [
-      "Sun",
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri",
-      "Sat"
-    ],
-    "switch_state": true
-  },
-  {
-    "time": "08:58 PM",
-    "text": "period(2)",
-    "music": "Handbell.mp3",
-    "days": [
-      "Tue"
+      "Wed"
     ],
     "switch_state": true
   }

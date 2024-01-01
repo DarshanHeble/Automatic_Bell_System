@@ -174,38 +174,20 @@ class BellSystemApp:
     def create_widgets(self):
         # Main Frame
         self.main_frame = ctk.CTkFrame(self.master, fg_color="transparent")
-        self.main_frame.pack(fill="both", expand=True)
-
-        self.main_frame.rowconfigure(0, weight=1)
-        self.main_frame.columnconfigure(0, weight=1)
-        self.main_frame.columnconfigure(1, weight=1)
-        self.main_frame.columnconfigure(2, weight=1)
-        self.main_frame.columnconfigure(3, weight=1)
-        self.main_frame.columnconfigure(4, weight=1)
-        self.main_frame.columnconfigure(5, weight=0)
 
         # Left Frame
         self.left_frame = ctk.CTkFrame(
             self.main_frame, fg_color="transparent", width=600
         )
+        self.create_buttons_for_left_frame(self.left_frame)
         self.left_frame.pack(side="left", fill="y")
-        # self.left_frame.grid(
-        #     row=0, column=0, columnspan=2, sticky="swne", padx=10, pady=10
-        # )
 
         # Right Frame
         self.right_frame = ctk.CTkFrame(self.main_frame)
-        self.right_frame.pack(side="right", fill="both", expand=True)
-        # self.right_frame.grid(row=0, column=1, columnspan=5, sticky="swen")
-
-        # Initial frame in the right frame
-        # self.default_frame = ctk.CTkFrame(self.right_frame)
-        # self.default_frame.pack(fill="both", expand=True)
-        # label = ctk.CTkLabel(self.default_frame, text="Default Frame")
-        # label.pack(pady=10)
-
         self.create_frames_for_right_frame(self.right_frame)
-        self.create_buttons_for_left_frame(self.left_frame)
+        self.right_frame.pack(side="right", fill="both", expand=True)
+
+        self.main_frame.pack(fill="both", expand=True)
 
     def create_frames_for_right_frame(self, right_frame):
         self.frame1 = ctk.CTkFrame(right_frame, fg_color="transparent")
@@ -1130,11 +1112,6 @@ class BellSystemApp:
                 btn.configure(text="00")
             else:
                 btn.configure(text=f"{int(value)+1:02}")
-        # else:
-        #     if value == "pm":
-        #         btn.configure(text="am")
-        #     else:
-        #         btn.configure(text="pm")
 
     def decrement(self, btn, time):
         value = btn.cget("text")
@@ -1148,11 +1125,6 @@ class BellSystemApp:
                 btn.configure(text="59")
             else:
                 btn.configure(text=f"{int(value)-1 :02}")
-        # else:
-        #     if value == "am":
-        #         btn.configure(text="pm")
-        #     else:
-        #         btn.configure(text="am")
 
     def edit_alarm(self, alar, scrol_frame, alarm, data):
         edit_alarm_window = ctk.CTkFrame(root, fg_color=("#c4c4c4", "#303030"))
@@ -1164,71 +1136,6 @@ class BellSystemApp:
             text="Edit Bell",
             font=("helvitica", 30, "bold"),
         ).pack(pady=20)
-        # =============================Name field===============================
-        name_frame = ctk.CTkFrame(card, fg_color="transparent")
-        name_frame.pack(pady=(0, 30))
-
-        text_label = ctk.CTkLabel(
-            name_frame,
-            text="    ",
-            font=("arial", 25),
-            image=CTkImage(
-                dark_image=self.dark_mode_label,
-                light_image=self.light_mode_label,
-                size=(25, 25),
-            ),
-        )
-        text_label.grid(row=0, column=0, pady=10)
-
-        text_var = ctk.StringVar(name_frame)
-        text_var.set(alar["text"])
-        text_entry = ctk.CTkEntry(name_frame, textvariable=text_var)
-        text_entry.grid(row=0, column=1, pady=5)
-
-        # =============================Name field===============================
-        option_frame = ctk.CTkFrame(card, fg_color="transparent")
-        option_frame.pack(pady=(0, 30))
-
-        # =============================hours===============================
-        hour_var = ctk.StringVar(option_frame)
-        hour_var.set(alar["time"].split(":")[0])
-        hour_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=hour_var,
-            width=100,
-            height=50,
-            font=("arial", 17),
-            values=[str(i).zfill(2) for i in range(1, 13)],
-        )
-        hour_entry.grid(row=0, column=0, padx=10)
-        # =============================hours===============================
-        #  =============================minute===============================
-        minute_var = ctk.StringVar(edit_alarm_window)
-        minute_var.set(alar["time"].split(":")[1].split()[0])
-        minute_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=minute_var,
-            width=100,
-            height=50,
-            font=("arial", 17),
-            values=[str(i).zfill(2) for i in range(60)],
-        )
-        minute_entry.grid(row=0, column=1, padx=10)
-
-        # =============================minute===============================
-        # =============================ampm===============================
-        am_pm_var = ctk.StringVar(card)
-        am_pm_var.set(alar["time"].split()[1])
-        am_pm_entry = ctk.CTkOptionMenu(
-            option_frame,
-            variable=am_pm_var,
-            width=100,
-            height=50,
-            font=("arial", 25),
-            values=["AM", "PM"],
-        )
-        am_pm_entry.grid(row=0, column=2, padx=10)
-        # =============================ampm===============================
 
         # =============================time===============================
         main_time_frame = ctk.CTkFrame(card, fg_color="transparent")
@@ -1289,7 +1196,7 @@ class BellSystemApp:
 
         self.hrbtn = ctk.CTkButton(
             timeframe,
-            text=time.strftime("%I"),
+            text=alar["time"].split(":")[0],
             width=55,
             fg_color="transparent",
             height=60,
@@ -1307,7 +1214,7 @@ class BellSystemApp:
 
         self.minbtn = ctk.CTkButton(
             timeframe,
-            text=time.strftime("%M"),
+            text=alar["time"].split(":")[1].split()[0],
             width=55,
             fg_color="transparent",
             height=60,
@@ -1323,7 +1230,7 @@ class BellSystemApp:
 
         self.ampmbtn = ctk.CTkButton(
             timeframe,
-            text=time.strftime("%p"),
+            text=alar["time"].split()[1],
             width=75,
             fg_color="transparent",
             height=60,
@@ -1388,7 +1295,60 @@ class BellSystemApp:
 
         arrowdownframe.pack(fill="x", padx=28)
         main_time_frame.pack(padx=20, pady=20)
+
         # =============================time====================================
+        # =============================Name field===============================
+        name_frame = ctk.CTkFrame(card, fg_color="transparent")
+        name_frame.pack(pady=(0, 30))
+
+        text_label = ctk.CTkLabel(
+            name_frame,
+            text="    ",
+            font=("arial", 25),
+            image=CTkImage(
+                dark_image=self.dark_mode_label,
+                light_image=self.light_mode_label,
+                size=(25, 25),
+            ),
+        )
+        text_label.grid(row=0, column=0, pady=10)
+
+        text_var = ctk.StringVar(name_frame)
+        text_var.set(alar["text"])
+        text_entry = ctk.CTkEntry(name_frame, textvariable=text_var)
+        text_entry.grid(row=0, column=1, pady=5)
+
+        # =============================Name field===============================
+        # =============================music field===============================
+        def get_music_files(folder_path):
+            music_files = []
+            for file in os.listdir(folder_path):
+                if (
+                    file.endswith(".mp3")
+                    or file.endswith(".wav")
+                    or file.endswith(".ogg")
+                    or file.endswith(".aiff")
+                    or file.endswith(".flac")
+                    or file.endswith(".acc")
+                    or file.endswith(".wma")
+                ):
+                    music_files.append(file)
+            return music_files
+
+        music_frame = ctk.CTkFrame(card, fg_color="transparent")
+        music_frame.pack(pady=(0, 30))
+        music_label = ctk.CTkLabel(
+            music_frame, text="Select Music : ", font=("helvitica", 23)
+        )
+        music_label.pack(side="left", padx=5)
+        music_files = get_music_files("Assets/music")
+        curr_music = ctk.StringVar()
+        curr_music.set(alar["music"])
+        select_bell = ctk.CTkOptionMenu(
+            music_frame, values=music_files, variable=curr_music, font=("helvitica", 16)
+        )
+        select_bell.pack(side="left")
+        # =============================music field===============================
         # =============================days field===============================
 
         weekd_days_frame = ctk.CTkFrame(card, fg_color="transparent")
@@ -1430,11 +1390,12 @@ class BellSystemApp:
             # fg_color="#4cc2ff",
             image=CTkImage(dark_image=self.save_icon),
             command=lambda: self.save_edited_alarm(
-                hour_var.get(),
-                minute_var.get(),
-                am_pm_var.get(),
+                self.hrbtn.cget("text"),
+                self.minbtn.cget("text"),
+                self.ampmbtn.cget("text"),
                 text_var.get(),
                 days_var,
+                curr_music.get(),
                 alar,
                 scrol_frame,
                 alarm,
@@ -1528,6 +1489,8 @@ class BellSystemApp:
             for alarm in self.alarms1:
                 current_time = time.strftime("%I:%M %p")
                 current_day = time.strftime("%a")
+                sound1 = pygame.mixer.Sound(f"Assets/music/{alarm['music']}")
+
                 if (
                     alarm["time"] == current_time
                     and current_day in alarm["days"]
@@ -1535,7 +1498,7 @@ class BellSystemApp:
                     and not music_played
                 ):
                     sound.play()
-                    print(alarm["music"])
+                    print(sound1)
                     # music_played = True
                     time.sleep(60)
                     # current_time = time.strftime("%I:%M %p")
@@ -1741,7 +1704,6 @@ class BellSystemApp:
             time_and_name_frame = ctk.CTkFrame(
                 time_name_and_btn_frame, fg_color="transparent"
             )
-            # time_and_name_frame.grid(row=0, column=0, sticky="nw", columnspan=3)
             time_and_name_frame.pack(side=LEFT, expand=True, fill="both")
 
             # time and name frame widgets
@@ -1765,8 +1727,8 @@ class BellSystemApp:
             musics = ctk.CTkLabel(
                 time_and_name_frame,
                 # text=f"{alar['music']}",
-                text="music",
-                font=("arial", 20, "bold"),
+                text=f"{alar['music']}",
+                font=("arial", 15, "bold"),
                 text_color=("black", "white"),
             )
             musics.pack(anchor="w", padx=10)
@@ -1794,8 +1756,8 @@ class BellSystemApp:
                 width=4,
                 corner_radius=50,
                 variable=switch_var,
-                command=lambda alar=alar, sv=switch_var, alarm=alarm, data=data, text=text, times=times: self.toggle_switch(
-                    alar, sv, alarm, data, text, times
+                command=lambda alar=alar, sv=switch_var, alarm=alarm, data=data, text=text, times=times, musics=musics: self.toggle_switch(
+                    alar, sv, alarm, data, text, times, musics
                 ),
             )
             switch_widget.pack(anchor="e", padx=5)
@@ -1875,16 +1837,18 @@ class BellSystemApp:
             # Save the updated data to the JSON file
             self.save_button_names()
 
-    def toggle_switch(self, alar, switch_var, alarm, data, text, times):
+    def toggle_switch(self, alar, switch_var, alarm, data, text, times, musics):
         alar["switch_state"] = switch_var.get()
         if alar["switch_state"]:
             # switch_tooltip.configure(message="True")
             text.configure(text_color=("black", "white"))
             times.configure(text_color=("black", "white"))
+            musics.configure(text_color=("black", "white"))
         else:
             # switch_tooltip.configure(message="False")
             text.configure(text_color=("grey", "grey"))
             times.configure(text_color=("grey", "grey"))
+            musics.configure(text_color=("grey", "grey"))
         self.save_data(alarm, data)
 
     def delete_alarm(self, alar, scrol_frame, alarm, data):
@@ -1899,6 +1863,7 @@ class BellSystemApp:
         am_pm,
         text,
         days_var,
+        music,
         old_alarm,
         scrol_frame,
         alarm,
@@ -1917,6 +1882,7 @@ class BellSystemApp:
         edited_alarm = {
             "time": alarm_time,
             "text": text,
+            "music": music,
             "days": days_selected,
             "switch_state": True,  # default to True
         }
