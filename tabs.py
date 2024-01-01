@@ -361,9 +361,7 @@ def open_window(f, framelist, curr_hr, curr_min, curr_am_pm):
         select_bell = ctk.CTkOptionMenu(
             music_frame, values=music_files, variable=curr_music, font=("helvitica", 16)
         )
-        select_bell.pack(
-            side="left",
-        )
+        select_bell.pack(side="left")
 
     def schedule():
         global schedule_switch

@@ -3,6 +3,7 @@
 import pywinstyles
 import customtkinter
 from tkinter.colorchooser import askcolor
+import time
 
 
 def change_style(e):
@@ -68,5 +69,7 @@ customtkinter.CTkButton(root, text="Change Title Color", command=change_title).p
 customtkinter.CTkButton(root, text="Change Border Color", command=change_border).pack(
     padx=10, pady=0, fill="x"
 )
+current_day = time.strftime("%a")
+print(current_day)
 
 root.mainloop()
