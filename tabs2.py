@@ -780,7 +780,7 @@ class BellSystemApp:
         extracted_numbers = [
             int(match.group(1))
             for item in alarm
-            if (match := re.match(r"period\((\d+)\)", item["text"]))
+            if (match := re.match(r"Period\((\d+)\)", item["text"]))
         ]
         if extracted_numbers:
             # Find missing values in the sequence
@@ -800,7 +800,7 @@ class BellSystemApp:
 
     def open_add_alarm_window(self, scrol_frame, alarm, data):
         add_alarm_window = ctk.CTkFrame(root, fg_color=("#c4c4c4", "#303030"))
-        card = ctk.CTkFrame(add_alarm_window, fg_color=("White", "#252525"))
+        card = ctk.CTkFrame(add_alarm_window, fg_color=("#EDEDED", "#272727"))
 
         # Widgets in the sub-window
         ctk.CTkLabel(
@@ -871,6 +871,7 @@ class BellSystemApp:
             timeframe,
             text=time.strftime("%I"),
             width=55,
+            text_color=("black", "white"),
             fg_color="transparent",
             height=60,
             font=("arial", 40, "bold"),
@@ -889,6 +890,7 @@ class BellSystemApp:
             timeframe,
             text=time.strftime("%M"),
             width=55,
+            text_color=("black", "white"),
             fg_color="transparent",
             height=60,
             font=("arial", 40, "bold"),
@@ -905,6 +907,7 @@ class BellSystemApp:
             timeframe,
             text=time.strftime("%p"),
             width=75,
+            text_color=("black", "white"),
             fg_color="transparent",
             height=60,
             font=("arial", 40, "bold"),
@@ -984,12 +987,12 @@ class BellSystemApp:
         text_label.grid(row=0, column=0, pady=5)
 
         value = self.get_entry_value(alarm)
-        name = ctk.StringVar(value=f"period({value})")
+        name = ctk.StringVar(value=f"Period({value})")
 
         text_entry = ctk.CTkEntry(
-            name_frame, font=("arial", 20), width=200, textvariable=name
+            name_frame, font=("arial", 20), width=280, textvariable=name
         )
-        text_entry.grid(row=0, column=1, pady=5)
+        text_entry.grid(row=0, column=1, pady=5, ipadx=5, ipady=5)
         name_frame.pack(pady=(0, 30))
         # =============================Name field===============================
         # =============================days field===============================
@@ -1048,8 +1051,9 @@ class BellSystemApp:
         cancel_button = ctk.CTkButton(
             btn_frame,
             text="Cancel",
-            fg_color="#383838",
-            hover_color="#424242",
+            fg_color=("white", "#383838"),
+            text_color=("black", "white"),
+            hover_color=("#DADADA", "#252525"),
             image=CTkImage(
                 dark_image=self.dark_mode_cross, light_image=self.light_mode_cross
             ),
@@ -1728,7 +1732,7 @@ class BellSystemApp:
                 time_and_name_frame,
                 # text=f"{alar['music']}",
                 text=f"{alar['music']}",
-                font=("arial", 15, "bold"),
+                font=("arial", 15, "normal"),
                 text_color=("black", "white"),
             )
             musics.pack(anchor="w", padx=10)
@@ -1815,6 +1819,7 @@ class BellSystemApp:
             ctk.CTkLabel(
                 day_frame,
                 fg_color="transparent",
+                corner_radius=50,
                 text=f"{'        '.join(alar['days'])}",
                 text_color="grey",
             ).pack(anchor="w", padx=15)
