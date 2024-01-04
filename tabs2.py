@@ -558,6 +558,8 @@ class BellSystemApp:
         # ==========================Settings Buttons===============================
 
     def create_Announcement_page_widgets(self):
+        engine = pyttsx3.init("sapi5")
+
         self.announcement_frame = ctk.CTkFrame(self.right_frame)
         self.scrol_announcement_frame = ctk.CTkScrollableFrame(
             self.announcement_frame, corner_radius=0
@@ -594,7 +596,7 @@ class BellSystemApp:
             border_width=2,
             border_color="#1F6AA5",
             image=CTkImage(light_image=self.play_icon, dark_image=self.play_icon),
-            command=lambda: self.start_Play(textbox, female_voice, play),
+            command=lambda: self.start_Play(engine, textbox, female_voice, play),
         )
         play.pack(ipadx=5, ipady=5)
 
@@ -615,15 +617,17 @@ class BellSystemApp:
         # -----------------------------------------------------------------
         self.scrol_announcement_frame.pack(expand=True, fill="both")
 
-    def start_Play(self, textbox, voice, play_btn):
+    def start_Play(self, engine, textbox, voice, play_btn):
         play_btn.configure(state="disabled")
 
         def speak():
-            engine = pyttsx3.init()
+            voices = engine.getProperty("voices")
+
             text_content = textbox.get("0.0", "end")
+
             engine.setProperty(
                 "voice",
-                voice,
+                voices[1].id,
             )
             engine.setProperty("rate", 120)
             engine.say(text_content)
@@ -1001,7 +1005,7 @@ class BellSystemApp:
 
         days_var = {}
         for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
-            days_var[day] = ctk.BooleanVar(weekd_days_frame)
+            days_var[day] = ctk.BooleanVar(weekd_days_frame, value=True)
             ctk.CTkCheckBox(
                 weekd_days_frame,
                 text=day,
