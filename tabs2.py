@@ -15,7 +15,8 @@ class BellSystemApp:
     def __init__(self, master):
         self.master = master
         self.master.minsize(600, 600)
-        self.master.geometry("600x600")
+        self.master.geometry("1000x600")
+        self.master.wm_attributes("-fullscreen")
 
         # Load other data from JSON file
         self.other_data = self.load_other_data()
@@ -106,21 +107,21 @@ class BellSystemApp:
             self.second_breakpoint = self.third_breakpoint = False
             self.column_length = 1
             self.arrange_elements(scrol_frame)
-            # self.button1.configure(width=200)
+            self.button1.configure(width=200)
 
         elif 500 <= current_width < 1000 and not self.second_breakpoint:
             self.second_breakpoint = True
             self.first_breakpoint = self.third_breakpoint = False
             self.column_length = 2
             self.arrange_elements(scrol_frame)
-            self.button1.configure(width=200)
+            # self.button1.configure(width=200)
 
         elif 1000 <= current_width < 1500 and not self.third_breakpoint:
             self.third_breakpoint = True
             self.first_breakpoint = self.second_breakpoint = False
             self.column_length = 3
             self.arrange_elements(scrol_frame)
-            # self.button1.configure(width=300)
+            self.button1.configure(width=300)
 
         elif 1500 <= current_width < 2000 and not self.third_breakpoint:
             self.third_breakpoint = True
@@ -128,6 +129,13 @@ class BellSystemApp:
             self.column_length = 4
             self.arrange_elements(scrol_frame)
             # self.button1.configure(width=300)
+
+        # print(self.master.wm_attributes("-fullscreen"))
+        # elif not self.master.wm_attributes("-fullscreen"):
+        #     pass
+        # else:
+        #     self.button1.configure(width=300)
+        #     print("hi")
 
     def arrange_elements(self, scrol_frame):
         row = col = 0
@@ -581,12 +589,9 @@ class BellSystemApp:
         btn_and_textbox_frame.pack(expand=True, fill="both")
 
         btn_frame = ctk.CTkFrame(btn_and_textbox_frame, fg_color="transparent")
-        btn_frame.pack(expand=True, fill="both")
+        btn_frame.pack(fill="y", side="right")
 
-        male_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
-        female_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
-
-        play = ctk.CTkButton(
+        playbtn = ctk.CTkButton(
             btn_frame,
             text="",
             fg_color="transparent",
@@ -596,9 +601,21 @@ class BellSystemApp:
             border_width=2,
             border_color="#1F6AA5",
             image=CTkImage(light_image=self.play_icon, dark_image=self.play_icon),
-            command=lambda: self.start_Play(engine, textbox, female_voice, play),
+            command=lambda: self.start_Play(engine, textbox, playbtn),
         )
-        play.pack(ipadx=5, ipady=5)
+        playbtn.pack(ipadx=5, ipady=5)
+
+        def openTools():
+            pass
+        editbtn = ctk.CTkButton(
+            btn_frame,
+            text="",
+            width=50,
+            corner_radius=60,
+            image=CTkImage(dark_image=self.dark_mode_edit),
+            command=openTools,
+        )
+        editbtn.pack()
 
         # automatic bg color change for play btn
         def printer(textbox, play_btn):
@@ -611,13 +628,13 @@ class BellSystemApp:
         textbox = ctk.CTkTextbox(
             btn_and_textbox_frame, font=("arial", 20), height=500, undo=True
         )
-        textbox.pack(expand=True, fill="both", padx=20, pady=20)
-        textbox.bind("<KeyRelease>", lambda event: printer(textbox, play))
+        textbox.pack(expand=True, fill="both", padx=20, pady=20, side="left")
+        textbox.bind("<KeyRelease>", lambda event: printer(textbox, playbtn))
 
         # -----------------------------------------------------------------
         self.scrol_announcement_frame.pack(expand=True, fill="both")
 
-    def start_Play(self, engine, textbox, voice, play_btn):
+    def start_Play(self, engine, textbox, play_btn):
         play_btn.configure(state="disabled")
 
         def speak():
