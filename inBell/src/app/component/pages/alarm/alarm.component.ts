@@ -5,8 +5,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+
 import { structure } from '../../../structuer';
 import { Bell } from '../../../Bell';
+
+interface stc {
+  tab_name: string;
+  tab_icon: string;
+  tab_id: string;
+  data: Bell[];
+}
 
 @Component({
   selector: 'app-alarm',
@@ -36,24 +44,27 @@ import { Bell } from '../../../Bell';
             class="tab"
             mat-raised-button
             extended
-            *ngFor="let item of data"
+            *ngFor="let item of data1"
+            (click)="setActiveTab(item.tab_id)"
           >
-            <mat-icon>chat_bubble</mat-icon>
+            <mat-icon> {{ item.tab_icon }} </mat-icon>
             <span> {{ item.tab_name }} </span>
           </button>
         </div>
       </div>
       <div class="alarm_window">
-        <!-- <cdk-virtual-scroll-viewport class="window" itemSize=" {{ len }} ">
-        </cdk-virtual-scroll-viewport> -->
-
-        <div class="window">
-          <mat-card *ngFor="let item of bell_data">
+        <div
+          class="window"
+          *ngFor="let item of data1"
+          id="{{ item.tab_id }}"
+          [ngClass]="{ active: item.tab_id === activeTabId }"
+        >
+          <mat-card *ngFor="let data of item.data">
             <mat-card-header>
-              <mat-card-subtitle> {{ item.time }} </mat-card-subtitle>
-              <mat-card-title> {{ item.time }} </mat-card-title>
+              <mat-card-subtitle> {{ data.label }} </mat-card-subtitle>
+              <mat-card-title> {{ data.time }} </mat-card-title>
             </mat-card-header>
-            <mat-card-content> {{ item.days }}</mat-card-content>
+            <mat-card-content> {{ data.days }}</mat-card-content>
             <mat-card-actions>
               <button mat-icon-button>
                 <mat-icon>edit</mat-icon>
@@ -80,15 +91,19 @@ import { Bell } from '../../../Bell';
         width: 16rem;
         padding-inline: 1rem;
         background: yellow;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
       .alarm_window {
-        overflow-y: hidden;
+        overflow: hidden;
         height: 100vh;
         width: 100%;
         background: pink;
+        position: relative;
 
         .window {
+          position: absolute;
+
+          width: -webkit-fill-available;
           height: -webkit-fill-available;
           padding: 3rem;
           display: grid;
@@ -98,12 +113,27 @@ import { Bell } from '../../../Bell';
           );
           grid-template-rows: repeat(auto-fit, 10rem);
           gap: 1rem;
-          // overflow-y: auto;
+          z-index: 10;
+          background-color: pink;
 
           mat-card {
             min-width: 14rem;
             height: 10rem;
           }
+        }
+        .window.active {
+          // background-color: red;
+          z-index: 11;
+          animation: ActiveTab 1s ease-in-out;
+        }
+      }
+
+      @keyframes ActiveTab {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(0%);
         }
       }
       button {
@@ -128,15 +158,91 @@ import { Bell } from '../../../Bell';
   ],
 })
 export class AlarmComponent {
-  buttonLabels = ['Action', 'Another Action', 'Third Action'];
-  data: structure[];
-  len: number;
-  bell_data: Bell;
+  bell_chats = ['Classes', 'Examamination'];
+  data: Bell[][];
+  data1: stc[];
+  activeTabId: string = '';
+
+  setActiveTab(tabId: string) {
+    this.activeTabId = tabId;
+  }
+
   constructor() {
+    // this.data = [
+    //   {
+    //     Class: [
+    //       {
+    //         time: '2:21am',
+    //         label: 'hello1',
+    //         days: ['monday', 'tuesday'],
+    //         switch_state: true,
+    //       },
+    //     ],
+    //     Class: [
+    //       {
+    //         time: '2:21am',
+    //         label: 'hello1',
+    //         days: ['monday', 'tuesday'],
+    //         switch_state: true,
+    //       },
+    //     ],
+    //   },
+    // ];
     this.data = [
+      [
+        {
+          time: '2:21am',
+          label: 'hello1',
+          days: ['monday', 'tuesday'],
+          switch_state: true,
+        },
+        {
+          time: '2:21am',
+          label: 'hello1',
+          days: ['monday', 'tuesday'],
+          switch_state: true,
+        },
+      ],
+      [
+        {
+          time: '2:21am',
+          label: 'hello1',
+          days: ['monday', 'tuesday'],
+          switch_state: true,
+        },
+      ],
+    ];
+    this.data1 = [
       {
         tab_name: 'Classes',
-        time: [
+        tab_icon: 'alarm',
+        tab_id: 'Classes',
+        data: [
+          {
+            time: '2:21am',
+            label: 'hello',
+            days: ['monday', 'tuesday'],
+            switch_state: true,
+          },
+          {
+            time: '2:21am',
+            label: 'hello',
+            days: ['monday', 'tuesday'],
+            switch_state: true,
+          },
+          {
+            time: '2:21am',
+            label: 'hello',
+            days: ['monday', 'tuesday'],
+            switch_state: true,
+          },
+        ],
+      },
+      {
+        tab_name: 'exam',
+        tab_icon: 'campaign',
+        tab_id: 'exam',
+        data: [
           {
             time: '2:21am',
             label: 'hello1',
@@ -145,41 +251,15 @@ export class AlarmComponent {
           },
           {
             time: '2:21am',
-            label: 'hello',
-            days: ['monday', 'tuesday'],
-            switch_state: true,
-          },
-        ],
-      },
-      {
-        tab_name: 'exams',
-        time: [
-          {
-            time: '2:21am',
-            label: 'hello2',
-            days: ['monday', 'tuesday'],
-            switch_state: true,
-          },
-          {
-            time: '2:21am',
-            label: 'hello',
+            label: 'hello1',
             days: ['monday', 'tuesday'],
             switch_state: true,
           },
         ],
       },
     ];
-    this.len = this.data.length;
-
-    for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < i; j++) {
-        // const element = i[j];
-      }
-      console.log(this.data[i].time);
-    }
-    for (let i of this.data[1].time) {
-      this.bell_data = i;
-      console.log(i);
-    }
+  }
+  AddActive(id: string) {
+    console.log('#' + id);
   }
 }
