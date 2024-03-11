@@ -20,8 +20,6 @@ export type MenuItem = {
     MatIconModule,
     MatButtonModule,
     MatSidenavModule,
-    // RouterOutlet,
-    // RouterLink,
     RouterModule,
     MatListModule,
   ],

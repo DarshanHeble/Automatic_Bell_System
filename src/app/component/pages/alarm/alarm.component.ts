@@ -35,7 +35,12 @@ interface Bell {
     <section class="alarm">
       <div class="alarm_sidebar">
         <!-- Add new tab button -->
-        <button class="new_tab_btn" mat-raised-button extended>
+        <button
+          class="new_tab_btn"
+          mat-raised-button
+          extended
+          (click)="add_new_tab()"
+        >
           <mat-icon>add</mat-icon>
           <span> New tab </span>
         </button>
@@ -81,6 +86,9 @@ interface Bell {
               <mat-slide-toggle></mat-slide-toggle>
             </mat-card-actions>
           </mat-card>
+          <button mat-fab class="add">
+            <mat-icon>add</mat-icon>
+          </button>
         </div>
       </div>
     </section>
@@ -125,6 +133,11 @@ interface Bell {
           mat-card {
             min-width: 14rem;
             height: 10rem;
+          }
+          .add {
+            position: absolute;
+            bottom: 4rem;
+            right: 4rem;
           }
         }
         .window.active {
@@ -236,18 +249,17 @@ export class AlarmComponent {
             days: ['monday', 'tuesday'],
             switch_state: true,
           },
-          {
-            time: '2:21am',
-            label: 'hello1',
-            days: ['monday', 'tuesday'],
-            switch_state: true,
-          },
         ],
       },
     ];
     this.activeTabId = this.bell_data[0].tab_id;
   }
-  AddActive(id: string) {
-    console.log('#' + id);
+  add_new_tab() {
+    this.bell_data.push({
+      tab_name: 'exam',
+      tab_icon: 'alarm',
+      tab_id: 'exam',
+      data: [],
+    });
   }
 }
