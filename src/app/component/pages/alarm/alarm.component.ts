@@ -55,6 +55,7 @@ interface Bell {
               extended
               *ngFor="let item of bell_data"
               (click)="setActiveTab(item.tab_id)"
+              (dblclick)="rename()"
               [ngClass]="{ active: item.tab_id === activeTabId }"
             >
               <mat-icon> {{ item.tab_icon }} </mat-icon>
@@ -135,7 +136,7 @@ interface Bell {
             height: 10rem;
           }
           .add {
-            position: absolute;
+            position: fixed;
             bottom: 4rem;
             right: 4rem;
           }
@@ -261,5 +262,8 @@ export class AlarmComponent {
       tab_id: 'exam',
       data: [],
     });
+  }
+  rename() {
+    console.log('rename');
   }
 }
