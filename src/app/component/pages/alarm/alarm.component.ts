@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatDialogModule } from '@angular/material/dialog';
 
 interface stc {
   tab_name: string;
@@ -15,6 +16,7 @@ interface stc {
 interface Bell {
   time: string;
   label: string;
+  music_file_name: string;
   days: string[];
   switch_state: boolean;
 }
@@ -30,6 +32,7 @@ interface Bell {
     MatCardModule,
     MatSlideToggleModule,
     ScrollingModule,
+    MatDialogModule,
   ],
   template: `
     <section class="alarm">
@@ -73,19 +76,23 @@ interface Bell {
         >
           <mat-card *ngFor="let data of item.data">
             <mat-card-header>
-              <mat-card-subtitle> {{ data.label }} </mat-card-subtitle>
-              <mat-card-title> {{ data.time }} </mat-card-title>
-            </mat-card-header>
-            <mat-card-content> {{ data.days }}</mat-card-content>
-            <mat-card-actions>
-              <button mat-icon-button>
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button>
-                <mat-icon>delete</mat-icon>
-              </button>
+              <div class="card-title" style="">
+                <mat-card-title>
+                  {{ data.time.split(' ')[0] }}
+                </mat-card-title>
+                <mat-card-subtitle>
+                  {{ data.time.split(' ')[1] }}
+                </mat-card-subtitle>
+              </div>
+
               <mat-slide-toggle></mat-slide-toggle>
-            </mat-card-actions>
+            </mat-card-header>
+            <mat-card-content>
+              <p class="label">{{ data.label }}</p>
+              <p class="music">{{ data.music_file_name }}</p>
+              <p class="days">{{ data.days }}</p>
+            </mat-card-content>
+            <!-- <mat-card-actions> </mat-card-actions> -->
           </mat-card>
           <button mat-fab class="add">
             <mat-icon>add</mat-icon>
@@ -131,9 +138,38 @@ interface Bell {
           background-color: pink;
           overflow-y: auto;
 
+          .card-title {
+            display: flex;
+            align-items: baseline;
+
+            mat-card-subtitle {
+              font-size: x-large;
+            }
+          }
+          mat-card-title {
+            font-size: 3.5rem;
+            color: #484848;
+            line-height: 3rem;
+            height: 3rem;
+          }
+          mat-slide-toggle {
+            margin-left: auto;
+          }
+
           mat-card {
             min-width: 14rem;
             height: 10rem;
+          }
+          mat-card-content {
+            margin-top: auto;
+
+            p {
+              margin-block: 4px;
+            }
+            .label {
+              font-size: large;
+              font-weight: 500;
+            }
           }
           .add {
             position: fixed;
@@ -144,15 +180,17 @@ interface Bell {
         .window.active {
           // background-color: red;
           z-index: 11;
-          animation: ActiveTab 0.5s ease-in-out;
+          animation: ActiveTab 0.3s ease-in-out;
         }
       }
 
       @keyframes ActiveTab {
         0% {
-          transform: translateX(100%);
+          opacity: 0.3;
+          transform: translateX(50%);
         }
         100% {
+          opacity: 1;
           transform: translateX(0%);
         }
       }
@@ -196,45 +234,52 @@ export class AlarmComponent {
         tab_id: 'Classes',
         data: [
           {
-            time: '2:21am',
+            time: '2:21 am',
             label: 'hello',
-            days: ['monday', 'tuesday'],
+            music_file_name: 'bell.mp3',
+            days: ['mon', 'tue'],
             switch_state: true,
           },
           {
-            time: '2:21am',
+            time: '2:21 am',
             label: 'hello',
-            days: ['monday', 'tuesday'],
+            music_file_name: 'bell.mp3',
+            days: ['mon', 'tue'],
             switch_state: true,
           },
           {
-            time: '2:21am',
+            time: '2:21 am',
             label: 'hello',
-            days: ['monday', 'tuesday'],
+            days: ['mon', 'tue'],
+            music_file_name: 'bell.mp3',
             switch_state: true,
           },
           {
-            time: '2:21am',
+            time: '2:21 am',
             label: 'hello',
-            days: ['monday', 'tuesday'],
+            music_file_name: 'bell.mp3',
+            days: ['mon', 'tue'],
             switch_state: true,
           },
           {
-            time: '2:21am',
+            time: '2:21 am',
             label: 'hello',
-            days: ['monday', 'tuesday'],
+            music_file_name: 'bell.mp3',
+            days: ['mon', 'tue'],
             switch_state: true,
           },
           {
-            time: '2:21am',
+            time: '2:21 am',
             label: 'hello',
-            days: ['monday', 'tuesday'],
+            music_file_name: 'bell.mp3',
+            days: ['mon', 'tue'],
             switch_state: true,
           },
           {
-            time: '2:21am',
+            time: '2:21 am',
             label: 'hello',
-            days: ['monday', 'tuesday'],
+            music_file_name: 'bell.mp3',
+            days: ['mon', 'tue'],
             switch_state: true,
           },
         ],
@@ -245,9 +290,10 @@ export class AlarmComponent {
         tab_id: 'exam',
         data: [
           {
-            time: '2:21am',
+            time: '2:21 am',
             label: 'hello1',
-            days: ['monday', 'tuesday'],
+            music_file_name: 'bell.mp3',
+            days: ['mon', 'tue'],
             switch_state: true,
           },
         ],
