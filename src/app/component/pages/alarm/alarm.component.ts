@@ -5,7 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RenameDailogComponent } from '../../dialog/rename-dailog/rename-dailog.component';
 
 interface stc {
   tab_name: string;
@@ -42,7 +43,7 @@ interface Bell {
           class="new_tab_btn"
           mat-raised-button
           extended
-          (click)="add_new_tab()"
+          (click)="open_dailog()"
         >
           <mat-icon>add</mat-icon>
           <span> New tab </span>
@@ -90,7 +91,7 @@ interface Bell {
             <mat-card-content>
               <p class="label">{{ data.label }}</p>
               <p class="music">{{ data.music_file_name }}</p>
-              <p class="days">{{ data.days }}</p>
+              <p class="days" *ngFor="let day of data.days">{{ day }} &nbsp;</p>
             </mat-card-content>
             <!-- <mat-card-actions> </mat-card-actions> -->
           </mat-card>
@@ -170,6 +171,9 @@ interface Bell {
               font-size: large;
               font-weight: 500;
             }
+            .days {
+              display: inline;
+            }
           }
           .add {
             position: fixed;
@@ -226,7 +230,7 @@ export class AlarmComponent {
     this.activeTabId = tabId;
   }
 
-  constructor() {
+  constructor(private dailog: MatDialog) {
     this.bell_data = [
       {
         tab_name: 'Classes',
@@ -237,7 +241,7 @@ export class AlarmComponent {
             time: '2:21 am',
             label: 'hello',
             music_file_name: 'bell.mp3',
-            days: ['mon', 'tue'],
+            days: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
             switch_state: true,
           },
           {
@@ -311,5 +315,8 @@ export class AlarmComponent {
   }
   rename() {
     console.log('rename');
+  }
+  open_dailog() {
+    this.dailog.open(RenameDailogComponent, {});
   }
 }
