@@ -39,14 +39,15 @@ import { DialogRef } from '@angular/cdk/dialog';
         <mat-label>Fill tab name</mat-label>
         <input
           matInput
-          #tab_name_input
+          required
           type="text"
           placeholder="Tab name"
           cdkFocusInitial
           value="{{ input_data.initial_text }}"
           (keyup.enter)="get_tab_name_input(tab_name_input.value)"
-          required
+          #tab_name_input
         />
+        <mat-error>Add unique name for tab</mat-error>
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
@@ -56,7 +57,7 @@ import { DialogRef } from '@angular/cdk/dialog';
         mat-dialog-close=""
         color="primary"
         type="submit"
-        (click)="onconfirm(tab_name_input.value)"
+        (click)="onconfirm(tab_name_input.value, input_data.title)"
       >
         <!-- (click)="get_tab_name_input(tab_name_input.value)" -->
         Ok
@@ -88,11 +89,7 @@ export class RenameDailogComponent implements OnInit {
     // this.input_name = name;
     // console.log(name);
   }
-  onconfirm(name: string): void {
-    this.input_name = name;
-    console.log(name + 'by dailog');
-
-    let d = 'hello';
-    this.ref.close();
+  onconfirm(name: string, heading: any): void {
+    this.ref.close({ name, heading });
   }
 }

@@ -85,6 +85,10 @@ html,
 body {
   height: 100%;
 }
+// removes extra scrollbar on dailog(on small screens)
+.cdk-global-scrollblock {
+  overflow: hidden;
+}
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;

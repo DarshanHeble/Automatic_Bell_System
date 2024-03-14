@@ -64,7 +64,7 @@ interface Bell {
               extended
               *ngFor="let item of bell_data"
               (click)="setActiveTab(item.tab_id)"
-              (dblclick)="open_dailog('Rename the tab', item.tab_id)"
+              (dblclick)="open_dailog('Rename the tab', item.tab_name)"
               [ngClass]="{ active: item.tab_id === activeTabId }"
             >
               <mat-icon> {{ item.tab_icon }} </mat-icon>
@@ -316,16 +316,16 @@ export class AlarmComponent {
     this.input_name = name;
     console.log(name);
   }
-  add_new_tab() {
+  add_new_tab(result: any) {
     this.bell_data.push({
-      tab_name: 'exam',
+      tab_name: result.name,
       tab_icon: 'alarm',
-      tab_id: 'exam',
+      tab_id: result.name,
       data: [],
     });
   }
-  rename() {
-    console.log('rename');
+  rename(result: any) {
+    console.log(result);
   }
   open_dailog(heading: any, text: any = 'Tab') {
     const dailogref = this.dailog.open(RenameDailogComponent, {
@@ -335,8 +335,10 @@ export class AlarmComponent {
       },
     });
     dailogref.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log(result);
+      if (result.heading == 'Rename the tab') {
+        this.rename(result);
+      } else if (result.heading == 'Create new tab') {
+        this.add_new_tab(result);
       }
     });
   }
