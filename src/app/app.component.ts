@@ -8,6 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 
 // UI component
 import { SidenavComponent } from './component/sidenav/sidenav.component';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-root',
@@ -66,4 +67,12 @@ import { SidenavComponent } from './component/sidenav/sidenav.component';
 })
 export class AppComponent {
   title = 'inBell';
+  constructor() {
+    providers: [
+      {
+        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+        useValue: { appearance: 'outline' },
+      },
+    ];
+  }
 }

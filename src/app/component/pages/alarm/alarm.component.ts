@@ -224,6 +224,8 @@ interface Bell {
 })
 export class AlarmComponent {
   bell_data: stc[];
+  input_name: string = '';
+
   activeTabId: string;
 
   setActiveTab(tabId: string) {
@@ -305,6 +307,10 @@ export class AlarmComponent {
     ];
     this.activeTabId = this.bell_data[0].tab_id;
   }
+  get_tab_name_input(name: string) {
+    this.input_name = name;
+    console.log(name);
+  }
   add_new_tab() {
     this.bell_data.push({
       tab_name: 'exam',
@@ -317,6 +323,11 @@ export class AlarmComponent {
     console.log('rename');
   }
   open_dailog() {
-    this.dailog.open(RenameDailogComponent, {});
+    let dailogref = this.dailog.open(RenameDailogComponent);
+    // dailogref.afterClosed().subscribe((result) => {
+    //   if (result) {
+    //     console.log(this.input_name);
+    //   }
+    // });
   }
 }
