@@ -82,7 +82,8 @@ export class SidenavComponent {
       route: 'alarm',
     },
     {
-      icon: 'campaign',
+      // icon: 'campaign',
+      icon: 'volume_up',
       label: 'Announcement',
       route: 'announcement',
     },

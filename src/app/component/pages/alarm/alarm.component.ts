@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatMenuModule } from '@angular/material/menu';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -12,6 +13,8 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { RenameDailogComponent } from '../../dialog/rename-dailog/rename-dailog.component';
+import { MatRippleModule } from '@angular/material/core';
+import { AddAlarmDailogComponent } from '../../dialog/add-alarm-dailog/add-alarm-dailog.component';
 
 interface stc {
   tab_name: string;
@@ -39,6 +42,8 @@ interface Bell {
     MatSlideToggleModule,
     ScrollingModule,
     MatDialogModule,
+    MatMenuModule,
+    MatRippleModule,
   ],
   template: `
     <section class="alarm">
@@ -64,12 +69,29 @@ interface Bell {
               extended
               *ngFor="let item of bell_data"
               (click)="setActiveTab(item.tab_id)"
-              (dblclick)="open_dailog('Rename the tab', item.tab_name)"
+              (dblclick)="open_dailog('Rename this tab', item.tab_name)"
               [ngClass]="{ active: item.tab_id === activeTabId }"
             >
               <mat-icon> {{ item.tab_icon }} </mat-icon>
               <span> {{ item.tab_name }} </span>
             </button>
+
+            <div
+              class="tab "
+              class="button_div"
+              mat-ripple
+              *ngFor="let item of bell_data"
+              (click)="setActiveTab(item.tab_id)"
+              (dblclick)="open_dailog('Rename this tab', item.tab_name)"
+              [ngClass]="{ active: item.tab_id === activeTabId }"
+            >
+              <mat-icon>{{ item.tab_icon }}</mat-icon>
+
+              <span> {{ item.tab_name }} </span>
+              <button mat-icon-button style="margin-left: auto;">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -100,7 +122,7 @@ interface Bell {
             </mat-card-content>
             <!-- <mat-card-actions> </mat-card-actions> -->
           </mat-card>
-          <button mat-fab class="add">
+          <button mat-fab class="add" (click)="open_alarm_dailog('Add alarm')">
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -220,6 +242,39 @@ interface Bell {
           margin-block-end: 0.3rem;
           justify-content: start;
         }
+        .button_div {
+          height: 2.4rem;
+          background-color: white;
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          font-size: 0.9rem;
+          border-radius: 2rem;
+          margin-block: 4px;
+          padding-inline: 0.5rem;
+          cursor: pointer;
+          box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+            0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+
+          span {
+            margin-left: 0.4rem;
+          }
+          button {
+            display: none;
+          }
+          mat-icon {
+            display: grid;
+            font-size: 1.2rem;
+            place-items: center;
+          }
+        }
+        .button_div:hover {
+          box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+            0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+        }
+
         .tab.active {
           background-color: lightblue;
         }
@@ -328,18 +383,25 @@ export class AlarmComponent {
     console.log(result);
   }
   open_dailog(heading: any, text: any = 'Tab') {
-    const dailogref = this.dailog.open(RenameDailogComponent, {
+    const namedailogref = this.dailog.open(RenameDailogComponent, {
       data: {
         title: heading,
         initial_text: text,
       },
     });
-    dailogref.afterClosed().subscribe((result) => {
+    namedailogref.afterClosed().subscribe((result) => {
       if (result.heading == 'Rename the tab') {
         this.rename(result);
       } else if (result.heading == 'Create new tab') {
         this.add_new_tab(result);
       }
+    });
+  }
+  open_alarm_dailog(heading: string) {
+    const alarmdailogref = this.dailog.open(AddAlarmDailogComponent, {
+      data: {
+        title: heading,
+      },
     });
   }
 }

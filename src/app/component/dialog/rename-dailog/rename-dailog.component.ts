@@ -28,7 +28,6 @@ import { DialogRef } from '@angular/cdk/dialog';
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
-    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
   ],
@@ -47,14 +46,14 @@ import { DialogRef } from '@angular/cdk/dialog';
           (keyup.enter)="get_tab_name_input(tab_name_input.value)"
           #tab_name_input
         />
-        <mat-error>Add unique name for tab</mat-error>
+        <mat-hint>Add unique name for tab</mat-hint>
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button mat-dialog-close color="warn">Cancel</button>
       <button
         mat-button
-        mat-dialog-close=""
+        mat-dialog-close
         color="primary"
         type="submit"
         (click)="onconfirm(tab_name_input.value, input_data.title)"
