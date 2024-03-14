@@ -1,4 +1,14 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  Input,
+  Output,
+  EventEmitter,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +17,9 @@ import {
   MatDialogModule,
   MatDialogRef,
   MatDialog,
+  MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
+import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-rename-dailog',
@@ -21,7 +33,7 @@ import {
     MatInputModule,
   ],
   template: `
-    <h2 mat-dialog-title>Tab name</h2>
+    <h2 mat-dialog-title>{{ input_data.title }}</h2>
     <mat-dialog-content>
       <mat-form-field>
         <mat-label>Fill tab name</mat-label>
@@ -31,6 +43,7 @@ import {
           type="text"
           placeholder="Tab name"
           cdkFocusInitial
+          value="{{ input_data.initial_text }}"
           (keyup.enter)="get_tab_name_input(tab_name_input.value)"
           required
         />
@@ -40,11 +53,12 @@ import {
       <button mat-button mat-dialog-close color="warn">Cancel</button>
       <button
         mat-button
-        mat-dialog-close
+        mat-dialog-close=""
         color="primary"
         type="submit"
-        (click)="get_tab_name_input(tab_name_input.value)"
+        (click)="onconfirm(tab_name_input.value)"
       >
+        <!-- (click)="get_tab_name_input(tab_name_input.value)" -->
         Ok
       </button>
     </mat-dialog-actions>
@@ -55,13 +69,30 @@ import {
   }
   `,
 })
-export class RenameDailogComponent {
+export class RenameDailogComponent implements OnInit {
   input_name: string = '';
-  tab_name_input: any;
+  // tab_name_input: string = '';
+  input_data: any;
 
-  constructor() {}
+  constructor(
+    private ref: MatDialogRef<RenameDailogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  ngOnInit(): void {
+    // throw new Error('Method not implemented.');
+    this.input_data = this.data;
+  }
+
   get_tab_name_input(name: string) {
     // this.input_name = name;
     // console.log(name);
+  }
+  onconfirm(name: string): void {
+    this.input_name = name;
+    console.log(name + 'by dailog');
+
+    let d = 'hello';
+    this.ref.close();
   }
 }

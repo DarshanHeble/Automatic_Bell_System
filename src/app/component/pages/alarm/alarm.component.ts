@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { RenameDailogComponent } from '../../dialog/rename-dailog/rename-dailog.component';
 
 interface stc {
@@ -43,7 +48,7 @@ interface Bell {
           class="new_tab_btn"
           mat-raised-button
           extended
-          (click)="open_dailog()"
+          (click)="open_dailog('Create New Tab')"
         >
           <mat-icon>add</mat-icon>
           <span> New tab </span>
@@ -59,7 +64,7 @@ interface Bell {
               extended
               *ngFor="let item of bell_data"
               (click)="setActiveTab(item.tab_id)"
-              (dblclick)="rename()"
+              (dblclick)="open_dailog('Rename the tab', item.tab_id)"
               [ngClass]="{ active: item.tab_id === activeTabId }"
             >
               <mat-icon> {{ item.tab_icon }} </mat-icon>
@@ -322,12 +327,17 @@ export class AlarmComponent {
   rename() {
     console.log('rename');
   }
-  open_dailog() {
-    let dailogref = this.dailog.open(RenameDailogComponent);
-    // dailogref.afterClosed().subscribe((result) => {
-    //   if (result) {
-    //     console.log(this.input_name);
-    //   }
-    // });
+  open_dailog(heading: any, text: any = 'Tab') {
+    const dailogref = this.dailog.open(RenameDailogComponent, {
+      data: {
+        title: heading,
+        initial_text: text,
+      },
+    });
+    dailogref.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log(result);
+      }
+    });
   }
 }
