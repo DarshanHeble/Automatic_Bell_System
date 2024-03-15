@@ -9,9 +9,9 @@
       placeholder="Tab name"
       cdkFocusInitial
       value="{{ input_data.initial_text }}"
-      (keyup.enter)="get_tab_name_input(tab_name_input.value)"
       #tab_name_input
     />
+    <!-- (keyup.enter)="get_tab_name_input(tab_name_input.value)" -->
     <mat-hint>Add unique name for tab</mat-hint>
   </mat-form-field>
 </mat-dialog-content>
@@ -22,7 +22,9 @@
     mat-dialog-close
     color="primary"
     type="submit"
-    (click)="onconfirm(tab_name_input.value, input_data.title)"
+    (click)="
+      onconfirm(tab_name_input.value, input_data.title, input_data.item_data)
+    "
   >
     <!-- (click)="get_tab_name_input(tab_name_input.value)" -->
     Ok

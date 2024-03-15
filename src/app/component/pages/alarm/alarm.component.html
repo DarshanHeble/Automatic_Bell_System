@@ -1,12 +1,8 @@
 <section class="alarm">
   <div class="alarm_sidebar">
     <!-- Add new tab button -->
-    <button
-      class="new_tab_btn"
-      mat-raised-button
-      extended
-      (click)="open_dailog('Create new tab')"
-    >
+    <button class="new_tab_btn" mat-raised-button extended>
+      <!-- (click)="open_dailog('Create new tab','tav')" -->
       <mat-icon>add</mat-icon>
       <span> New tab </span>
     </button>
@@ -49,7 +45,9 @@
               <button
                 mat-menu-item
                 style="border-radius: 0"
-                (click)="open_dailog('Rename this tab', item.tab_name)"
+                (click)="
+                  open_rename_dailog('Rename this tab', item.tab_name, item)
+                "
               >
                 <mat-icon>edit</mat-icon>
                 <span>Rename</span>

@@ -53,8 +53,6 @@ interface Bell {
 })
 export class AlarmComponent {
   bell_data: stc[];
-  input_name: string = '';
-
   activeTabId: string;
 
   setActiveTab(tabId: string) {
@@ -73,41 +71,6 @@ export class AlarmComponent {
             label: 'hello',
             music_file_name: 'bell.mp3',
             days: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
-            switch_state: true,
-          },
-          {
-            time: '2:21 am',
-            label: 'hello',
-            music_file_name: 'bell.mp3',
-            days: ['mon', 'tue'],
-            switch_state: true,
-          },
-          {
-            time: '2:21 am',
-            label: 'hello',
-            days: ['mon', 'tue'],
-            music_file_name: 'bell.mp3',
-            switch_state: true,
-          },
-          {
-            time: '2:21 am',
-            label: 'hello',
-            music_file_name: 'bell.mp3',
-            days: ['mon', 'tue'],
-            switch_state: true,
-          },
-          {
-            time: '2:21 am',
-            label: 'hello',
-            music_file_name: 'bell.mp3',
-            days: ['mon', 'tue'],
-            switch_state: true,
-          },
-          {
-            time: '2:21 am',
-            label: 'hello',
-            music_file_name: 'bell.mp3',
-            days: ['mon', 'tue'],
             switch_state: true,
           },
           {
@@ -136,10 +99,6 @@ export class AlarmComponent {
     ];
     this.activeTabId = this.bell_data[0].tab_id;
   }
-  get_tab_name_input(name: string) {
-    this.input_name = name;
-    console.log(name);
-  }
   add_new_tab(result: any) {
     console.log(result);
     this.bell_data.push({
@@ -149,22 +108,33 @@ export class AlarmComponent {
       data: [],
     });
   }
-  rename(result: any) {
-    console.log(result);
+  rename_tab(result: any) {
+    console.log(result.item);
+    var index = this.bell_data.indexOf(result.item);
+    this.bell_data[index].tab_name = result.name;
   }
-  open_dailog(heading: any, text: any = 'Tab') {
+
+  delete_tab(result: any) {
+    console.log(result.item);
+    var index = this.bell_data.indexOf(result.item);
+    this.bell_data.splice(index, 1);
+  }
+  open_rename_dailog(heading: any, text: any, dict: any) {
     const namedailogref = this.dailog.open(RenameDailogComponent, {
       data: {
         title: heading,
         initial_text: text,
+        item_data: dict,
       },
     });
     namedailogref.afterClosed().subscribe((result) => {
-      if (result.heading == 'Rename the tab') {
-        this.rename(result);
+      if (result.heading == 'Rename this tab') {
+        this.rename_tab(result);
       } else if (result.heading == 'Create new tab') {
         console.log('new');
         this.add_new_tab(result);
+      } else if (result.heading == 'Delete this tab') {
+        this.delete_tab(result);
       }
     });
   }
