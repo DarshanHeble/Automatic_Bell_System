@@ -8,6 +8,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-add-alarm-dailog',
@@ -18,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatChipsModule,
   ],
   templateUrl: './add-alarm-dailog.component.html',
   styleUrl: './add-alarm-dailog.component.scss',

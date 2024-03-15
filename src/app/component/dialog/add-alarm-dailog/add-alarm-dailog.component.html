@@ -1,21 +1,34 @@
 <h2 mat-dialog-title>{{ input_data.title }}</h2>
 <mat-dialog-content>
-  <mat-form-field>
-    <mat-icon matSuffix fontSet="material-icons-outlined">time </mat-icon>
-    <!-- <input type="time" /> -->
-  </mat-form-field>
-  <mat-form-field>
+  <div class="time">
+    <div class="arrow_up"></div>
+    <div class="button">
+      <button mat-button>1</button>
+      <button mat-button>22</button>
+    </div>
+    <div class="arrow_down"></div>
+  </div>
+
+  <mat-form-field role="label">
     <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
     <input matInput type="text" />
   </mat-form-field>
+
+  <!-- <mat-form-field role="days">
+    <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
+    <input matInput type="text" />
+  </mat-form-field> -->
+
+  <!-- <mat-icon matPrefix fontSet="material-icons-outlined">music </mat-icon> -->
+  <input type="file" />
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-raised-button mat-dialog-close>
-    <mat-icon>cancel</mat-icon>
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close color="warn">
+    <mat-icon fontSet="material-icons-outlined">close</mat-icon>
     <span>close</span>
   </button>
-  <button mat-raised-button mat-dialog-close>
-    <mat-icon>save</mat-icon>
+  <button mat-raised-button mat-dialog-close color="accent">
+    <mat-icon fontSet="material-icons-outlined">save</mat-icon>
     <span>save</span>
   </button>
 </mat-dialog-actions>
