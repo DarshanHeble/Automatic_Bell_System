@@ -23,56 +23,8 @@ export type MenuItem = {
     RouterModule,
     MatListModule,
   ],
-  template: `
-    <mat-nav-list class="side">
-      <a
-        mat-list-item
-        class="menu-item"
-        *ngFor="let item of menuItems()"
-        [routerLink]="item.route"
-        routerLinkActive="selected-menu-item"
-        #rla="routerLinkActive"
-        [activated]="rla.isActive"
-      >
-        <mat-icon
-          matListItemIcon
-          [fontSet]="
-            rla.isActive ? 'material-icons' : 'material-icons-outlined'
-          "
-          >{{ item.icon }}</mat-icon
-        >
-        <!-- <span matListItemTitle>{{ item.label }}</span> -->
-      </a>
-    </mat-nav-list>
-  `,
-  styles: [
-    `
-      .side {
-        display: flex;
-        flex-direction: column;
-        :last-child {
-          margin-top: auto;
-        }
-      }
-      .menu-item {
-        transition: 0.5s;
-      }
-      .selected-menu-item {
-        :before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 5px;
-          height: 100%;
-          border-radius: 1px;
-          background: blue;
-        }
-        // not working
-        background-color: rgba(0, 0, 0, 0.05) !important;
-      }
-    `,
-  ],
+  templateUrl: './sidenav.component.html',
+  styleUrl: './sidenav.component.scss',
 })
 export class SidenavComponent {
   menuItems = signal<MenuItem[]>([

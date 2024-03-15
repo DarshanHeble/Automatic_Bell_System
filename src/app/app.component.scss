@@ -1,0 +1,20 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+app-main-window {
+  width: -webkit-fill-available;
+}
+mat-sidenav-container {
+  height: 100vh;
+}
+mat-sidenav {
+  width: 3.5rem;
+  // padding-inline: 5px;
+}
+mat-sidenav-content {
+  width: -webkit-fill-available;
+  // width: 20rem;
+}

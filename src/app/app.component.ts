@@ -24,55 +24,9 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
     SidenavComponent,
     // MainWindowComponent,
   ],
-  template: `
-    <!-- <router-outlet /> -->
-    <mat-sidenav-container>
-      <mat-sidenav opened mode="side" [style.width]="''">
-        <!-- side nav component -->
-        <app-sidenav></app-sidenav>
-      </mat-sidenav>
-
-      <mat-sidenav-content class="content">
-        <!-- <router-outlet /> -->
-        <router-outlet></router-outlet>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-    <!-- <app-main-window></app-main-window> -->
-  `,
-  styles: [
-    `
-      * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-        cursor-pointer: none;
-      }
-
-      app-main-window {
-        width: -webkit-fill-available;
-      }
-      mat-sidenav-container {
-        height: 100vh;
-      }
-      mat-sidenav {
-        width: 3.5rem;
-        // padding-inline: 5px;
-      }
-      mat-sidenav-content {
-        width: -webkit-fill-available;
-        // width: 20rem;
-      }
-    `,
-  ],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'inBell';
-  constructor() {
-    // providers: [
-    //   {
-    //     provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-    //     useValue: { appearance: 'outline' },
-    //   },
-    // ];
-  }
+  title = 'angel';
 }

@@ -1,0 +1,82 @@
+<section class="alarm">
+  <div class="alarm_sidebar">
+    <!-- Add new tab button -->
+    <button
+      class="new_tab_btn"
+      mat-raised-button
+      extended
+      (click)="open_dailog('Create New Tab')"
+    >
+      <mat-icon>add</mat-icon>
+      <span> New tab </span>
+    </button>
+
+    <!-- All Tabs -->
+    <div class="All_Tabs">
+      <div class="alarm_tab">
+        <h3>All Tabs</h3>
+        <button
+          class="tab"
+          mat-raised-button
+          extended
+          *ngFor="let item of bell_data"
+          (click)="setActiveTab(item.tab_id)"
+          (dblclick)="open_dailog('Rename this tab', item.tab_name)"
+          [ngClass]="{ active: item.tab_id === activeTabId }"
+        >
+          <mat-icon> {{ item.tab_icon }} </mat-icon>
+          <span> {{ item.tab_name }} </span>
+        </button>
+
+        <div
+          class="tab"
+          class="button_div"
+          mat-ripple
+          *ngFor="let item of bell_data"
+          (click)="setActiveTab(item.tab_id)"
+          (dblclick)="open_dailog('Rename this tab', item.tab_name)"
+          [ngClass]="{ active: item.tab_id === activeTabId }"
+        >
+          <mat-icon>{{ item.tab_icon }}</mat-icon>
+
+          <span> {{ item.tab_name }} </span>
+          <button mat-icon-button style="margin-left: auto">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="alarm_window">
+    <div
+      class="window"
+      *ngFor="let item of bell_data"
+      id="{{ item.tab_id }}"
+      [ngClass]="{ active: item.tab_id === activeTabId }"
+    >
+      <mat-card *ngFor="let data of item.data">
+        <mat-card-header>
+          <div class="card-title" style="">
+            <mat-card-title>
+              {{ data.time.split(" ")[0] }}
+            </mat-card-title>
+            <mat-card-subtitle>
+              {{ data.time.split(" ")[1] }}
+            </mat-card-subtitle>
+          </div>
+
+          <mat-slide-toggle></mat-slide-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="label">{{ data.label }}</p>
+          <p class="music">{{ data.music_file_name }}</p>
+          <p class="days" *ngFor="let day of data.days">{{ day }} &nbsp;</p>
+        </mat-card-content>
+        <!-- <mat-card-actions> </mat-card-actions> -->
+      </mat-card>
+      <button mat-fab class="add" (click)="open_alarm_dailog('Add alarm')">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+</section>

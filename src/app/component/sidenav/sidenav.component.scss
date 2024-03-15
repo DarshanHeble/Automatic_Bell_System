@@ -1,0 +1,24 @@
+.side {
+  display: flex;
+  flex-direction: column;
+  :last-child {
+    margin-top: auto;
+  }
+}
+.menu-item {
+  transition: 0.5s;
+}
+.selected-menu-item {
+  :before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    border-radius: 1px;
+    background: blue;
+  }
+  // not working
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}

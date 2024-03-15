@@ -19,30 +19,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
   ],
-  template: `
-    <h2 mat-dialog-title>{{ input_data.title }}</h2>
-    <mat-dialog-content>
-      <mat-form-field>
-        <mat-icon matSuffix fontSet="material-icons-outlined">time </mat-icon>
-        <!-- <input type="time" /> -->
-      </mat-form-field>
-      <mat-form-field>
-        <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
-        <input matInput type="text" />
-      </mat-form-field>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-raised-button mat-dialog-close>
-        <mat-icon>cancel</mat-icon>
-        <span>close</span>
-      </button>
-      <button mat-raised-button mat-dialog-close>
-        <mat-icon>save</mat-icon>
-        <span>save</span>
-      </button>
-    </mat-dialog-actions>
-  `,
-  styles: ``,
+  templateUrl: './add-alarm-dailog.component.html',
+  styleUrl: './add-alarm-dailog.component.scss',
 })
 export class AddAlarmDailogComponent implements OnInit {
   input_data: any;
