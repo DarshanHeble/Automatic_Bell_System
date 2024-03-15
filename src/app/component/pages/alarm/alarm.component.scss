@@ -79,16 +79,6 @@
   }
 }
 
-@keyframes ActiveTab {
-  0% {
-    opacity: 0.3;
-    transform: translateX(50%);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0%);
-  }
-}
 button {
   border-radius: 5rem;
 }
@@ -115,16 +105,20 @@ button {
     font-size: 0.9rem;
     border-radius: 2rem;
     margin-block: 4px;
-    padding-inline: 0.5rem;
+    padding-inline: 0.5rem 0;
     cursor: pointer;
     box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
       0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 
     span {
+      color: black;
       margin-left: 0.4rem;
     }
     button {
-      display: none;
+      visibility: hidden;
+    }
+    &:hover button {
+      visibility: visible;
     }
     mat-icon {
       display: grid;
@@ -139,5 +133,18 @@ button {
 
   .tab.active {
     background-color: lightblue;
+  }
+  .button_div.active {
+    background-color: lightblue;
+  }
+}
+@keyframes ActiveTab {
+  0% {
+    opacity: 0.3;
+    transform: translateX(50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
   }
 }

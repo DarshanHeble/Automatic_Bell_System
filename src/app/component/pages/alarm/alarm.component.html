@@ -5,7 +5,7 @@
       class="new_tab_btn"
       mat-raised-button
       extended
-      (click)="open_dailog('Create New Tab')"
+      (click)="open_dailog('Create new tab')"
     >
       <mat-icon>add</mat-icon>
       <span> New tab </span>
@@ -15,7 +15,7 @@
     <div class="All_Tabs">
       <div class="alarm_tab">
         <h3>All Tabs</h3>
-        <button
+        <!-- <button
           class="tab"
           mat-raised-button
           extended
@@ -26,7 +26,7 @@
         >
           <mat-icon> {{ item.tab_icon }} </mat-icon>
           <span> {{ item.tab_name }} </span>
-        </button>
+        </button> -->
 
         <div
           class="tab"
@@ -34,14 +34,32 @@
           mat-ripple
           *ngFor="let item of bell_data"
           (click)="setActiveTab(item.tab_id)"
-          (dblclick)="open_dailog('Rename this tab', item.tab_name)"
           [ngClass]="{ active: item.tab_id === activeTabId }"
         >
           <mat-icon>{{ item.tab_icon }}</mat-icon>
 
           <span> {{ item.tab_name }} </span>
-          <button mat-icon-button style="margin-left: auto">
+          <button
+            mat-icon-button
+            style="margin-left: auto"
+            [matMenuTriggerFor]="tab_menu"
+          >
             <mat-icon>more_vert</mat-icon>
+            <mat-menu #tab_menu>
+              <button
+                mat-menu-item
+                style="border-radius: 0"
+                (click)="open_dailog('Rename this tab', item.tab_name)"
+              >
+                <mat-icon>edit</mat-icon>
+                <span>Rename</span>
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item style="border-radius: 0">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
           </button>
         </div>
       </div>
@@ -56,7 +74,7 @@
     >
       <mat-card *ngFor="let data of item.data">
         <mat-card-header>
-          <div class="card-title" style="">
+          <div class="card-title">
             <mat-card-title>
               {{ data.time.split(" ")[0] }}
             </mat-card-title>
@@ -72,7 +90,6 @@
           <p class="music">{{ data.music_file_name }}</p>
           <p class="days" *ngFor="let day of data.days">{{ day }} &nbsp;</p>
         </mat-card-content>
-        <!-- <mat-card-actions> </mat-card-actions> -->
       </mat-card>
       <button mat-fab class="add" (click)="open_alarm_dailog('Add alarm')">
         <mat-icon>add</mat-icon>

@@ -15,6 +15,7 @@ import {
 import { RenameDailogComponent } from '../../dialog/rename-dailog/rename-dailog.component';
 import { MatRippleModule } from '@angular/material/core';
 import { AddAlarmDailogComponent } from '../../dialog/add-alarm-dailog/add-alarm-dailog.component';
+import { MatDivider } from '@angular/material/divider';
 
 interface stc {
   tab_name: string;
@@ -33,6 +34,8 @@ interface Bell {
 @Component({
   selector: 'app-alarm',
   standalone: true,
+  templateUrl: './alarm.component.html',
+  styleUrl: './alarm.component.scss',
   imports: [
     MatIconModule,
     MatButtonModule,
@@ -44,9 +47,9 @@ interface Bell {
     MatDialogModule,
     MatMenuModule,
     MatRippleModule,
+    AddAlarmDailogComponent,
+    MatDivider,
   ],
-  templateUrl: './alarm.component.html',
-  styleUrl: './alarm.component.scss',
 })
 export class AlarmComponent {
   bell_data: stc[];
@@ -138,6 +141,7 @@ export class AlarmComponent {
     console.log(name);
   }
   add_new_tab(result: any) {
+    console.log(result);
     this.bell_data.push({
       tab_name: result.name,
       tab_icon: 'alarm',
@@ -159,6 +163,7 @@ export class AlarmComponent {
       if (result.heading == 'Rename the tab') {
         this.rename(result);
       } else if (result.heading == 'Create new tab') {
+        console.log('new');
         this.add_new_tab(result);
       }
     });
