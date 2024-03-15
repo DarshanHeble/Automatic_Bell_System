@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Delete '{{ input_data.tab_name }}' tab?</h1>
+<mat-dialog-content>
+  <p>Once deleted the data or the tab connot be retrived</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+  <button
+    mat-raised-button
+    mat-dialog-close
+    cdkFocusInitial
+    color="primary"
+    type="submit"
+    (click)="onconfirm(input_data.item_data)"
+  >
+    Yes
+  </button>
+</mat-dialog-actions>

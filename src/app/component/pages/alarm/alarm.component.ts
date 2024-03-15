@@ -16,6 +16,8 @@ import { RenameDailogComponent } from '../../dialog/rename-dailog/rename-dailog.
 import { MatRippleModule } from '@angular/material/core';
 import { AddAlarmDailogComponent } from '../../dialog/add-alarm-dailog/add-alarm-dailog.component';
 import { MatDivider } from '@angular/material/divider';
+import { CreateNewTabComponent } from '../../dialog/create-new-tab/create-new-tab.component';
+import { ConfirmationDeleteDailogComponent } from '../../dialog/confirmation-delete-dailog/confirmation-delete-dailog.component';
 
 interface stc {
   tab_name: string;
@@ -99,12 +101,12 @@ export class AlarmComponent {
     ];
     this.activeTabId = this.bell_data[0].tab_id;
   }
-  add_new_tab(result: any) {
+  add_new_tab(result: string) {
     console.log(result);
     this.bell_data.push({
-      tab_name: result.name,
+      tab_name: result,
       tab_icon: 'alarm',
-      tab_id: result.name,
+      tab_id: result,
       data: [],
     });
   }
@@ -115,25 +117,53 @@ export class AlarmComponent {
   }
 
   delete_tab(result: any) {
-    console.log(result.item);
+    console.log(result.tab_name);
     var index = this.bell_data.indexOf(result.item);
     this.bell_data.splice(index, 1);
   }
-  open_rename_dailog(heading: any, text: any, dict: any) {
-    const namedailogref = this.dailog.open(RenameDailogComponent, {
+  open_rename_dailog(dict: stc) {
+    const rename_dailogref = this.dailog.open(RenameDailogComponent, {
       data: {
-        title: heading,
-        initial_text: text,
+        title: 'Rename this tab',
+        initial_text: dict.tab_name,
         item_data: dict,
       },
     });
-    namedailogref.afterClosed().subscribe((result) => {
-      if (result.heading == 'Rename this tab') {
+    rename_dailogref.afterClosed().subscribe((result) => {
+      if (result) {
         this.rename_tab(result);
-      } else if (result.heading == 'Create new tab') {
-        console.log('new');
+      }
+    });
+  }
+  open_create_new_tab_dailog() {
+    const rename_dailogref = this.dailog.open(CreateNewTabComponent, {
+      data: {
+        title: 'Name this new tab',
+        initial_text: '',
+        // item_data: dict,
+      },
+    });
+    rename_dailogref.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result) {
         this.add_new_tab(result);
-      } else if (result.heading == 'Delete this tab') {
+      }
+    });
+  }
+  open_confirmation_delete_dailog(dict: stc) {
+    const delete_dailogref = this.dailog.open(
+      ConfirmationDeleteDailogComponent,
+      {
+        data: {
+          title: 'Name this new tab',
+          tab_name: dict.tab_name,
+          item_data: dict,
+        },
+      }
+    );
+    delete_dailogref.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result) {
         this.delete_tab(result);
       }
     });
