@@ -1,7 +1,7 @@
 form {
   display: flex;
   flex-direction: column;
-  width: 20rem;
+  width: 21rem;
 
   mat-dialog-content {
     width: 100%;
@@ -49,6 +49,20 @@ form {
             font-size: large;
             height: 2rem;
           }
+        }
+      }
+    }
+    mat-form-field {
+      padding: 1rem;
+    }
+    .days {
+      mat-chip-listbox {
+        mat-chip {
+          display: grid;
+          width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 5rem;
+          place-content: center;
         }
       }
     }
