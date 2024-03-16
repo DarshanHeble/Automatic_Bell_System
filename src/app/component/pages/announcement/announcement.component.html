@@ -1,30 +1,43 @@
 <p>announcement works!</p>
-<div
-  class=""
-  style="display: grid; place-items: center; border: solid; width: 23rem"
->
+<div class="" style="display: grid; place-items: center; border: solid">
   <h2 mat-dialog-title>Add bell</h2>
-  <form action="" style="display: flex; flex-direction: column">
-    <mat-dialog-content style="display: flex; flex-direction: column">
+  <form action="">
+    <mat-dialog-content>
       <div class="time">
         <div class="arrow_up"></div>
-        <div class="button" style="display: flex">
-          <button
-            mat-stroked-button
-            style="height: inherit; font-size: x-large"
-          >
-            1
-          </button>
-          <mat-icon>go_to_line</mat-icon>
-          <button
-            mat-stroked-button
-            style="height: inherit; font-size: x-large"
-          >
-            22
-          </button>
-          <div class="" style="display: flex; flex-direction: column">
-            <button mat-raised-button>am</button>
-            <button mat-raised-button>pm</button>
+        <div class="buttons">
+          <div class="number">
+            <button
+              type="button"
+              mat-raised-button
+              [matMenuTriggerFor]="hr_menu"
+            >
+              1
+            </button>
+            <h1>:</h1>
+            <button
+              type="button"
+              mat-raised-button
+              [matMenuTriggerFor]="min_menu"
+            >
+              22
+            </button>
+
+            <mat-menu #hr_menu>
+              @for (item of [1,2,3,4,5,6,7,8,9,10,11,12]; track $index) {
+              <button mat-menu-item+ ->{{ item }}</button>
+              }
+            </mat-menu>
+            <mat-menu #min_menu>
+              @for (item of [5,10,15,20,25.30.35.40.45,50,55,60]; track $index)
+              {
+              <button mat-menu-item>{{ item }}</button>
+              }
+            </mat-menu>
+          </div>
+          <div class="ampm">
+            <button type="button" mat-raised-button>am</button>
+            <button type="button" mat-raised-button>pm</button>
           </div>
         </div>
         <div class="arrow_down"></div>
@@ -43,7 +56,7 @@
       <!-- <mat-icon matPrefix fontSet="material-icons-outlined">music </mat-icon> -->
       <input type="file" />
     </mat-dialog-content>
-    <mat-dialog-actions align="end">
+    <mat-dialog-actions align="center">
       <button mat-raised-button mat-dialog-close color="warn">
         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
         <span>close</span>
