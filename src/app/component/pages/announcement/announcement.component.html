@@ -9,18 +9,22 @@
           <div class="number">
             <button
               type="button"
+              #hour_btn
               mat-raised-button
               [matMenuTriggerFor]="hr_menu"
+              (wheel)="on_hr_scroll($event, hour_btn)"
             >
-              1
+              {{ hr_btn_text }}
             </button>
             <h1>:</h1>
             <button
               type="button"
               mat-raised-button
+              #min_btn
               [matMenuTriggerFor]="min_menu"
+              (wheel)="on_min_scroll($event, min_btn)"
             >
-              22
+              {{ min_btn_text }}
             </button>
 
             <mat-menu #hr_menu>
@@ -36,32 +40,36 @@
             </mat-menu>
           </div>
           <div class="ampm">
-            <button type="button" mat-raised-button>am</button>
-            <button type="button" mat-raised-button>pm</button>
+            @for (item of ["am","pm"]; track $index) {
+            <button
+              #vari
+              type="button"
+              mat-raised-button
+              [ngClass]="{ active: item === active_am_or_pm }"
+              (click)="set_ampm_active(item)"
+            >
+              {{ item }}
+            </button>
+            }
           </div>
         </div>
         <div class="arrow_down"></div>
       </div>
 
-      <mat-form-field role="label" appearance="outline">
+      <mat-form-field role="label" appearance="fill">
         <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
         <input matInput type="text" />
       </mat-form-field>
 
       <div class="days">
-        <mat-chip-listbox [selectable]="true" [multiple]="true">
-          @for (item of ["sun","mon","tue","wed","thu","fri","sat"]; track
-          $index) {
-          <mat-chip>{{ item }} </mat-chip>
-          }
-        </mat-chip-listbox>
         <mat-chip-listbox>
+          @for (item of chips; track $index) {
           <mat-chip
-            *ngFor="
-              let item of ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
-            "
-            >{{ item }}
+            (click)="toogle(item)"
+            [ngClass]="{ active: item.active === true }"
+            >{{ item.day }}
           </mat-chip>
+          }
         </mat-chip-listbox>
       </div>
       <!-- <mat-form-field role="days">

@@ -49,6 +49,9 @@ form {
             font-size: large;
             height: 2rem;
           }
+          button.active {
+            background-color: lightblue;
+          }
         }
       }
     }
@@ -63,6 +66,9 @@ form {
           height: 2.5rem;
           border-radius: 5rem;
           place-content: center;
+        }
+        mat-chip.active {
+          background-color: lightblue;
         }
       }
     }
