@@ -68,6 +68,12 @@ export class AnnouncementComponent {
       this.min_btn_text--;
     }
   }
+  menu_hr_click(item: number) {
+    this.hr_btn_text = item;
+  }
+  menu_min_click(item: number) {
+    this.min_btn_text = item;
+  }
   set_ampm_active(item: any) {
     if (item !== this.active_am_or_pm) {
       this.active_am_or_pm = item;

@@ -29,13 +29,17 @@
 
             <mat-menu #hr_menu>
               @for (item of [1,2,3,4,5,6,7,8,9,10,11,12]; track $index) {
-              <button mat-menu-item>{{ item }}</button>
+              <button mat-menu-item (click)="menu_hr_click(item)">
+                {{ item }}
+              </button>
               }
             </mat-menu>
             <mat-menu #min_menu>
               @for (item of [5,10,15,20,25,30,35,40,45,50,55,60]; track $index)
               {
-              <button mat-menu-item>{{ item }}</button>
+              <button mat-menu-item (click)="menu_min_click(item)">
+                {{ item }}
+              </button>
               }
             </mat-menu>
           </div>
@@ -72,10 +76,20 @@
           }
         </mat-chip-listbox>
       </div>
-      <!-- <mat-form-field role="days">
-    <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
-    <input matInput type="text" />
-  </mat-form-field> -->
+
+      <mat-form-field role="label" appearance="fill">
+        <mat-icon matPrefix fontSet="material-icons-outlined"
+          >music_note
+        </mat-icon>
+        <input matInput type="text" />
+        <button matSuffix mat-icon-button [matMenuTriggerFor]="music_menu">
+          <mat-icon fontSet="material-icons-outlined">expand_more </mat-icon>
+        </button>
+
+        <mat-menu #music_menu>
+          <button type="button" mat-menu-item></button>
+        </mat-menu>
+      </mat-form-field>
 
       <!-- <mat-icon matPrefix fontSet="material-icons-outlined">music </mat-icon> -->
       <input type="file" />
