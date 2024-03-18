@@ -78,19 +78,22 @@
       </div>
 
       <mat-form-field role="label" appearance="fill">
-        <mat-icon matPrefix fontSet="material-icons-outlined"
-          >music_note
+        <mat-icon matPrefix fontSet="material-icons-outlined">
+          music_note
         </mat-icon>
         <input matInput type="text" />
-        <button matSuffix mat-icon-button [matMenuTriggerFor]="music_menu">
+        <button
+          type="button"
+          matSuffix
+          mat-icon-button
+          [matMenuTriggerFor]="music_menu"
+        >
           <mat-icon fontSet="material-icons-outlined">expand_more </mat-icon>
         </button>
-
         <mat-menu #music_menu>
-          <button type="button" mat-menu-item></button>
+          <button mat-menu-item></button>
         </mat-menu>
       </mat-form-field>
-
       <!-- <mat-icon matPrefix fontSet="material-icons-outlined">music </mat-icon> -->
       <input type="file" />
     </mat-dialog-content>

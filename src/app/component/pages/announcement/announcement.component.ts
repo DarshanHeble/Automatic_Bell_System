@@ -8,6 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 
+import * as fs from 'fs';
+import * as path from 'path';
+
 @Component({
   selector: 'app-announcement',
   standalone: true,
@@ -28,6 +31,7 @@ export class AnnouncementComponent {
   hr_btn_text: number = 1;
   min_btn_text: number = 0;
   active_am_or_pm: string = 'am';
+  files: any = fs.readdirSync('../../../../assets/music');
 
   chips = [
     { day: 'sun', active: false },
@@ -81,5 +85,8 @@ export class AnnouncementComponent {
   }
   toogle(item: any) {
     item.active = !item.active;
+  }
+  constructor() {
+    console.log(this.files);
   }
 }
