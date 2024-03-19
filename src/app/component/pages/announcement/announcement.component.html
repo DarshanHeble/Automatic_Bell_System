@@ -65,18 +65,6 @@
         <input matInput type="text" />
       </mat-form-field>
 
-      <div class="days">
-        <mat-chip-listbox>
-          @for (item of chips; track $index) {
-          <mat-chip
-            (click)="toogle(item)"
-            [ngClass]="{ active: item.active === true }"
-            >{{ item.day }}
-          </mat-chip>
-          }
-        </mat-chip-listbox>
-      </div>
-
       <mat-form-field role="label" appearance="fill">
         <mat-icon matPrefix fontSet="material-icons-outlined">
           music_note
@@ -91,20 +79,35 @@
           <mat-icon fontSet="material-icons-outlined">expand_more </mat-icon>
         </button>
         <mat-menu #music_menu>
-          <button mat-menu-item></button>
+          @for (item of files; track $index) {
+
+          <button mat-menu-item>
+            <mat-icon>music_note</mat-icon>
+            {{ item.split(".")[0] }}
+          </button>
+          }
         </mat-menu>
       </mat-form-field>
-      <!-- <mat-icon matPrefix fontSet="material-icons-outlined">music </mat-icon> -->
-      <input type="file" />
+      <div class="days">
+        <mat-chip-listbox>
+          @for (item of chips; track $index) {
+          <mat-chip
+            (click)="toogle(item)"
+            [ngClass]="{ active: item.active === true }"
+            >{{ item.day }}
+          </mat-chip>
+          }
+        </mat-chip-listbox>
+      </div>
     </mat-dialog-content>
-    <mat-dialog-actions align="center">
+    <mat-dialog-actions>
       <button mat-raised-button mat-dialog-close color="warn">
         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
-        <span>close</span>
+        <span>Close</span>
       </button>
       <button mat-raised-button mat-dialog-close color="accent">
         <mat-icon fontSet="material-icons-outlined">save</mat-icon>
-        <span>save</span>
+        <span>Save</span>
       </button>
     </mat-dialog-actions>
   </form>

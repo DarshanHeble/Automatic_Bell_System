@@ -31,16 +31,17 @@ export class AnnouncementComponent {
   hr_btn_text: number = 1;
   min_btn_text: number = 0;
   active_am_or_pm: string = 'am';
-  files: any = fs.readdirSync('../../../../assets/music');
+  // files: any = fs.readdirSync('../../../../assets/music');
+  files: string[] = ['Bell.mp3', 'Break.mp3'];
 
   chips = [
-    { day: 'sun', active: false },
-    { day: 'mon', active: false },
-    { day: 'tue', active: false },
-    { day: 'wed', active: false },
-    { day: 'thu', active: false },
-    { day: 'fri', active: false },
-    { day: 'sat', active: false },
+    { day: 'S', active: false },
+    { day: 'M', active: true },
+    { day: 'T', active: true },
+    { day: 'W', active: true },
+    { day: 'T', active: true },
+    { day: 'F', active: true },
+    { day: 'S', active: true },
   ];
   on_hr_scroll(event: WheelEvent, btn: any): void {
     if (event.deltaY > 0) {
@@ -86,7 +87,5 @@ export class AnnouncementComponent {
   toogle(item: any) {
     item.active = !item.active;
   }
-  constructor() {
-    console.log(this.files);
-  }
+  constructor() {}
 }

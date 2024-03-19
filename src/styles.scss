@@ -2,6 +2,7 @@
 
 /* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
+@use "./app//component/pages/announcement/announcement.component.scss" as ascss;
 @include mat.core();
 
 $c50: #e1f5fe;
