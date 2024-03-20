@@ -63,26 +63,33 @@
       id="{{ item.tab_id }}"
       [ngClass]="{ active: item.tab_id === activeTabId }"
     >
-      <mat-card *ngFor="let data of item.data">
-        <mat-card-header>
-          <div class="card-title">
-            <mat-card-title>
-              {{ data.time.split(" ")[0] }}
-            </mat-card-title>
-            <mat-card-subtitle>
-              {{ data.time.split(" ")[1] }}
-            </mat-card-subtitle>
-          </div>
+      <div class="" *ngFor="let data of item.data" (click)="click()">
+        <mat-card>
+          <mat-card-header>
+            <div class="card-title">
+              <mat-card-title>
+                {{ data.time.split(" ")[0] }}
+              </mat-card-title>
+              <mat-card-subtitle>
+                {{ data.time.split(" ")[1] }}
+              </mat-card-subtitle>
+            </div>
 
-          <mat-slide-toggle></mat-slide-toggle>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="label">{{ data.label }}</p>
-          <p class="music">{{ data.music_file_name }}</p>
-          <p class="days" *ngFor="let day of data.days">{{ day }} &nbsp;</p>
-        </mat-card-content>
-      </mat-card>
-      <button mat-fab class="add" (click)="open_alarm_dailog('Add alarm')">
+            <mat-slide-toggle></mat-slide-toggle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="label">{{ data.label }}</p>
+            <p class="music">{{ data.music_file_name }}</p>
+            <p class="days" *ngFor="let day of data.days">{{ day }} &nbsp;</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <button
+        mat-fab
+        class="add"
+        (click)="open_alarm_dailog('Add alarm', item)"
+      >
         <mat-icon>add</mat-icon>
       </button>
     </div>

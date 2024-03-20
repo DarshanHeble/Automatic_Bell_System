@@ -56,10 +56,12 @@ interface Bell {
 export class AlarmComponent {
   bell_data: stc[];
   activeTabId: string;
+  // activeTab_in_NO: number;
 
   setActiveTab(tabId: string) {
     this.activeTabId = tabId;
   }
+  click() {}
 
   constructor(private dailog: MatDialog) {
     this.bell_data = [
@@ -101,14 +103,27 @@ export class AlarmComponent {
     ];
     this.activeTabId = this.bell_data[0].tab_id;
   }
-  add_new_tab(result: string) {
-    console.log(result);
+  add_new_tab(result: any) {
     this.bell_data.push({
       tab_name: result,
       tab_icon: 'alarm',
       tab_id: result,
       data: [],
     });
+  }
+  Add_new_alarm(result: any) {
+    var index = this.bell_data.indexOf(result.item);
+    console.log(result.hr);
+    var times = `${result.hr}:${result.min} ${result.ampm}`;
+    console.log(times, typeof times);
+    this.bell_data[index].data.push({
+      time: times,
+      label: result.label,
+      music_file_name: result.music,
+      days: result.days,
+      switch_state: true,
+    });
+    // console.log(this.bell_data[index]);
   }
   rename_tab(result: any) {
     console.log(result.item);
@@ -118,8 +133,10 @@ export class AlarmComponent {
 
   delete_tab(result: any) {
     console.log(result.tab_name);
-    var index = this.bell_data.indexOf(result.item);
+    var index = this.bell_data.indexOf(result);
+    console.log(index);
     this.bell_data.splice(index, 1);
+    console.log(this.bell_data.splice(index, 1));
   }
   open_rename_dailog(dict: stc) {
     const rename_dailogref = this.dailog.open(RenameDailogComponent, {
@@ -137,7 +154,6 @@ export class AlarmComponent {
   }
   open_create_new_tab_dailog() {
     const rename_dailogref = this.dailog.open(CreateNewTabComponent, {
-      width: '24rem',
       data: {
         title: 'Name this new tab',
         initial_text: '',
@@ -163,17 +179,22 @@ export class AlarmComponent {
       }
     );
     delete_dailogref.afterClosed().subscribe((result) => {
-      console.log(result);
       if (result) {
         this.delete_tab(result);
       }
     });
   }
-  open_alarm_dailog(heading: string) {
+  open_alarm_dailog(heading: string, dist: stc) {
     const alarmdailogref = this.dailog.open(AddAlarmDailogComponent, {
       data: {
         title: heading,
+        item_data: dist,
       },
+    });
+    alarmdailogref.afterClosed().subscribe((result) => {
+      if (result) {
+        this.Add_new_alarm(result);
+      }
     });
   }
 }

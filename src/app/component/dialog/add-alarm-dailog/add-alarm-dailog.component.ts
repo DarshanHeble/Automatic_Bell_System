@@ -11,7 +11,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
@@ -106,11 +111,24 @@ export class AddAlarmDailogComponent implements OnInit {
   }
   constructor(
     private ref: MatDialogRef<AddAlarmDailogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: object
+    @Inject(MAT_DIALOG_DATA) public data: object,
+    private buildr: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.input_data = this.data;
     // throw new Error('Method not implemented.');
+  }
+
+  on_save(items: any) {
+    this.ref.close({
+      hr: this.hr_btn_text,
+      min: this.min_btn_text,
+      ampm: this.active_am_or_pm,
+      label: this.label,
+      music: this.recent_file,
+      days: this.chips,
+      item: items,
+    });
   }
 }
