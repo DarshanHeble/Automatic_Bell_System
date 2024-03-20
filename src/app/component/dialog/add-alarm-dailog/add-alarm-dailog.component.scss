@@ -1,7 +1,7 @@
 form {
   display: flex;
   flex-direction: column;
-  width: 21rem;
+  width: 24rem;
 
   mat-dialog-content {
     width: 100%;
@@ -9,6 +9,7 @@ form {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding-top: 0;
 
     .time {
       width: 100%;
@@ -17,6 +18,9 @@ form {
       flex-direction: column;
       justify-content: center;
       margin-bottom: 1rem;
+      // background-color: whitesmoke;
+      background-color: aliceblue;
+
       .buttons {
         display: flex;
         justify-content: space-evenly;

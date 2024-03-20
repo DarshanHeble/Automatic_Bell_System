@@ -137,7 +137,7 @@ export class AlarmComponent {
   }
   open_create_new_tab_dailog() {
     const rename_dailogref = this.dailog.open(CreateNewTabComponent, {
-      width: '21rem',
+      width: '24rem',
       data: {
         title: 'Name this new tab',
         initial_text: '',
