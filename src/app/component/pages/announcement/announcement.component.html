@@ -62,14 +62,30 @@
 
       <mat-form-field role="label" appearance="fill">
         <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
-        <input matInput type="text" />
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="label"
+          value="label"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        @if(label){
+        <button matSuffix type="button" mat-icon-button (click)="label = ''">
+          <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+        </button>
+        }
       </mat-form-field>
 
-      <mat-form-field role="label" appearance="fill">
+      <mat-form-field role="music" appearance="fill">
         <mat-icon matPrefix fontSet="material-icons-outlined">
           music_note
         </mat-icon>
-        <input matInput type="text" />
+        <input
+          matInput
+          type="text"
+          value="{{ recent_file.split('.')[0] }}"
+          autocapitalize="auto_files"
+        />
         <button
           type="button"
           matSuffix
@@ -81,12 +97,17 @@
         <mat-menu #music_menu>
           @for (item of files; track $index) {
 
-          <button mat-menu-item>
+          <button mat-menu-item (click)="add_to_recent(item)">
             <mat-icon>music_note</mat-icon>
             {{ item.split(".")[0] }}
           </button>
           }
         </mat-menu>
+        <!-- <mat-autocomplete #auto_files autoActiveFirstOption>
+          @for (item of files | async; track $index) {
+          <mat-option [value]="item">{{ item }} </mat-option>
+          }
+        </mat-autocomplete> -->
       </mat-form-field>
       <div class="days">
         <mat-chip-listbox>
@@ -94,7 +115,8 @@
           <mat-chip
             (click)="toogle(item)"
             [ngClass]="{ active: item.active === true }"
-            >{{ item.day }}
+          >
+            <div class="chipText" style="font-size: 1rem">{{ item.day }}</div>
           </mat-chip>
           }
         </mat-chip-listbox>

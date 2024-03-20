@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -7,9 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { Observable, map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-announcement',
@@ -25,6 +28,10 @@ import * as path from 'path';
     MatInputModule,
     MatMenuModule,
     MatChipsModule,
+    FormsModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    AsyncPipe,
   ],
 })
 export class AnnouncementComponent {
@@ -33,6 +40,12 @@ export class AnnouncementComponent {
   active_am_or_pm: string = 'am';
   // files: any = fs.readdirSync('../../../../assets/music');
   files: string[] = ['Bell.mp3', 'Break.mp3'];
+  recent_file: string = this.files[0];
+  label: string = 'Period';
+  value = 'Clear me';
+
+  mycontrol = new FormControl('');
+  // filterd_files: Observable<string[]>;
 
   chips = [
     { day: 'S', active: false },
@@ -86,6 +99,9 @@ export class AnnouncementComponent {
   }
   toogle(item: any) {
     item.active = !item.active;
+  }
+  add_to_recent(item: string) {
+    this.recent_file = item;
   }
   constructor() {}
 }

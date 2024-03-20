@@ -1,40 +1,132 @@
-<h2 mat-dialog-title>{{ input_data.title }}</h2>
-<form action="" style="display: flex; flex-direction: column">
-  <mat-dialog-content style="display: flex; flex-direction: column">
+<h2 mat-dialog-title>Add bell</h2>
+<form action="">
+  <mat-dialog-content>
     <div class="time">
       <div class="arrow_up"></div>
-      <div class="button" style="display: flex">
-        <button mat-button>1</button>
-        <button mat-button>22</button>
-        <div class="" style="display: flex; flex-direction: column">
-          <button mat-raised-button>am</button>
-          <button mat-raised-button>pm</button>
+      <div class="buttons">
+        <div class="number">
+          <button
+            type="button"
+            #hour_btn
+            mat-raised-button
+            [matMenuTriggerFor]="hr_menu"
+            (wheel)="on_hr_scroll($event, hour_btn)"
+          >
+            {{ hr_btn_text }}
+          </button>
+          <h1>:</h1>
+          <button
+            type="button"
+            mat-raised-button
+            #min_btn
+            [matMenuTriggerFor]="min_menu"
+            (wheel)="on_min_scroll($event, min_btn)"
+          >
+            {{ min_btn_text }}
+          </button>
+
+          <mat-menu #hr_menu>
+            @for (item of [1,2,3,4,5,6,7,8,9,10,11,12]; track $index) {
+            <button mat-menu-item (click)="menu_hr_click(item)">
+              {{ item }}
+            </button>
+            }
+          </mat-menu>
+          <mat-menu #min_menu>
+            @for (item of [5,10,15,20,25,30,35,40,45,50,55,60]; track $index) {
+            <button mat-menu-item (click)="menu_min_click(item)">
+              {{ item }}
+            </button>
+            }
+          </mat-menu>
+        </div>
+        <div class="ampm">
+          @for (item of ["am","pm"]; track $index) {
+          <button
+            #vari
+            type="button"
+            mat-raised-button
+            [ngClass]="{ active: item === active_am_or_pm }"
+            (click)="set_ampm_active(item)"
+          >
+            {{ item }}
+          </button>
+          }
         </div>
       </div>
       <div class="arrow_down"></div>
     </div>
 
-    <mat-form-field role="label">
+    <mat-form-field role="label" appearance="fill">
       <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
-      <input matInput type="text" />
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="label"
+        value="label"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      @if(label){
+      <button matSuffix type="button" mat-icon-button (click)="label = ''">
+        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      </button>
+      }
     </mat-form-field>
 
-    <!-- <mat-form-field role="days">
-    <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
-    <input matInput type="text" />
-  </mat-form-field> -->
+    <mat-form-field role="music" appearance="fill">
+      <mat-icon matPrefix fontSet="material-icons-outlined">
+        music_note
+      </mat-icon>
+      <input
+        matInput
+        type="text"
+        value="{{ recent_file.split('.')[0] }}"
+        autocapitalize="auto_files"
+      />
+      <button
+        type="button"
+        matSuffix
+        mat-icon-button
+        [matMenuTriggerFor]="music_menu"
+      >
+        <mat-icon fontSet="material-icons-outlined">expand_more </mat-icon>
+      </button>
+      <mat-menu #music_menu>
+        @for (item of files; track $index) {
 
-    <!-- <mat-icon matPrefix fontSet="material-icons-outlined">music </mat-icon> -->
-    <input type="file" />
+        <button mat-menu-item (click)="add_to_recent(item)">
+          <mat-icon>music_note</mat-icon>
+          {{ item.split(".")[0] }}
+        </button>
+        }
+      </mat-menu>
+      <!-- <mat-autocomplete #auto_files autoActiveFirstOption>
+          @for (item of files | async; track $index) {
+          <mat-option [value]="item">{{ item }} </mat-option>
+          }
+        </mat-autocomplete> -->
+    </mat-form-field>
+    <div class="days">
+      <mat-chip-listbox>
+        @for (item of chips; track $index) {
+        <mat-chip
+          (click)="toogle(item)"
+          [ngClass]="{ active: item.active === true }"
+        >
+          <div class="chipText" style="font-size: 1rem">{{ item.day }}</div>
+        </mat-chip>
+        }
+      </mat-chip-listbox>
+    </div>
   </mat-dialog-content>
-  <mat-dialog-actions align="end">
+  <mat-dialog-actions>
     <button mat-raised-button mat-dialog-close color="warn">
       <mat-icon fontSet="material-icons-outlined">close</mat-icon>
-      <span>close</span>
+      <span>Close</span>
     </button>
     <button mat-raised-button mat-dialog-close color="accent">
       <mat-icon fontSet="material-icons-outlined">save</mat-icon>
-      <span>save</span>
+      <span>Save</span>
     </button>
   </mat-dialog-actions>
 </form>
