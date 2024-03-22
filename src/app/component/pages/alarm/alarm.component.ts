@@ -134,9 +134,9 @@ export class AlarmComponent {
   delete_tab(result: any) {
     console.log(result.tab_name);
     var index = this.bell_data.indexOf(result);
-    console.log(index);
+    console.log(result);
     this.bell_data.splice(index, 1);
-    console.log(this.bell_data.splice(index, 1));
+    // console.log(this.bell_data.splice(index, 1));
   }
   open_rename_dailog(dict: stc) {
     const rename_dailogref = this.dailog.open(RenameDailogComponent, {

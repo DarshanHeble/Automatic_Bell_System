@@ -20,9 +20,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
     MatButtonModule,
     MatIconModule,
     MatSidenavModule,
-    // UI component
     SidenavComponent,
-    // MainWindowComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
