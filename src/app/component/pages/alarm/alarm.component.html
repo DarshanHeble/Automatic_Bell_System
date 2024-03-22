@@ -80,7 +80,9 @@
           <mat-card-content>
             <p class="label">{{ data.label }}</p>
             <p class="music">{{ data.music_file_name }}</p>
-            <p class="days" *ngFor="let day of data.days">{{ day }} &nbsp;</p>
+            <p class="days" *ngFor="let day of data.days">
+              {{ day.day }} &nbsp;
+            </p>
           </mat-card-content>
         </mat-card>
       </div>

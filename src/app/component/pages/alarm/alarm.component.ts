@@ -19,6 +19,10 @@ import { MatDivider } from '@angular/material/divider';
 import { CreateNewTabComponent } from '../../dialog/create-new-tab/create-new-tab.component';
 import { ConfirmationDeleteDailogComponent } from '../../dialog/confirmation-delete-dailog/confirmation-delete-dailog.component';
 
+interface Day {
+  day: string;
+  active: boolean;
+}
 interface stc {
   tab_name: string;
   tab_icon: string;
@@ -29,7 +33,7 @@ interface Bell {
   time: string;
   label: string;
   music_file_name: string;
-  days: string[];
+  days: Day[];
   switch_state: boolean;
 }
 
@@ -74,14 +78,30 @@ export class AlarmComponent {
             time: '2:21 am',
             label: 'hello',
             music_file_name: 'bell.mp3',
-            days: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+            days: [
+              { day: 'S', active: false },
+              { day: 'M', active: true },
+              { day: 'T', active: true },
+              { day: 'W', active: true },
+              { day: 'T', active: true },
+              { day: 'F', active: true },
+              { day: 'S', active: true },
+            ],
             switch_state: true,
           },
           {
             time: '2:21 am',
             label: 'hello',
             music_file_name: 'bell.mp3',
-            days: ['mon', 'tue'],
+            days: [
+              { day: 'S', active: false },
+              { day: 'M', active: true },
+              { day: 'T', active: true },
+              { day: 'W', active: true },
+              { day: 'T', active: true },
+              { day: 'F', active: true },
+              { day: 'S', active: true },
+            ],
             switch_state: true,
           },
         ],
@@ -95,7 +115,15 @@ export class AlarmComponent {
             time: '2:21 am',
             label: 'hello1',
             music_file_name: 'bell.mp3',
-            days: ['mon', 'tue'],
+            days: [
+              { day: 'S', active: false },
+              { day: 'M', active: true },
+              { day: 'T', active: true },
+              { day: 'W', active: true },
+              { day: 'T', active: true },
+              { day: 'F', active: true },
+              { day: 'S', active: true },
+            ],
             switch_state: true,
           },
         ],
