@@ -18,24 +18,9 @@ import { AddAlarmDailogComponent } from '../../dialog/add-alarm-dailog/add-alarm
 import { MatDivider } from '@angular/material/divider';
 import { CreateNewTabComponent } from '../../dialog/create-new-tab/create-new-tab.component';
 import { ConfirmationDeleteDailogComponent } from '../../dialog/confirmation-delete-dailog/confirmation-delete-dailog.component';
-
-interface Day {
-  day: string;
-  active: boolean;
-}
-interface stc {
-  tab_name: string;
-  tab_icon: string;
-  tab_id: string;
-  data: Bell[];
-}
-interface Bell {
-  time: string;
-  label: string;
-  music_file_name: string;
-  days: Day[];
-  switch_state: boolean;
-}
+import { Day } from '../../../Day';
+import { Bell } from '../../../Bell';
+import { Stc } from '../../../Stc';
 
 @Component({
   selector: 'app-alarm',
@@ -58,7 +43,7 @@ interface Bell {
   ],
 })
 export class AlarmComponent {
-  bell_data: stc[];
+  bell_data: Stc[];
   activeTabId: string;
   // activeTab_in_NO: number;
 
@@ -166,7 +151,7 @@ export class AlarmComponent {
     this.bell_data.splice(index, 1);
     // console.log(this.bell_data.splice(index, 1));
   }
-  open_rename_dailog(dict: stc) {
+  open_rename_dailog(dict: Stc) {
     const rename_dailogref = this.dailog.open(RenameDailogComponent, {
       data: {
         title: 'Rename this tab',
@@ -195,7 +180,7 @@ export class AlarmComponent {
       }
     });
   }
-  open_confirmation_delete_dailog(dict: stc) {
+  open_confirmation_delete_dailog(dict: Stc) {
     const delete_dailogref = this.dailog.open(
       ConfirmationDeleteDailogComponent,
       {
@@ -212,7 +197,7 @@ export class AlarmComponent {
       }
     });
   }
-  open_alarm_dailog(heading: string, dist: stc) {
+  open_alarm_dailog(heading: string, dist: Stc) {
     const alarmdailogref = this.dailog.open(AddAlarmDailogComponent, {
       data: {
         title: heading,
