@@ -62,7 +62,7 @@ export class AlarmComponent {
           {
             time: '2:21 am',
             label: 'hello',
-            music_file_name: 'bell.mp3',
+            music_file_name: 'Bell.mp3',
             days: [
               { day: 'S', active: false },
               { day: 'M', active: true },
@@ -72,12 +72,12 @@ export class AlarmComponent {
               { day: 'F', active: true },
               { day: 'S', active: true },
             ],
-            switch_state: true,
+            switch_state: false,
           },
           {
             time: '2:21 am',
             label: 'hello',
-            music_file_name: 'bell.mp3',
+            music_file_name: 'Bell.mp3',
             days: [
               { day: 'S', active: false },
               { day: 'M', active: true },
@@ -99,7 +99,7 @@ export class AlarmComponent {
           {
             time: '2:21 am',
             label: 'hello1',
-            music_file_name: 'bell.mp3',
+            music_file_name: 'Bell.mp3',
             days: [
               { day: 'S', active: false },
               { day: 'M', active: true },
@@ -115,6 +115,13 @@ export class AlarmComponent {
       },
     ];
     this.activeTabId = this.bell_data[0].tab_id;
+  }
+  update_switch(data: any) {
+    if (data.switch_state) {
+      data.switch_state = false;
+    } else {
+      data.switch_state = true;
+    }
   }
   add_new_tab(result: any) {
     this.bell_data.push({
@@ -143,7 +150,6 @@ export class AlarmComponent {
     var index = this.bell_data.indexOf(result.item);
     this.bell_data[index].tab_name = result.name;
   }
-
   delete_tab(result: any) {
     console.log(result.tab_name);
     var index = this.bell_data.indexOf(result);
@@ -151,6 +157,7 @@ export class AlarmComponent {
     this.bell_data.splice(index, 1);
     // console.log(this.bell_data.splice(index, 1));
   }
+  // dailog ============
   open_rename_dailog(dict: Stc) {
     const rename_dailogref = this.dailog.open(RenameDailogComponent, {
       data: {

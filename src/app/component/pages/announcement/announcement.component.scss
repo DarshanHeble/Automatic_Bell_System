@@ -1,91 +1,27 @@
-form {
-  display: flex;
-  flex-direction: column;
-  width: 21rem;
+section {
+  padding: 1rem 3rem;
+  height: -webkit-fill-available;
+  background-color: #97fffc;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: start;
+  // align-items: center;
+}
 
-  mat-dialog-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+h1 {
+  font-size: 2.4em;
+}
 
-    .time {
-      width: 100%;
-      padding: 0.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-bottom: 1rem;
-      .buttons {
-        display: flex;
-        justify-content: space-evenly;
+.container {
+  width: -webkit-fill-available;
+  height: 95%;
 
-        .number {
-          display: flex;
-          justify-content: center;
-          align-items: center;
+  mat-form-field {
+    width: -webkit-fill-available;
+    height: 98%;
 
-          button {
-            height: 4.5rem;
-            width: 4.5rem;
-            font-size: x-large;
-          }
-          h1 {
-            display: grid;
-            place-items: center;
-            height: 4.5rem;
-            font-weight: bold;
-            margin-inline: 5px;
-            margin-block: 0;
-          }
-          mat-menu {
-            max-width: 2rem;
-          }
-        }
-
-        .ampm {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-evenly;
-          button {
-            font-size: large;
-            height: 2rem;
-          }
-          button.active {
-            background-color: lightblue;
-          }
-        }
-      }
+    #textarea {
+      height: 36rem;
     }
-    mat-form-field {
-      // padding: 1rem;
-      width: 100%;
-    }
-    .days {
-      margin-bottom: 1.5rem;
-      mat-chip-listbox {
-        .mdc-evolution-chip-set__chips {
-          margin-right: 0;
-        }
-        mat-chip {
-          display: grid;
-          width: 2.5rem;
-          height: 2.5rem;
-          border-radius: 5rem;
-          place-content: center;
-          .chipText {
-            font-size: 1rem;
-          }
-        }
-        mat-chip.active {
-          background-color: lightblue;
-        }
-      }
-    }
-  }
-  mat-dialog-actions {
-    display: flex;
-    justify-content: space-evenly;
   }
 }

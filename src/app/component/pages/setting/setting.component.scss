@@ -1,4 +1,4 @@
-section {
+.setting {
   padding: 1rem 3rem;
   height: -webkit-fill-available;
   // display: flex;
@@ -10,7 +10,7 @@ h1 {
   font-size: 2.4em;
 }
 mat-expansion-panel {
-  width: 40rem;
+  max-width: 40rem;
 
   mat-icon {
     margin-right: 2rem;
