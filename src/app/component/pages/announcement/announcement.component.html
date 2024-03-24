@@ -1,20 +1,24 @@
-<section>
-  <h1>Announcement</h1>
+<section class="announce">
+  <h1>Announcements</h1>
   <div class="container">
-    <div class="">
-      <button style="background-color: blue" mat-icon-button>
-        <mat-icon>send</mat-icon>
-      </button>
-    </div>
-    <mat-form-field style="background-color: red">
+    <mat-form-field appearance="fill">
       <textarea
-        style="background-color: green"
         name=""
-        id="textarea"
+        #text
+        [(ngModel)]="textarea"
         cols="30"
-        rows="10"
+        rows="28"
         matInput
+        (keyup)="update(text.value)"
       ></textarea>
     </mat-form-field>
+    <div class="button">
+      <button mat-fab color="accent" [disabled]="!textarea" matTooltip="Play">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+      <button mat-fab color="accent" matTooltip="Filter">
+        <mat-icon>tune</mat-icon>
+      </button>
+    </div>
   </div>
 </section>

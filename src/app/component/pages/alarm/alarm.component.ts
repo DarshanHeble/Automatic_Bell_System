@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -21,6 +21,7 @@ import { ConfirmationDeleteDailogComponent } from '../../dialog/confirmation-del
 import { Day } from '../../../Day';
 import { Bell } from '../../../Bell';
 import { Stc } from '../../../Stc';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-alarm',
@@ -40,12 +41,13 @@ import { Stc } from '../../../Stc';
     MatRippleModule,
     AddAlarmDailogComponent,
     MatDivider,
+    MatTooltipModule,
   ],
 })
 export class AlarmComponent {
   bell_data: Stc[];
   activeTabId: string;
-  // activeTab_in_NO: number;
+  isEnabled: boolean = true;
 
   setActiveTab(tabId: string) {
     this.activeTabId = tabId;

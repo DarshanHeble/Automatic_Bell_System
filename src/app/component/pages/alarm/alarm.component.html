@@ -75,21 +75,21 @@
               </mat-card-subtitle>
             </div>
 
-            <!-- @if (data.switch_state) {
-            <mat-slide-toggle checked="true"></mat-slide-toggle>
-            } -->
-
+            @if (data.switch_state) {
             <mat-slide-toggle
               checked="true"
-              *ngIf="data.switch_state; else elseSwitch"
               (toggleChange)="update_switch(data)"
-            ></mat-slide-toggle>
-            <ng-template #elseSwitch>
-              <mat-slide-toggle
-                checked="false"
-                (toggleChange)="update_switch(data)"
-              ></mat-slide-toggle>
-            </ng-template>
+              [matTooltip]="data.switch_state ? 'on' : 'off'"
+            >
+            </mat-slide-toggle>
+            }@else {
+            <mat-slide-toggle
+              checked="false"
+              (toggleChange)="update_switch(data)"
+              [matTooltip]="data.switch_state ? 'on' : 'off'"
+            >
+            </mat-slide-toggle>
+            }
           </mat-card-header>
           <mat-card-content>
             <p class="label">{{ data.label }}</p>
@@ -103,8 +103,10 @@
 
       <button
         mat-fab
+        color="accent"
         class="add"
         (click)="open_alarm_dailog('Add alarm', item)"
+        matTooltip="Add alarm"
       >
         <mat-icon>add</mat-icon>
       </button>
