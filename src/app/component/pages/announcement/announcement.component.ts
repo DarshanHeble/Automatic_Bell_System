@@ -1,15 +1,14 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AnnFilterComponent } from '../../dialog/ann-filter/ann-filter.component';
 
 @Component({
   selector: 'app-announcement',
@@ -23,12 +22,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatFormFieldModule,
     MatDialogModule,
     MatInputModule,
-    MatMenuModule,
-    MatChipsModule,
     FormsModule,
     MatAutocompleteModule,
-    ReactiveFormsModule,
-    AsyncPipe,
     MatTooltipModule,
   ],
 })
@@ -37,5 +32,8 @@ export class AnnouncementComponent {
   update(input: any) {
     console.log(input);
   }
-  constructor() {}
+  open_ann_filter() {
+    this.dailog.open(AnnFilterComponent, {});
+  }
+  constructor(private dailog: MatDialog) {}
 }

@@ -18,6 +18,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-add-alarm-dailog',
@@ -35,11 +36,13 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatAutocompleteModule,
     ReactiveFormsModule,
     AsyncPipe,
+    MatSelectModule,
   ],
   templateUrl: './add-alarm-dailog.component.html',
   styleUrl: './add-alarm-dailog.component.scss',
 })
 export class AddAlarmDailogComponent implements OnInit {
+  selected = 'option2';
   input_data: any;
   hr_btn_text: number = 1;
   min_btn_text: number = 0;

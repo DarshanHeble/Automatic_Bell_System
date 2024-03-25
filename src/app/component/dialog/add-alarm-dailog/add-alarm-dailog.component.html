@@ -76,38 +76,30 @@
       }
     </mat-form-field>
 
-    <mat-form-field role="music" appearance="fill">
+    <mat-form-field>
       <mat-icon matPrefix fontSet="material-icons-outlined">
         music_note
       </mat-icon>
-      <input
-        matInput
-        type="text"
-        value="{{ recent_file.split('.')[0] }}"
-        autocapitalize="auto_files"
-      />
-      <button
-        type="button"
-        matSuffix
-        mat-icon-button
-        [matMenuTriggerFor]="music_menu"
-      >
-        <mat-icon fontSet="material-icons-outlined">expand_more </mat-icon>
-      </button>
-      <mat-menu #music_menu>
+      <mat-select>
         @for (item of files; track $index) {
-        <button mat-menu-item (click)="add_to_recent(item)">
+        <mat-option value="item " (click)="add_to_recent(item)">
           <mat-icon>music_note</mat-icon>
           {{ item.split(".")[0] }}
-        </button>
+        </mat-option>
         }
-      </mat-menu>
-      <!-- <mat-autocomplete #auto_files autoActiveFirstOption>
-          @for (item of files | async; track $index) {
-          <mat-option [value]="item">{{ item }} </mat-option>
-          }
-        </mat-autocomplete> -->
+      </mat-select>
     </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Select an option</mat-label>
+      <mat-select [(value)]="selected">
+        <mat-option>None</mat-option>
+        <mat-option value="option1">Option 1</mat-option>
+        <mat-option value="option2">Option 2</mat-option>
+        <mat-option value="option3">Option 3</mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <div class="days">
       <mat-chip-listbox>
         @for (item of chips; track $index) {
@@ -137,3 +129,30 @@
     </button>
   </mat-dialog-actions>
 </form>
+
+<!--  -->
+<!-- <mat-form-field role="music" appearance="fill">
+  <mat-icon matPrefix fontSet="material-icons-outlined"> music_note </mat-icon>
+  <input
+    matInput
+    type="text"
+    value="{{ recent_file.split('.')[0] }}"
+    autocapitalize="auto_files"
+  />
+  <button
+    type="button"
+    matSuffix
+    mat-icon-button
+    [matMenuTriggerFor]="music_menu"
+  >
+    <mat-icon fontSet="material-icons-outlined">expand_more </mat-icon>
+  </button>
+  <mat-menu #music_menu>
+    @for (item of files; track $index) {
+    <button mat-menu-item (click)="add_to_recent(item)">
+      <mat-icon>music_note</mat-icon>
+      {{ item.split(".")[0] }}
+    </button>
+    }
+  </mat-menu>
+</mat-form-field> -->

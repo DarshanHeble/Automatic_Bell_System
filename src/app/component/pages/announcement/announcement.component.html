@@ -16,7 +16,12 @@
       <button mat-fab color="accent" [disabled]="!textarea" matTooltip="Play">
         <mat-icon>play_arrow</mat-icon>
       </button>
-      <button mat-fab color="accent" matTooltip="Filter">
+      <button
+        mat-fab
+        color="accent"
+        matTooltip="Filter"
+        (click)="open_ann_filter()"
+      >
         <mat-icon>tune</mat-icon>
       </button>
     </div>

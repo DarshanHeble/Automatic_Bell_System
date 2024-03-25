@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Filter</h1>
+<mat-dialog-content>
+  <mat-slider showTickMarks discrete min="0" max="10">
+    <input matSliderThumb />
+  </mat-slider>
+  <mat-slider showTickMarks discrete min="0" max="10">
+    <input matSliderThumb />
+  </mat-slider>
+  <mat-slider showTickMarks discrete min="0" max="10">
+    <input matSliderThumb />
+  </mat-slider>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close color="warn">
+    <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+    <span>Close</span>
+  </button>
+  <button mat-raised-button mat-dialog-close color="accent">
+    <!-- (click)="on_save(input_data.item_data)" -->
+    <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+    <span>Save</span>
+  </button>
+</mat-dialog-actions>
