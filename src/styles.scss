@@ -36,6 +36,7 @@ $dark-theme: mat.define-dark-theme(
 html,
 body {
   height: 100%;
+  background-color: theme.$c400;
 }
 // removes extra scrollbar on dailog(on small screens)
 .cdk-global-scrollblock {

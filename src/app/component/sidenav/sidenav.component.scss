@@ -11,17 +11,15 @@
   transition: 0.5s;
 }
 .selected-menu-item {
-  :before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 5px;
-    height: 100%;
-    border-radius: 1px;
-    background-color: blue;
-    // background: blue;
-  }
-  // not working
+  // :before {
+  //   content: "";
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   width: 5px;
+  //   height: 100%;
+  //   border-radius: 1px;
+  //   background-color: blue;
+  // }
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
