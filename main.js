@@ -16,6 +16,7 @@ function createWindow() {
   //   })
   // );
   win.loadURL("http://localhost:4200");
+  win.focus();
 
   // Open the DevTools.
   win.webContents.openDevTools();

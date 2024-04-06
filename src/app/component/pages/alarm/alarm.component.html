@@ -5,6 +5,7 @@
       class="new_tab_btn"
       mat-raised-button
       extended
+      color="accent"
       (click)="open_create_new_tab_dailog()"
     >
       <mat-icon>add</mat-icon>
@@ -94,9 +95,9 @@
           <mat-card-content>
             <p class="label">{{ data.label }}</p>
             <p class="music">{{ data.music_file_name }}</p>
-            <p class="days" *ngFor="let day of data.days">
-              {{ day.day }} &nbsp;
-            </p>
+            @for (day of data.days; track $index) { @if (day.active) {
+            <p class="days">{{ day.day }} &nbsp;</p>
+            } }
           </mat-card-content>
         </mat-card>
       </div>
