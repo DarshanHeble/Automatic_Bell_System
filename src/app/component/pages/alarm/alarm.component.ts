@@ -6,20 +6,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatMenuModule } from '@angular/material/menu';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RenameDailogComponent } from '../../dialog/rename-dailog/rename-dailog.component';
 import { MatRippleModule } from '@angular/material/core';
 import { AddAlarmDailogComponent } from '../../dialog/add-alarm-dailog/add-alarm-dailog.component';
 import { MatDivider } from '@angular/material/divider';
 import { CreateNewTabComponent } from '../../dialog/create-new-tab/create-new-tab.component';
 import { ConfirmationDeleteDailogComponent } from '../../dialog/confirmation-delete-dailog/confirmation-delete-dailog.component';
-import { Day } from '../../../Day';
-import { Bell } from '../../../Bell';
+
 import { Stc } from '../../../Stc';
 import { MatTooltipModule } from '@angular/material/tooltip';
 

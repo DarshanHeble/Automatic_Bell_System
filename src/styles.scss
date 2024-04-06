@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @use "themes.scss" as theme;
 @use "@angular/material" as mat;
+// @import "../style.scss";
 @include mat.core();
 
 :host {
@@ -77,4 +78,17 @@ body {
 /* Style the thumb when hovering over the scrollbar */
 ::-webkit-scrollbar-thumb:hover {
   background: #666;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #1b1b1b;
+    color: white;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background: #ddd;
+    color: black;
+  }
 }
