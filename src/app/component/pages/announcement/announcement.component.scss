@@ -24,7 +24,7 @@
 
       #textarea {
         font-size: 1.4rem;
-        height: 36rem;
+        height: 34rem;
       }
     }
     .button {
@@ -42,14 +42,14 @@
     h1 {
       color: white;
     }
-    .container {
-      mat-form-field {
-        // background-color: red;
-        textarea {
-          background-color: red;
-        }
-      }
-    }
+    // .container {
+    //   mat-form-field {
+    //     background-color: red;
+    //     textarea {
+    //       background-color: red;
+    //     }
+    //   }
+    // }
   }
 }
 

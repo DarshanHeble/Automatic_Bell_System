@@ -23,12 +23,12 @@ mat-expansion-panel {
 }
 
 @media (prefers-color-scheme: dark) {
+  .setting {
+    background-color: #202020;
+  }
   .icon {
     color: rgb(239, 239, 239) !important;
   }
-  /* .selected-menu-item {
-    background-color: rgba(0, 0, 0, 0.05) !important;
-  } */
 }
 
 @media (prefers-color-scheme: light) {

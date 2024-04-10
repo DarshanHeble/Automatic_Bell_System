@@ -16,7 +16,7 @@ $cA200: #18ffff;
 $cA400: #00e5ff;
 $cA700: #00b8d4;
 
-$custom-primary-palette: (
+$custom-dark-palette: (
   50: $c50,
   100: $c100,
   200: $c200,
@@ -32,16 +32,16 @@ $custom-primary-palette: (
   A400: $cA400,
   A700: $cA700,
   contrast: (
-    50: rgb(0, 0, 0),
-    100: rgb(0, 0, 0),
-    200: rgb(0, 0, 0),
-    300: rgb(255, 255, 255),
-    400: rgb(255, 255, 255),
-    500: rgb(255, 255, 255),
-    600: rgb(255, 255, 255),
-    700: rgb(255, 255, 255),
-    800: rgb(255, 255, 255),
-    900: rgb(255, 255, 255),
+    50: white,
+    100: white,
+    200: white,
+    300: black,
+    400: black,
+    500: black,
+    600: black,
+    700: black,
+    800: black,
+    900: black,
   ),
 );
 
