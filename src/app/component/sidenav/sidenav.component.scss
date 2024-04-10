@@ -1,4 +1,4 @@
-// @use "../../../styles.scss" as scss;
+@import "../../../themes.scss";
 
 .side {
   display: flex;
@@ -22,4 +22,25 @@
   //   background-color: blue;
   // }
   background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .icon {
+    color: rgb(239, 239, 239) !important;
+  }
+  .icon.active {
+    color: $c500 !important;
+  }
+  /* .selected-menu-item {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+  } */
+}
+
+@media (prefers-color-scheme: light) {
+  .icon {
+    color: black !important;
+  }
+  .icon.active {
+    color: $c200 !important;
+  }
 }

@@ -2,31 +2,30 @@
   width: 100%;
   display: flex;
   padding: 0;
-  // flex-direction: column;
+  /* flex-direction: column; */
 }
 .alarm_sidebar {
   height: 100vh;
   width: 16rem;
   padding-inline: 1rem;
-  background: yellow;
+  /* background: yellow; */
   overflow-y: auto;
 }
 .alarm_window {
   overflow: hidden;
   height: 100vh;
   width: 100%;
-  background: white;
   position: relative;
 
   .window {
-    background: white;
+    /* background: white; */
     position: absolute;
     width: -webkit-fill-available;
     height: -webkit-fill-available;
     padding: 3rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    // grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr)); */
     grid-template-rows: repeat(auto-fit, 10rem);
     gap: 1rem;
     z-index: 10;
@@ -48,6 +47,7 @@
     }
     mat-slide-toggle {
       margin-left: auto;
+      height: fit-content;
     }
 
     mat-card {
@@ -75,7 +75,7 @@
     }
   }
   .window.active {
-    // background-color: red;
+    /* background-color: red; */
     z-index: 11;
     animation: ActiveTab 0.3s ease-in-out;
   }
@@ -150,5 +150,51 @@ button {
   100% {
     opacity: 1;
     transform: translateX(0%);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .alarm_sidebar {
+    background-color: #202020;
+
+    .new_tab_btn {
+      background-color: #484848;
+      color: rgb(241, 241, 241);
+    }
+
+    h3 {
+      color: white;
+    }
+  }
+  .window {
+    background-color: black;
+  }
+  mat-card {
+    background-color: #202020;
+    mat-card-header {
+      .card-title {
+        mat-card-title {
+          color: white;
+        }
+        mat-card-subtitle {
+          color: rgb(238, 238, 238);
+        }
+      }
+    }
+    mat-card-content {
+      p {
+        color: white;
+      }
+    }
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .alarm_sidebar {
+    background-color: #e4e4e4;
+
+    h3 {
+      color: black;
+    }
   }
 }

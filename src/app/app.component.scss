@@ -18,3 +18,15 @@ mat-sidenav-content {
   width: -webkit-fill-available;
   // width: 20rem;
 }
+
+@media (prefers-color-scheme: dark) {
+  mat-sidenav {
+    background: #202020;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  mat-sidenav {
+    background: #f0f0f0;
+  }
+}

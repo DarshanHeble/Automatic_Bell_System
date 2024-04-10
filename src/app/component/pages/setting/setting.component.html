@@ -8,7 +8,10 @@
         Select app theme
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <mat-radio-group aria-label="Select an option">
+    <mat-radio-group
+      aria-label="Select an option"
+      onchange="change_theme($event)"
+    >
       <mat-radio-button value="Light">Light</mat-radio-button>
       <mat-radio-button value="Dark">Dark</mat-radio-button>
       <mat-radio-button value="System_theme">System theme</mat-radio-button>

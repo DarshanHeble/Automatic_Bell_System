@@ -11,4 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.scss',
 })
-export class SettingComponent {}
+export class SettingComponent {
+  async change_theme() {
+    await window.darkMode.sytem();
+  }
+}

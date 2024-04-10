@@ -10,6 +10,8 @@
   >
     <mat-icon
       matListItemIcon
+      class="icon"
+      [ngClass]="{ active: rla.isActive }"
       [fontSet]="rla.isActive ? 'material-icons' : 'material-icons-outlined'"
       >{{ item.icon }}</mat-icon
     >

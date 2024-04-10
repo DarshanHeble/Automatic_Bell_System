@@ -21,3 +21,18 @@ mat-expansion-panel {
     align-items: flex-start;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  .icon {
+    color: rgb(239, 239, 239) !important;
+  }
+  /* .selected-menu-item {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+  } */
+}
+
+@media (prefers-color-scheme: light) {
+  .icon {
+    color: black !important;
+  }
+}
