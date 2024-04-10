@@ -1,3 +1,6 @@
+@use "@angular/material" as mat;
+@include mat.core();
+
 $c50: #e0f7fa;
 $c100: #b2ebf2;
 $c200: #80deea;
@@ -42,31 +45,13 @@ $custom-primary-palette: (
   ),
 );
 
-// $indigo-palette: (
-//   50: $c50,
-//   100: $c100,
-//   200: $c200,
-//   300: $c300,
-//   400: $c400,
-//   500: $c500,
-//   600: $c600,
-//   700: $c700,
-//   800: $c800,
-//   900: $c900,
-//   A100: #80d8ff,
-//   A200: #40c4ff,
-//   A400: #00b0ff,
-//   A700: #0091ea,
-//   contrast: (
-//     50: rgb(0, 0, 0),
-//     100: rgb(0, 0, 0),
-//     200: rgb(0, 0, 0),
-//     300: rgb(255, 255, 255),
-//     400: rgb(255, 255, 255),
-//     500: rgb(255, 255, 255),
-//     600: rgb(255, 255, 255),
-//     700: rgb(255, 255, 255),
-//     800: rgb(255, 255, 255),
-//     900: rgb(255, 255, 255),
-//   ),
-// );
+$light_primary: mat.define-palette(mat.$indigo-palette, 500);
+$light_accent: mat.define-palette(mat.$indigo-palette, A200, A100, A400);
+
+// $dark_primary: mat.define-palette(mat.$amber-palette, 500);
+// $dark_accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
+
+$dark_primary: mat.define-palette(mat.$blue-gray-palette, 500);
+$dark_accent: mat.define-palette(mat.$blue-gray-palette, A200, A100, A400);
+
+$my-warn: mat.define-palette(mat.$red-palette, A200);
