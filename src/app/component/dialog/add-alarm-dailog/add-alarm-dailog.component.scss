@@ -1,95 +1,133 @@
-form {
-  display: flex;
-  flex-direction: column;
-  width: 24rem;
-
-  mat-dialog-content {
-    width: 100%;
+section {
+  form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-top: 0;
+    width: 24rem;
 
-    .time {
+    mat-dialog-content {
       width: 100%;
-      padding: 0.5rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      margin-bottom: 1rem;
-      // background-color: whitesmoke;
-      background-color: aliceblue;
+      align-items: center;
+      padding-top: 0;
 
-      .buttons {
+      .time {
+        width: 100%;
+        padding: 0.5rem;
         display: flex;
-        justify-content: space-evenly;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 1rem;
+        // background-color: whitesmoke;
+        // background-color: aliceblue;
 
-        .number {
+        .buttons {
           display: flex;
-          justify-content: center;
-          align-items: center;
+          justify-content: space-evenly;
 
-          button {
-            height: 4.5rem;
-            width: 4.5rem;
-            font-size: x-large;
+          .number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            button {
+              height: 4.5rem;
+              width: 4.5rem;
+              font-size: x-large;
+              background-color: #202020;
+            }
+            h1 {
+              display: grid;
+              place-items: center;
+              height: 4.5rem;
+              font-weight: bold;
+              margin-inline: 5px;
+              margin-block: 0;
+            }
+            mat-menu {
+              max-width: 2rem;
+            }
           }
-          h1 {
-            display: grid;
-            place-items: center;
-            height: 4.5rem;
-            font-weight: bold;
-            margin-inline: 5px;
-            margin-block: 0;
-          }
-          mat-menu {
-            max-width: 2rem;
+
+          .ampm {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            button {
+              font-size: large;
+              height: 2rem;
+            }
+            button.active {
+              background-color: lightblue;
+            }
           }
         }
-
-        .ampm {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-evenly;
-          button {
-            font-size: large;
-            height: 2rem;
+      }
+      mat-form-field {
+        // padding: 1rem;
+        width: 100%;
+      }
+      .days {
+        margin-bottom: 1.5rem;
+        mat-chip-listbox {
+          .mdc-evolution-chip-set__chips {
+            margin-right: 0;
           }
-          button.active {
+          mat-chip {
+            display: grid;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 5rem;
+            place-content: center;
+            .chipText {
+              font-size: 1rem;
+            }
+          }
+          mat-chip.active {
             background-color: lightblue;
           }
         }
       }
     }
-    mat-form-field {
-      // padding: 1rem;
-      width: 100%;
+    mat-dialog-actions {
+      display: flex;
+      justify-content: space-evenly;
     }
-    .days {
-      margin-bottom: 1.5rem;
-      mat-chip-listbox {
-        .mdc-evolution-chip-set__chips {
-          margin-right: 0;
-        }
-        mat-chip {
-          display: grid;
-          width: 2.5rem;
-          height: 2.5rem;
-          border-radius: 5rem;
-          place-content: center;
-          .chipText {
-            font-size: 1rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  section {
+    background-color: black;
+    h1 {
+      color: white;
+    }
+    form {
+      mat-dialog-content {
+        .time {
+          .buttons {
+            .number {
+              button {
+                background-color: #202020;
+                color: white;
+              }
+              h1 {
+                color: white;
+              }
+              mat-menu {
+                background-color: #202020;
+                button {
+                  background-color: #202020;
+                }
+              }
+            }
           }
-        }
-        mat-chip.active {
-          background-color: lightblue;
         }
       }
     }
   }
-  mat-dialog-actions {
-    display: flex;
-    justify-content: space-evenly;
-  }
+}
+
+@media (prefers-color-scheme: light) {
 }

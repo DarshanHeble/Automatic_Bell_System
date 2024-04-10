@@ -1,135 +1,136 @@
-<h1 mat-dialog-title>Add bell</h1>
-<form action="">
-  <mat-dialog-content>
-    <div class="time">
-      <div class="arrow_up"></div>
-      <div class="buttons">
-        <div class="number">
-          <button
-            type="button"
-            #hour_btn
-            mat-raised-button
-            [matMenuTriggerFor]="hr_menu"
-            (wheel)="on_hr_scroll($event, hour_btn)"
-          >
-            {{ hr_btn_text }}
-          </button>
-          <h1>:</h1>
-          <button
-            type="button"
-            mat-raised-button
-            #min_btn
-            [matMenuTriggerFor]="min_menu"
-            (wheel)="on_min_scroll($event, min_btn)"
-          >
-            {{ min_btn_text }}
-          </button>
-          <div class="menu">
-            <mat-menu #hr_menu>
-              @for (item of [01,02,03,04,05,06,07,08,09,10,11,12]; track $index)
-              {
-              <button mat-menu-item (click)="menu_hr_click(item)">
-                {{ item }}
-              </button>
-              }
-            </mat-menu>
-            <mat-menu #min_menu>
-              @for (item of [05,10,15,20,25,30,35,40,45,50,55,60]; track $index)
-              {
-              <button mat-menu-item (click)="menu_min_click(item)">
-                {{ item }}
-              </button>
-              }
-            </mat-menu>
+<section>
+  <h1 mat-dialog-title>Add bell</h1>
+  <form action="">
+    <mat-dialog-content>
+      <div class="time">
+        <div class="arrow_up"></div>
+        <div class="buttons">
+          <div class="number">
+            <button
+              type="button"
+              #hour_btn
+              mat-raised-button
+              [matMenuTriggerFor]="hr_menu"
+              (wheel)="on_hr_scroll($event, hour_btn)"
+            >
+              {{ hr_btn_text }}
+            </button>
+            <h1>:</h1>
+            <button
+              type="button"
+              mat-raised-button
+              #min_btn
+              [matMenuTriggerFor]="min_menu"
+              (wheel)="on_min_scroll($event, min_btn)"
+            >
+              {{ min_btn_text }}
+            </button>
+            <div class="menu">
+              <mat-menu #hr_menu>
+                @for (item of [01,02,03,04,05,06,07,08,09,10,11,12]; track
+                $index) {
+                <button mat-menu-item (click)="menu_hr_click(item)">
+                  {{ item }}
+                </button>
+                }
+              </mat-menu>
+              <mat-menu #min_menu>
+                @for (item of [05,10,15,20,25,30,35,40,45,50,55,60]; track
+                $index) {
+                <button mat-menu-item (click)="menu_min_click(item)">
+                  {{ item }}
+                </button>
+                }
+              </mat-menu>
+            </div>
+          </div>
+          <div class="ampm">
+            @for (item of ["am","pm"]; track $index) {
+            <button
+              #vari
+              type="button"
+              mat-raised-button
+              [ngClass]="{ active: item === active_am_or_pm }"
+              (click)="set_ampm_active(item)"
+            >
+              {{ item }}
+            </button>
+            }
           </div>
         </div>
-        <div class="ampm">
-          @for (item of ["am","pm"]; track $index) {
-          <button
-            #vari
-            type="button"
-            mat-raised-button
-            [ngClass]="{ active: item === active_am_or_pm }"
-            (click)="set_ampm_active(item)"
-          >
-            {{ item }}
-          </button>
-          }
-        </div>
+        <div class="arrow_down"></div>
       </div>
-      <div class="arrow_down"></div>
-    </div>
 
-    <mat-form-field role="label" appearance="fill">
-      <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
-      <input
-        matInput
-        type="text"
-        [(ngModel)]="label"
-        value="label"
-        [ngModelOptions]="{ standalone: true }"
-      />
-      @if(label){
-      <button matSuffix type="button" mat-icon-button (click)="label = ''">
+      <mat-form-field role="label" appearance="fill">
+        <mat-icon matPrefix fontSet="material-icons-outlined">label </mat-icon>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="label"
+          value="label"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        @if(label){
+        <button matSuffix type="button" mat-icon-button (click)="label = ''">
+          <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+        </button>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-icon matPrefix fontSet="material-icons-outlined">
+          music_note
+        </mat-icon>
+        <mat-select value="recent_file">
+          @for (item of files; track $index) {
+          <mat-option value="item" (click)="add_to_recent(item)">
+            <mat-icon>music_note</mat-icon>
+            {{ item.split(".")[0] }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Select an option</mat-label>
+        <mat-select [(value)]="selected">
+          <mat-option>None</mat-option>
+          <mat-option value="option1">Option 1</mat-option>
+          <mat-option value="option2">Option 2</mat-option>
+          <mat-option value="option3">Option 3</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="days">
+        <mat-chip-listbox>
+          @for (item of chips; track $index) {
+          <mat-chip
+            (click)="toogle(item)"
+            [ngClass]="{ active: item.active === true }"
+          >
+            <div class="chipText" style="font-size: 1rem">{{ item.day }}</div>
+          </mat-chip>
+          }
+        </mat-chip-listbox>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-raised-button mat-dialog-close color="warn">
         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+        <span>Close</span>
       </button>
-      }
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-icon matPrefix fontSet="material-icons-outlined">
-        music_note
-      </mat-icon>
-      <mat-select>
-        @for (item of files; track $index) {
-        <mat-option value="item " (click)="add_to_recent(item)">
-          <mat-icon>music_note</mat-icon>
-          {{ item.split(".")[0] }}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Select an option</mat-label>
-      <mat-select [(value)]="selected">
-        <mat-option>None</mat-option>
-        <mat-option value="option1">Option 1</mat-option>
-        <mat-option value="option2">Option 2</mat-option>
-        <mat-option value="option3">Option 3</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <div class="days">
-      <mat-chip-listbox>
-        @for (item of chips; track $index) {
-        <mat-chip
-          (click)="toogle(item)"
-          [ngClass]="{ active: item.active === true }"
-        >
-          <div class="chipText" style="font-size: 1rem">{{ item.day }}</div>
-        </mat-chip>
-        }
-      </mat-chip-listbox>
-    </div>
-  </mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-raised-button mat-dialog-close color="warn">
-      <mat-icon fontSet="material-icons-outlined">close</mat-icon>
-      <span>Close</span>
-    </button>
-    <button
-      mat-raised-button
-      mat-dialog-close
-      color="accent"
-      (click)="on_save(input_data.item_data)"
-    >
-      <mat-icon fontSet="material-icons-outlined">save</mat-icon>
-      <span>Save</span>
-    </button>
-  </mat-dialog-actions>
-</form>
-
+      <button
+        mat-raised-button
+        mat-dialog-close
+        color="accent"
+        (click)="on_save(input_data.item_data)"
+      >
+        <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+        <span>Save</span>
+      </button>
+    </mat-dialog-actions>
+  </form>
+</section>
 <!--  -->
 <!-- <mat-form-field role="music" appearance="fill">
   <mat-icon matPrefix fontSet="material-icons-outlined"> music_note </mat-icon>

@@ -51,7 +51,7 @@ export class AddAlarmDailogComponent implements OnInit {
   files: string[] = ['Bell.mp3', 'Break.mp3'];
   recent_file: string = this.files[0];
   label: string = 'Period';
-  value = 'Clear me';
+  // value = 'Clear me';
 
   mycontrol = new FormControl('');
   // filterd_files: Observable<string[]>;
@@ -110,6 +110,7 @@ export class AddAlarmDailogComponent implements OnInit {
     item.active = !item.active;
   }
   add_to_recent(item: string) {
+    console.log(item);
     this.recent_file = item;
   }
   constructor(
