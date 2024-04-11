@@ -82,23 +82,13 @@
         <mat-icon matPrefix fontSet="material-icons-outlined">
           music_note
         </mat-icon>
-        <mat-select value="recent_file">
+        <mat-select [(value)]="recent_file">
           @for (item of files; track $index) {
-          <mat-option value="item" (click)="add_to_recent(item)">
+          <mat-option [value]="item">
             <mat-icon>music_note</mat-icon>
             {{ item.split(".")[0] }}
           </mat-option>
           }
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Select an option</mat-label>
-        <mat-select [(value)]="selected">
-          <mat-option>None</mat-option>
-          <mat-option value="option1">Option 1</mat-option>
-          <mat-option value="option2">Option 2</mat-option>
-          <mat-option value="option3">Option 3</mat-option>
         </mat-select>
       </mat-form-field>
 

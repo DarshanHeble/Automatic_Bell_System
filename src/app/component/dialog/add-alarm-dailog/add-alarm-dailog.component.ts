@@ -43,6 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class AddAlarmDailogComponent implements OnInit {
   selected = 'option2';
+
   input_data: any;
   hr_btn_text: number = 1;
   min_btn_text: number = 0;
