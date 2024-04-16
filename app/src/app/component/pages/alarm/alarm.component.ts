@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -16,6 +16,13 @@ import { ConfirmationDeleteDailogComponent } from '../../dialog/confirmation-del
 
 import { Stc } from '../../../Stc';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  CountdownConfig,
+  CountdownEvent,
+  CountdownModule,
+} from 'ngx-countdown';
+import { setInterval } from 'timers';
+import { log } from 'console';
 
 @Component({
   selector: 'app-alarm',
@@ -36,17 +43,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AddAlarmDailogComponent,
     MatDivider,
     MatTooltipModule,
+    CountdownModule,
   ],
 })
-export class AlarmComponent {
+export class AlarmComponent implements OnInit, AfterViewInit {
   bell_data: Stc[];
   activeTabId: string;
   isEnabled: boolean = true;
 
+  handleEvent(event: CountdownEvent): void {
+    // notify action not trigger
+    console.log(event);
+    if (event.action === 'notify') {
+      console.log(event);
+    }
+  }
+
   setActiveTab(tabId: string) {
     this.activeTabId = tabId;
   }
-  click() {}
 
   constructor(private dailog: MatDialog) {
     this.bell_data = [
@@ -112,6 +127,31 @@ export class AlarmComponent {
     ];
     this.activeTabId = this.bell_data[0].tab_id;
   }
+
+  ngOnInit() {
+    // this.intervalId = setInterval(() => {
+    //   this.add();
+    // }, 1000);
+    window.onload();
+  }
+
+  ngOnDestroy() {
+    // if (this.intervalId) {
+    //   clearInterval(this.intervalId);
+    // }
+  }
+  check_alarm() {
+    const now = new Date();
+    // console.log(now);
+  }
+
+  playsound(music_file: string) {
+    let audio = new Audio();
+    audio.src = '../../../../assets/music/' + music_file;
+    audio.load();
+    audio.play();
+  }
+
   update_switch(data: any) {
     if (data.switch_state) {
       data.switch_state = false;
@@ -212,5 +252,11 @@ export class AlarmComponent {
         this.Add_new_alarm(result);
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    // setInterval(() => {
+    //   console.log('00');
+    // }, 60000);
   }
 }

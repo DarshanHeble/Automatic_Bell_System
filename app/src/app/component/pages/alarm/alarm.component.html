@@ -14,6 +14,10 @@
 
     <!-- All Tabs -->
     <div class="All_Tabs">
+      <countdown
+        [config]="{ leftTime: 10, format: 'h:mm:ss a', notify: 5 }"
+        (event)="handleEvent($event)"
+      ></countdown>
       <div class="alarm_tab">
         <h3>All Tabs</h3>
         <div
@@ -63,7 +67,7 @@
       id="{{ item.tab_id }}"
       [ngClass]="{ active: item.tab_id === activeTabId }"
     >
-      <div class="" *ngFor="let data of item.data" (click)="click()">
+      <div class="" *ngFor="let data of item.data">
         <mat-card>
           <mat-card-header>
             <div class="card-title">

@@ -10,7 +10,7 @@ export const routes: Routes = [
     redirectTo: 'alarm',
   },
   {
-    path: '',
+    path: 'alarm',
     component: AlarmComponent,
   },
   {
